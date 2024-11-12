@@ -26,7 +26,7 @@ public class Main {
         while (true) {
             String input2 = scanner.nextLine();
             OllamaChatResult chatResult = ollamaAPI.chat(builder.withMessages(history).withMessage(OllamaChatMessageRole.USER, input2).build());
-//            System.out.println(chatResult.getResponse());
+            System.out.println(chatResult.getResponse());
             history = chatResult.getChatHistory();
         }
     }
