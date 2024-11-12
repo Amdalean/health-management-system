@@ -18,11 +18,6 @@
 * 权限认证使用Jwt，支持多终端认证系统。
 * 支持加载动态权限菜单，多方式轻松权限控制。
 * 高效率开发，使用代码生成器可以一键生成前后端代码。
-* 提供了技术栈（[Vue3](https://v3.cn.vuejs.org) [Element Plus](https://element-plus.org/zh-CN) [Vite](https://cn.vitejs.dev)）版本[RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3)，保持同步更新。
-* 提供了单应用版本[RuoYi-Vue-fast](https://github.com/yangzongzhuan/RuoYi-Vue-fast)，Oracle版本[RuoYi-Vue-Oracle](https://github.com/yangzongzhuan/RuoYi-Vue-Oracle)，保持同步更新。
-* 不分离版本，请移步[RuoYi](https://gitee.com/y_project/RuoYi)，微服务版本，请移步[RuoYi-Cloud](https://gitee.com/y_project/RuoYi-Cloud)
-* 阿里云折扣场：[点我进入](http://aly.ruoyi.vip)，腾讯云秒杀场：[点我进入](http://txy.ruoyi.vip)&nbsp;&nbsp;
-* 阿里云优惠券：[点我领取](https://www.aliyun.com/minisite/goods?userCode=brki8iof&share_source=copy_link)，腾讯云优惠券：[点我领取](https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console)&nbsp;&nbsp;
 
 ## 内置功能
 
@@ -45,13 +40,6 @@
 17. 在线构建器：拖动表单元素生成相应的HTML代码。
 18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
-## 在线体验
-
-- admin/admin123  
-- 陆陆续续收到一些打赏，为了更好的体验已用于演示服务器升级。谢谢各位小伙伴。
-
-演示地址：http://vue.ruoyi.vip  
-文档地址：http://doc.ruoyi.vip
 
 ## 演示图
 
@@ -91,6 +79,87 @@
 </table>
 
 
-## 若依前后端分离交流群
+## 时序图
+```mermaid
+sequenceDiagram
+participant User
+participant WebApp
+participant Server
+participant Database
 
-QQ群： [![加入QQ群](https://img.shields.io/badge/已满-937441-blue.svg)](https://jq.qq.com/?_wv=1027&k=5bVB1og) [![加入QQ群](https://img.shields.io/badge/已满-887144332-blue.svg)](https://jq.qq.com/?_wv=1027&k=5eiA4DH) [![加入QQ群](https://img.shields.io/badge/已满-180251782-blue.svg)](https://jq.qq.com/?_wv=1027&k=5AxMKlC) [![加入QQ群](https://img.shields.io/badge/已满-104180207-blue.svg)](https://jq.qq.com/?_wv=1027&k=51G72yr) [![加入QQ群](https://img.shields.io/badge/已满-186866453-blue.svg)](https://jq.qq.com/?_wv=1027&k=VvjN2nvu) [![加入QQ群](https://img.shields.io/badge/已满-201396349-blue.svg)](https://jq.qq.com/?_wv=1027&k=5vYAqA05) [![加入QQ群](https://img.shields.io/badge/已满-101456076-blue.svg)](https://jq.qq.com/?_wv=1027&k=kOIINEb5) [![加入QQ群](https://img.shields.io/badge/已满-101539465-blue.svg)](https://jq.qq.com/?_wv=1027&k=UKtX5jhs) [![加入QQ群](https://img.shields.io/badge/已满-264312783-blue.svg)](https://jq.qq.com/?_wv=1027&k=EI9an8lJ) [![加入QQ群](https://img.shields.io/badge/已满-167385320-blue.svg)](https://jq.qq.com/?_wv=1027&k=SWCtLnMz) [![加入QQ群](https://img.shields.io/badge/已满-104748341-blue.svg)](https://jq.qq.com/?_wv=1027&k=96Dkdq0k) [![加入QQ群](https://img.shields.io/badge/已满-160110482-blue.svg)](https://jq.qq.com/?_wv=1027&k=0fsNiYZt) [![加入QQ群](https://img.shields.io/badge/已满-170801498-blue.svg)](https://jq.qq.com/?_wv=1027&k=7xw4xUG1) [![加入QQ群](https://img.shields.io/badge/已满-108482800-blue.svg)](https://jq.qq.com/?_wv=1027&k=eCx8eyoJ) [![加入QQ群](https://img.shields.io/badge/已满-101046199-blue.svg)](https://jq.qq.com/?_wv=1027&k=SpyH2875) [![加入QQ群](https://img.shields.io/badge/已满-136919097-blue.svg)](https://jq.qq.com/?_wv=1027&k=tKEt51dz) [![加入QQ群](https://img.shields.io/badge/已满-143961921-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=0vBbSb0ztbBgVtn3kJS-Q4HUNYwip89G&authKey=8irq5PhutrZmWIvsUsklBxhj57l%2F1nOZqjzigkXZVoZE451GG4JHPOqW7AW6cf0T&noverify=0&group_code=143961921) [![加入QQ群](https://img.shields.io/badge/已满-174951577-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=ZFAPAbp09S2ltvwrJzp7wGlbopsc0rwi&authKey=HB2cxpxP2yspk%2Bo3WKTBfktRCccVkU26cgi5B16u0KcAYrVu7sBaE7XSEqmMdFQp&noverify=0&group_code=174951577) [![加入QQ群](https://img.shields.io/badge/已满-161281055-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=Fn2aF5IHpwsy8j6VlalNJK6qbwFLFHat&authKey=uyIT%2B97x2AXj3odyXpsSpVaPMC%2Bidw0LxG5MAtEqlrcBcWJUA%2FeS43rsF1Tg7IRJ&noverify=0&group_code=161281055) [![加入QQ群](https://img.shields.io/badge/已满-138988063-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=XIzkm_mV2xTsUtFxo63bmicYoDBA6Ifm&authKey=dDW%2F4qsmw3x9govoZY9w%2FoWAoC4wbHqGal%2BbqLzoS6VBarU8EBptIgPKN%2FviyC8j&noverify=0&group_code=138988063) [![加入QQ群](https://img.shields.io/badge/151450850-blue.svg)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=DkugnCg68PevlycJSKSwjhFqfIgrWWwR&authKey=pR1Pa5lPIeGF%2FFtIk6d%2FGB5qFi0EdvyErtpQXULzo03zbhopBHLWcuqdpwY241R%2F&noverify=0&group_code=151450850) 点击按钮入群。
+    User->>WebApp: 输入用户名和密码
+    WebApp->>Server: 发送登录请求（用户名、密码）
+    Server->>Database: 查询用户名和密码
+    Database-->>Server: 返回查询结果（用户信息）
+    Server->>WebApp: 登录验证结果（成功或失败）
+    WebApp-->>User: 显示登录结果（成功或失败）
+```
+```mermaid
+graph TD
+    A["前端层"] --> B["应用层"]
+    B --> C["数据层"]
+    B --> D["智能化支持层"]
+    C --> E["数据库(MySQL)"]
+    D --> F["ollama4大模型"]
+    D --> G["qwen2通义千问模型"]
+
+%%graph TD
+%%    participant "前端层" as A
+%%    participant "应用层" as B
+%%    participant "数据层" as C
+%%    participant "智能化支持层" as D
+%%    participant "数据库(MySQL)" as E
+%%    participant "ollama4大模型" as F
+%%    participant "qwen2通义千问模型" as G
+%%    A[test] ->> B: 调用
+%%    B ->> C: 数据请求
+%%    B ->> D: 智能化请求
+%%    C ->> E: 数据存取
+%%    D ->> F: 大模型调用
+%%    D ->> G: 通义千问调用
+```
+
+系统总体架构分为多个层次，包括访问层、编程语言层、服务层、数据层、存储层和基础设施层。
+
+- **访问层**：包括ToC和ToB的用户访问，分别通过WEB和PC端进行。
+- **编程语言层**：WEB端使用Uniapp、Node、Vue，PC端使用Vue、Java。
+- **服务层**：包含系统管理、数据池、业务服务、鉴权服务和系统监控等模块。
+- **数据层**：负责数据缓存、存储过程、事务和消息管道的管理。
+- **存储层**：使用Cache和Redis进行缓存，使用MySQL作为数据库。
+- **基础设施层**：基于Linux和Windows操作系统，使用Docker进行容器化部署，并集成ollama中间件。
+
+- **系统管理**：包括组织管理、用户管理、字典管理和菜单管理。
+- **数据池**：包括学生建档、教师建档、课程建档和教学资料库。
+- **业务服务**：包括资料检索、消息推送、专属大模型和成绩录入。
+- **鉴权服务**：负责用户权限的管理和验证。
+- **系统监控**：负责系统的日志记录和监控。
+
+
+```plaintext
++---------------------+
+|    用户前端界面     |
++---------------------+
+           |
+           v
++---------------------+
+|      后端服务       |  <---> 数据库
+|  (Spring Boot)      |
++---------------------+
+           |
+           v
++---------------------+
+|   第三方服务模块   |
+|  (AI处理, API调用) |
++---------------------+
+```
+
+```mermaid
+sequenceDiagram
+    participant 用户
+    participant 学生系统
+    participant 数据库
+
+    用户->>学生系统: 输入学生信息
+    学生系统->>数据库: 保存学生信息
+    数据库-->>学生系统: 数据保存成功
+    学生系统-->>用户: 提示保存成功
