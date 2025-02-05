@@ -7,7 +7,7 @@ import com.hms.main.summary.domain.HsmSummary;
  * 财务汇总主Service接口
  * 
  * @author CYQ
- * @date 2025-01-28
+ * @date 2025-02-05
  */
 public interface IHsmSummaryService 
 {

@@ -11,7 +11,7 @@ import com.hms.common.core.domain.BaseEntity;
  * 财务汇总主对象 hsm_summary
  * 
  * @author CYQ
- * @date 2025-01-28
+ * @date 2025-02-05
  */
 public class HsmSummary extends BaseEntity
 {

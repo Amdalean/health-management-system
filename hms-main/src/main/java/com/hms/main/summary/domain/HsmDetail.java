@@ -10,7 +10,7 @@ import com.hms.common.core.domain.BaseEntity;
  * 财务明细子表对象 hsm_detail
  * 
  * @author CYQ
- * @date 2025-01-28
+ * @date 2025-02-05
  */
 public class HsmDetail extends BaseEntity
 {
@@ -38,6 +38,10 @@ public class HsmDetail extends BaseEntity
     /** 变化量 */
     @Excel(name = "变化量")
     private BigDecimal changeAmount;
+
+    /** 名称 */
+    @Excel(name = "名称")
+    private String name;
 
     public void setId(Long id) 
     {
@@ -93,6 +97,15 @@ public class HsmDetail extends BaseEntity
     {
         return changeAmount;
     }
+    public void setName(String name) 
+    {
+        this.name = name;
+    }
+
+    public String getName() 
+    {
+        return name;
+    }
 
     @Override
     public String toString() {
@@ -104,6 +117,7 @@ public class HsmDetail extends BaseEntity
             .append("amount", getAmount())
             .append("changeAmount", getChangeAmount())
             .append("remark", getRemark())
+            .append("name", getName())
             .toString();
     }
 }
