@@ -20,7 +20,7 @@ public class CurlToJavaHttpClient {
                     .header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
                     .header("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImxvZ2luX3Rva2Vuczo1OTA0NWZiMC0wYTkxLTRlYmEtYWI4MC1lZDU2ZGExODU0ZDgifQ.7Srtd7A6cX1t1y3mUYMgTtGqw6mzv6wBMZYlJl_8_ADb_2Vsfhluv7eWiMyq4Ej985smtk7nLvflh4HYfhMA3w")
 //                    .header("Content-Length", "0")
-                    .header("Cookie", "acw_tc=1a0c638d17314075781243721e0049f1e67d29c570c6d3944ad77568ddbc5a; Hm_lvt_79cba97204629d9fcf1ed81661fa43d3=1730611832,1731407581; HMACCOUNT=7F7416303E2B4DE3; community-web-Token=eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImxvZ2luX3Rva2Vuczo1OTA0NWZiMC0wYTkxLTRlYmEtYWI4MC1lZDU2ZGExODU0ZDgifQ.7Srtd7A6cX1t1y3mUYMgTtGqw6mzv6wBMZYlJl_8_ADb_2Vsfhluv7eWiMyq4Ej985smtk7nLvflh4HYfhMA3w; Hm_lpvt_79cba97204629d9fcf1ed81661fa43d3=1731407873")
+                    .header("Cookie", "acw_tc=1a0c640817325855537104061e00699f606706643ecadac8b79633dee0fbb6; Hm_lvt_79cba97204629d9fcf1ed81661fa43d3=1730611832,1731407581; HMACCOUNT=7F7416303E2B4DE3; community-web-Token=eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImxvZ2luX3Rva2Vuczo1OTA0NWZiMC0wYTkxLTRlYmEtYWI4MC1lZDU2ZGExODU0ZDgifQ.7Srtd7A6cX1t1y3mUYMgTtGqw6mzv6wBMZYlJl_8_ADb_2Vsfhluv7eWiMyq4Ej985smtk7nLvflh4HYfhMA3w; Hm_lpvt_79cba97204629d9fcf1ed81661fa43d3=1731407873")
                     .header("Origin", "https://community.yonyou.com")
                     .header("Priority", "u=1, i")
                     .header("Referer", "https://community.yonyou.com/profile/index")
