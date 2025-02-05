@@ -20,7 +20,7 @@
             />
          </el-form-item>
          <el-form-item label="系统内置" prop="configType">
-            <el-select v-model="queryParams.configType" placeholder="系统内置" clearable>
+            <el-select v-model="queryParams.configType" placeholder="系统内置" clearable style="width: 240px">
                <el-option
                   v-for="dict in sys_yes_no"
                   :key="dict.value"
@@ -139,7 +139,7 @@
                <el-input v-model="form.configKey" placeholder="请输入参数键名" />
             </el-form-item>
             <el-form-item label="参数键值" prop="configValue">
-               <el-input v-model="form.configValue" placeholder="请输入参数键值" />
+               <el-input v-model="form.configValue" type="textarea" placeholder="请输入参数键值" />
             </el-form-item>
             <el-form-item label="系统内置" prop="configType">
                <el-radio-group v-model="form.configType">

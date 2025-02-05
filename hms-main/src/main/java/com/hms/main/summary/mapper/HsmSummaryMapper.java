@@ -8,7 +8,7 @@ import com.hms.main.summary.domain.HsmDetail;
  * 财务汇总主Mapper接口
  * 
  * @author CYQ
- * @date 2025-01-28
+ * @date 2025-02-05
  */
 public interface HsmSummaryMapper 
 {
