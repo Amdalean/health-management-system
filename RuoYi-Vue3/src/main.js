@@ -42,6 +42,8 @@ import ImageUpload from "@/components/ImageUpload"
 import ImagePreview from "@/components/ImagePreview"
 // 字典标签组件
 import DictTag from '@/components/DictTag'
+// add by CYQ 2025年3月15日 文件预览组件
+import FilePreview from '@/components/FilePreview'
 
 const app = createApp(App)
 
@@ -63,6 +65,7 @@ app.component('ImageUpload', ImageUpload)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('Editor', Editor)
+app.component('FilePreview', FilePreview)
 
 app.use(router)
 app.use(store)

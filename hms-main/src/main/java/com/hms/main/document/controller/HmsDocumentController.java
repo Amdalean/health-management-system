@@ -19,13 +19,12 @@ import com.hms.common.enums.BusinessType;
 import com.hms.main.document.domain.HmsDocument;
 import com.hms.main.document.service.IHmsDocumentService;
 import com.hms.common.utils.poi.ExcelUtil;
-import com.hms.common.core.page.TableDataInfo;
 
 /**
  * 资料库管理Controller
  * 
  * @author CYQ
- * @date 2025-01-28
+ * @date 2025-03-15
  */
 @RestController
 @RequestMapping("/main/document")
@@ -39,11 +38,10 @@ public class HmsDocumentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('main:document:list')")
     @GetMapping("/list")
-    public TableDataInfo list(HmsDocument hmsDocument)
+    public AjaxResult list(HmsDocument hmsDocument)
     {
-        startPage();
         List<HmsDocument> list = hmsDocumentService.selectHmsDocumentList(hmsDocument);
-        return getDataTable(list);
+        return success(list);
     }
 
     /**
