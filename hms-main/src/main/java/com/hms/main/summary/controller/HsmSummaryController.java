@@ -70,6 +70,17 @@ public class HsmSummaryController extends BaseController
     }
 
     /**
+     * 获取财务汇总主详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('main:summary:init')")
+    @GetMapping(value = "/init")
+    public AjaxResult getInit()
+    {
+        return success(hsmSummaryService.initHsmSummary());
+//        return success(null);
+    }
+
+    /**
      * 新增财务汇总主
      */
     @PreAuthorize("@ss.hasPermi('main:summary:add')")

@@ -16,7 +16,12 @@ export function getSummary(id) {
     method: 'get'
   })
 }
-
+export function initSummary() {
+  return request({
+    url: '/main/summary/init/',
+    method: 'get'
+  })
+}
 // 新增财务汇总主
 export function addSummary(data) {
   return request({

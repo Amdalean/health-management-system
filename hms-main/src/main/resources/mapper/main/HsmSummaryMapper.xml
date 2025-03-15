@@ -135,4 +135,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ( #{item.id}, #{item.summaryId}, #{item.category}, #{item.type}, #{item.amount}, #{item.changeAmount}, #{item.remark}, #{item.name})
         </foreach>
     </insert>
+
+    <select id="selectHsmDetailByDate" parameterType="Integer" resultMap="HsmSummaryHsmDetailResult">
+        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit
+        from hsm_summary
+        where year = #{year} and month = #{month}
+    </select>
 </mapper>

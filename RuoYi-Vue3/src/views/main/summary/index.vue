@@ -256,7 +256,7 @@
 </template>
 
 <script setup name="Summary">
-import {listSummary, getSummary, delSummary, addSummary, updateSummary} from "@/api/main/summary";
+import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary} from "@/api/main/summary";
 
 const {proxy} = getCurrentInstance();
 const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 'month');
@@ -461,10 +461,17 @@ function handleSelectionChange(selection) {
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
+  addAfter();
   open.value = true;
   title.value = "添加财务汇总主表";
 }
-
+/** 新增前自动填充上月数据 */
+function addAfter(){
+  initSummary().then(response=>{
+    form.value.startDeposit = response.data.endDeposit;
+    debugger
+  })
+}
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();

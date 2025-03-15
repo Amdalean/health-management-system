@@ -9,6 +9,7 @@ import com.hms.main.summary.domain.HsmSummary;
  * @author CYQ
  * @date 2025-02-05
  */
+//@Component
 public interface IHsmSummaryService 
 {
     /**
@@ -58,4 +59,10 @@ public interface IHsmSummaryService
      * @return 结果
      */
     public int deleteHsmSummaryById(Long id);
+    /**
+     * 初始化财务汇总主信息
+     *
+     * @return 财务汇总主
+     */
+    public HsmSummary initHsmSummary();
 }
