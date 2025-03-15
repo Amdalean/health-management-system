@@ -13,22 +13,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="categoryId"    column="category_id"    />
         <result property="uploaderId"    column="uploader_id"    />
+        <result property="pid"    column="pid"    />
     </resultMap>
 
     <sql id="selectHmsDocumentVo">
-        select id, file_name, file_path, file_type, upload_time, description, category_id, uploader_id from hms_document
+        select id, file_name, file_path, file_type, upload_time, description, category_id, uploader_id, pid from hms_document
     </sql>
 
     <select id="selectHmsDocumentList" parameterType="HmsDocument" resultMap="HmsDocumentResult">
         <include refid="selectHmsDocumentVo"/>
         <where>  
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
-            <if test="filePath != null  and filePath != ''"> and file_path = #{filePath}</if>
             <if test="fileType != null  and fileType != ''"> and file_type = #{fileType}</if>
             <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="categoryId != null "> and category_id = #{categoryId}</if>
-            <if test="uploaderId != null "> and uploader_id = #{uploaderId}</if>
+            <if test="pid != null "> and pid = #{pid}</if>
         </where>
     </select>
     
@@ -41,21 +40,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into hms_document
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="fileName != null and fileName != ''">file_name,</if>
-            <if test="filePath != null and filePath != ''">file_path,</if>
+            <if test="filePath != null">file_path,</if>
             <if test="fileType != null">file_type,</if>
             <if test="uploadTime != null">upload_time,</if>
             <if test="description != null">description,</if>
             <if test="categoryId != null">category_id,</if>
             <if test="uploaderId != null">uploader_id,</if>
+            <if test="pid != null">pid,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileName != null and fileName != ''">#{fileName},</if>
-            <if test="filePath != null and filePath != ''">#{filePath},</if>
+            <if test="filePath != null">#{filePath},</if>
             <if test="fileType != null">#{fileType},</if>
             <if test="uploadTime != null">#{uploadTime},</if>
             <if test="description != null">#{description},</if>
             <if test="categoryId != null">#{categoryId},</if>
             <if test="uploaderId != null">#{uploaderId},</if>
+            <if test="pid != null">#{pid},</if>
          </trim>
     </insert>
 
@@ -63,12 +64,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update hms_document
         <trim prefix="SET" suffixOverrides=",">
             <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
-            <if test="filePath != null and filePath != ''">file_path = #{filePath},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
             <if test="fileType != null">file_type = #{fileType},</if>
             <if test="uploadTime != null">upload_time = #{uploadTime},</if>
             <if test="description != null">description = #{description},</if>
             <if test="categoryId != null">category_id = #{categoryId},</if>
             <if test="uploaderId != null">uploader_id = #{uploaderId},</if>
+            <if test="pid != null">pid = #{pid},</if>
         </trim>
         where id = #{id}
     </update>
