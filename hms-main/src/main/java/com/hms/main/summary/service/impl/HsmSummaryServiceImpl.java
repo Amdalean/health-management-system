@@ -1,6 +1,8 @@
 package com.hms.main.summary.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
+
 import com.hms.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,6 +108,18 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     {
         hsmSummaryMapper.deleteHsmDetailBySummaryId(id);
         return hsmSummaryMapper.deleteHsmSummaryById(id);
+    }
+
+    @Override
+    public HsmSummary initHsmSummary() {
+        LocalDate date = getLastMonth();
+        HsmSummary data = hsmSummaryMapper.selectHsmDetailByDate(date.getYear(),date.getMonth().getValue());
+        return data;
+    }
+    private static LocalDate getLastMonth() {
+        LocalDate date = LocalDate.now();
+        // 获取上一个月的日期
+        return date.minusMonths(1);
     }
 
     /**

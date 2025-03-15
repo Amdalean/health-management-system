@@ -3,6 +3,7 @@ package com.hms.main.summary.mapper;
 import java.util.List;
 import com.hms.main.summary.domain.HsmSummary;
 import com.hms.main.summary.domain.HsmDetail;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 财务汇总主Mapper接口
@@ -84,4 +85,8 @@ public interface HsmSummaryMapper
      * @return 结果
      */
     public int deleteHsmDetailBySummaryId(Long id);
+    /**
+     * 根据年月查询数据
+     * */
+    public HsmSummary selectHsmDetailByDate(@Param("year")Integer year, @Param("month")Integer month);
 }
