@@ -71,7 +71,6 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column label="文件名称" prop="fileName" />
-      <el-table-column label="文件路径" align="center" prop="filePath" />
       <el-table-column label="文件类型" align="center" prop="fileType" />
       <el-table-column label="上传时间" align="center" prop="uploadTime" width="180">
         <template #default="scope">
@@ -84,7 +83,6 @@
           <dict-tag :options="category" :value="scope.row.categoryId"/>
         </template>
       </el-table-column>
-      <el-table-column label="上传者ID" align="center" prop="uploaderId" />
       <el-table-column label="上级id" align="center" prop="pid" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
@@ -125,9 +123,6 @@
               :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="上传者ID" prop="uploaderId">
-          <el-input v-model="form.uploaderId" placeholder="请输入上传者ID" />
         </el-form-item>
         <el-form-item label="上级id" prop="pid">
           <el-tree-select
