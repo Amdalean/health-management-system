@@ -97,10 +97,10 @@
     <!-- 添加或修改资料库管理对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="documentRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="文件名称" prop="fileName">
+        <el-form-item label="资料名称" prop="fileName">
           <el-input v-model="form.fileName" placeholder="请输入文件名称" />
         </el-form-item>
-        <el-form-item label="文件路径" prop="filePath">
+        <el-form-item label="上传文件" prop="filePath">
           <file-upload v-model="form.filePath"/>
         </el-form-item>
         <el-form-item label="上传时间" prop="uploadTime">
@@ -258,6 +258,7 @@ function handleAdd(row) {
   } else {
     form.value.pid = 0;
   }
+  form.value.uploadTime = new Date().toISOString().slice(0, 10); // 设置上传时间为当前日期
   open.value = true;
   title.value = "添加资料库管理";
 }

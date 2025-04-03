@@ -69,6 +69,14 @@
             <span>更新日志</span>
           </div>
           <el-collapse accordion>
+            
+            <el-collapse-item title="v0.1.1 - 2025-04-03">
+              <ol>
+                <li>1.调整上传文件大小限制</li>
+                <li>2.调整上传上传类型限制</li>
+                <li>3.上传资料时会自动带出时间</li>
+              </ol>
+            </el-collapse-item>
             <el-collapse-item title="v0.1.0 - 2024-10-17">
               <ol>
                 <li>健康管理系统发布</li>
