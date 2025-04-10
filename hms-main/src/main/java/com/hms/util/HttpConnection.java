@@ -7,7 +7,7 @@
 //import java.net.http.HttpResponse;
 //
 //public class HttpConnection {
-//    public static String sendGET(final String url) throws IOException, InterruptedException {
+//    public static String sendGET(String url) throws IOException, InterruptedException {
 //        // 创建HttpClient实例
 //        HttpClient client = HttpClient.newHttpClient();
 //        // 创建HttpRequest实例
@@ -26,6 +26,5 @@
 //        // 输出响应体
 //        System.out.println("Response Body : " + response.body());
 //        return response.body();
-//
 //    }
 //}

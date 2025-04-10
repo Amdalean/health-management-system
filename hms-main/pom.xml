@@ -70,15 +70,6 @@
             <version>0.4.17</version> <!-- 请检查最新版本 -->
         </dependency>
 
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-crypto</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
