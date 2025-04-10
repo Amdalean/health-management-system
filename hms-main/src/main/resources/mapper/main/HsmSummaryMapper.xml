@@ -141,4 +141,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from hsm_summary
         where year = #{year} and month = #{month}
     </select>
+    <select id="selectLastData" resultMap="HsmSummaryHsmDetailResult">
+        select * from hsm_summary order by year,month desc limit 1
+    </select>
+    <select id="selectLastDetail" resultMap="HsmDetailResult">
+        select d.* from hsm_detail d
+        inner join (select id from hsm_summary order by year,month desc limit 1)s on s.id=d.summary_id
+    </select>
 </mapper>

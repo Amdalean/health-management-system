@@ -16,6 +16,7 @@ export function getSummary(id) {
     method: 'get'
   })
 }
+//查询上月数据
 export function initSummary() {
   return request({
     url: '/main/summary/init/',

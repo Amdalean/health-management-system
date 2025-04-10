@@ -85,8 +85,14 @@ public interface HsmSummaryMapper
      * @return 结果
      */
     public int deleteHsmDetailBySummaryId(Long id);
+    /** 查询待维护的最新期间 */
+    public String getLastData();
     /**
      * 根据年月查询数据
      * */
     public HsmSummary selectHsmDetailByDate(@Param("year")Integer year, @Param("month")Integer month);
+    /** 查询最新数据 */
+    public HsmSummary selectLastData();
+    /** 查询最新明细 */
+    public List<HsmDetail> selectLastDetail();
 }
