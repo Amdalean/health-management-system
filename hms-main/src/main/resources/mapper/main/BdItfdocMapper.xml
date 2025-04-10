@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.itfdoc.mapper.BdItfdocMapper">
+    
+    <resultMap type="BdItfdoc" id="BdItfdocResult">
+        <result property="pkItfdoc"    column="pk_itfdoc"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="runclass"    column="runclass"    />
+        <result property="sender"    column="sender"    />
+        <result property="receive"    column="receive"    />
+        <result property="memo"    column="memo"    />
+        <result property="enablestate"    column="enablestate"    />
+        <result property="loglevel"    column="loglevel"    />
+        <result property="warn"    column="warn"    />
+        <result property="enlevel"    column="enlevel"    />
+    </resultMap>
+
+    <sql id="selectBdItfdocVo">
+        select pk_itfdoc, code, name, runclass, sender, receive, memo, enablestate, loglevel, warn, enlevel from bd_itfdoc
+    </sql>
+
+    <select id="selectBdItfdocList" parameterType="BdItfdoc" resultMap="BdItfdocResult">
+        <include refid="selectBdItfdocVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="runclass != null  and runclass != ''"> and runclass = #{runclass}</if>
+            <if test="sender != null  and sender != ''"> and sender = #{sender}</if>
+            <if test="receive != null  and receive != ''"> and receive = #{receive}</if>
+            <if test="memo != null  and memo != ''"> and memo = #{memo}</if>
+            <if test="enablestate != null "> and enablestate = #{enablestate}</if>
+            <if test="loglevel != null "> and loglevel = #{loglevel}</if>
+            <if test="warn != null  and warn != ''"> and warn = #{warn}</if>
+            <if test="enlevel != null "> and enlevel = #{enlevel}</if>
+        </where>
+    </select>
+    
+    <select id="selectBdItfdocByPkItfdoc" parameterType="Long" resultMap="BdItfdocResult">
+        <include refid="selectBdItfdocVo"/>
+        where pk_itfdoc = #{pkItfdoc}
+    </select>
+
+    <insert id="insertBdItfdoc" parameterType="BdItfdoc">
+        insert into bd_itfdoc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pkItfdoc != null">pk_itfdoc,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="runclass != null">runclass,</if>
+            <if test="sender != null">sender,</if>
+            <if test="receive != null">receive,</if>
+            <if test="memo != null">memo,</if>
+            <if test="enablestate != null">enablestate,</if>
+            <if test="loglevel != null">loglevel,</if>
+            <if test="warn != null">warn,</if>
+            <if test="enlevel != null">enlevel,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pkItfdoc != null">#{pkItfdoc},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="runclass != null">#{runclass},</if>
+            <if test="sender != null">#{sender},</if>
+            <if test="receive != null">#{receive},</if>
+            <if test="memo != null">#{memo},</if>
+            <if test="enablestate != null">#{enablestate},</if>
+            <if test="loglevel != null">#{loglevel},</if>
+            <if test="warn != null">#{warn},</if>
+            <if test="enlevel != null">#{enlevel},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBdItfdoc" parameterType="BdItfdoc">
+        update bd_itfdoc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="runclass != null">runclass = #{runclass},</if>
+            <if test="sender != null">sender = #{sender},</if>
+            <if test="receive != null">receive = #{receive},</if>
+            <if test="memo != null">memo = #{memo},</if>
+            <if test="enablestate != null">enablestate = #{enablestate},</if>
+            <if test="loglevel != null">loglevel = #{loglevel},</if>
+            <if test="warn != null">warn = #{warn},</if>
+            <if test="enlevel != null">enlevel = #{enlevel},</if>
+        </trim>
+        where pk_itfdoc = #{pkItfdoc}
+    </update>
+
+    <delete id="deleteBdItfdocByPkItfdoc" parameterType="Long">
+        delete from bd_itfdoc where pk_itfdoc = #{pkItfdoc}
+    </delete>
+
+    <delete id="deleteBdItfdocByPkItfdocs" parameterType="String">
+        delete from bd_itfdoc where pk_itfdoc in 
+        <foreach item="pkItfdoc" collection="array" open="(" separator="," close=")">
+            #{pkItfdoc}
+        </foreach>
+    </delete>
+</mapper>
