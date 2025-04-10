@@ -3,6 +3,9 @@ package com.hms.main.summary.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hms.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,10 +114,17 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     }
 
     @Override
-    public HsmSummary initHsmSummary() {
+    public JSONObject initHsmSummary() {
         LocalDate date = getLastMonth();
-        HsmSummary data = hsmSummaryMapper.selectHsmDetailByDate(date.getYear(),date.getMonth().getValue());
-        return data;
+//        HsmSummary data = hsmSummaryMapper.selectHsmDetailByDate(date.getYear(),date.getMonth().getValue());
+        HsmSummary data = hsmSummaryMapper.selectLastData();
+        List<HsmDetail> detail = hsmSummaryMapper.selectLastDetail();
+        JSONObject json = new JSONObject();
+        String head = JSONObject.toJSONString(data);
+        String items = JSONArray.toJSONString(detail);
+        json.put("head",JSONObject.parse(head));
+        json.put("items",JSONArray.parse(items));
+        return json;
     }
     private static LocalDate getLastMonth() {
         LocalDate date = LocalDate.now();

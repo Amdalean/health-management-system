@@ -230,7 +230,7 @@
           </el-table-column>
           <el-table-column label="金额" prop="amount" width="150">
             <template #default="scope">
-              <el-input v-model="scope.row.amount" placeholder="请输入金额" @input="afterEvent" />
+              <el-input v-model="scope.row.amount" placeholder="请输入金额" @input="afterEvent(scope.row)" />
             </template>
           </el-table-column>
           <el-table-column label="变化量" prop="changeAmount" width="150">
@@ -351,19 +351,11 @@ function reset() {
     endDeposit: 0
   };
   hsmDetailList.value = [];
-  setDefault();
   proxy.resetForm("summaryRef");
 }
 /**add by CYQ 2025年2月5日 增加默认赋值 */
 function setDefault() {
-  // 获取当前日期
-  const now = new Date();
-  // 获取当前年份
-  const currentYear = ref(now.getFullYear());
-  // 获取当前月份（0-11，需要 +1）
-  const currentMonth = ref(now.getMonth() + 1);
-  form.value.year = currentYear;
-  form.value.month = currentMonth;
+
 
   hsmDetailList.value =[
     {
@@ -462,14 +454,35 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   addAfter();
+  // setDefault();
   open.value = true;
   title.value = "添加财务汇总主表";
 }
 /** 新增前自动填充上月数据 */
 function addAfter(){
+  // const month = row.month
   initSummary().then(response=>{
-    form.value.startDeposit = response.data.endDeposit;
-    debugger
+    form.value.startDeposit = response.data.head.endDeposit;
+    let date = new Date(response.data.head.year, response.data.head.month - 1);
+    // 设置为下一个月的第一天
+    date.setMonth(date.getMonth() + 1);
+    // 获取年份和月份，getMonth()返回值需要加1以转换为实际月份
+    let nextYear = date.getFullYear();
+    let nextMonth = date.getMonth() + 1;
+
+    form.value.year = nextYear;
+    form.value.month = nextMonth;
+    let items = response.data.items;
+    items.forEach((detail, index) => {
+      debugger
+      detail.index = index + 1;
+      detail.summaryId = null; // 清空主表ID
+      detail.id = null; // 清空ID
+      detail.changeAmount = detail.amount * -1; // 设置变化量
+      detail.changeAmountOld = detail.amount * -1; // 设置原始变化量
+      detail.amount = 0; // 清空金额
+    });
+    hsmDetailList.value = items;
   })
 }
 /** 修改按钮操作 */
@@ -484,11 +497,19 @@ function handleUpdate(row) {
   });
 }
 /** add by CYQ 2025年2月5日 编辑后回写表头金额 */
-function afterEvent() {
+function afterEvent(row) {
   debugger
   let sum = sumAmount(hsmDetailList.value);//汇总表体获得月底余额
   form.value.endDeposit = sum;//月底余额
   form.value.balance = subtractValues(sum,form.value.startDeposit)//计算结余，月底余额-月初余额
+  //回写表体变化量
+  hsmDetailList.value.forEach((item) => {
+    if(item.index == row.index){
+      let amount = item.changeAmountOld===null?0:item.changeAmountOld;
+      item.changeAmount = amount + (Number(row.amount) || 0); // 设置金额
+    }
+  });
+
 }
 /** 提交按钮 */
 function submitForm() {

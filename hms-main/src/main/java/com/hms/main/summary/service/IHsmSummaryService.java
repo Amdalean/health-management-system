@@ -1,6 +1,8 @@
 package com.hms.main.summary.service;
 
 import java.util.List;
+
+import com.alibaba.fastjson.JSONObject;
 import com.hms.main.summary.domain.HsmSummary;
 
 /**
@@ -64,5 +66,5 @@ public interface IHsmSummaryService
      *
      * @return 财务汇总主
      */
-    public HsmSummary initHsmSummary();
+    public JSONObject initHsmSummary();
 }
