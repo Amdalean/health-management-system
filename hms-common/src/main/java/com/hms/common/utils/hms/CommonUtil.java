@@ -14,7 +14,8 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
+import com.hms.common.exception.base.BaseException;
 
 
 /**
@@ -77,12 +78,12 @@ public class CommonUtil {
 	}
 	/** JSON格式的String转MAP
 	 * @throws Exception */
-	public static Map initMap(Object str) throws Exception{
+	public static Map initMap(Object str) throws BaseException{
 		try {
 			return JSON.parseObject(initstr(str), HashMap.class);
 		} catch (Exception e) {
 			// TODO: handle exception
-			throw new Exception("初始化JSON失败,"+e.getMessage());
+			throw new BaseException("初始化JSON失败,"+e.getMessage());
 		}
 	}
 //	/** JSON格式的String转MAP
@@ -103,7 +104,7 @@ public class CommonUtil {
 	 * 创建时间：2018年8月27日-下午1:25:23
 	 * @throws Exception
 	 */
-	public static Properties getWSAddress() throws Exception {
+	public static Properties getWSAddress() throws BaseException {
 		props = new Properties();
 		String filePath = "/resources/sip/sipconfig.properties";
 		InputStream in = null ;
@@ -111,7 +112,7 @@ public class CommonUtil {
 				in = new BufferedInputStream (new FileInputStream(filePath));
 				props.load(in);
 	       } catch (IOException e) {
-				throw new Exception("配置文件加载异常,"+e.getMessage());
+				throw new BaseException("配置文件加载异常,"+e.getMessage());
 			}
 			return props;
 	}
