@@ -132,3 +132,8 @@ qwen:
   apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
   model: qwq-plus
   apiKey: sk-REDACTED
+
+mail:
+  we: user@example.com,user@example.com
+  me: user@example.com
+  mailkey: 

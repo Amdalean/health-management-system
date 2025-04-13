@@ -4,14 +4,14 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.hms.ai.qwen.Chat;
+import com.hms.common.config.MailConfig;
 import com.hms.common.exception.base.BaseException;
 import com.hms.common.utils.hms.CommonUtil;
 import com.hms.common.utils.hms.EmailUtil;
 import com.hms.common.utils.hms.MDUtil;
-import com.hms.common.utils.hms.UtilConstants;
-//import com.hms.ollama.Chat;
-//import com.hms.util.HttpConnection;
 import com.hms.common.utils.http.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -19,13 +19,23 @@ import java.util.Map;
 @Component("SendMaillTask")
 public class SendMaillTask {
 
+    private static final Logger log = LoggerFactory.getLogger(SendMaillTask.class);
+    private StringBuffer msg = new StringBuffer();
     private static CommonUtil util = new CommonUtil();
-    public void task() throws Exception {
-        String gd = getGDAPI();//获取明天天气
-        String gptbody = getgptMsg(gd);//通过qwen2获取信息
-        String html = MDUtil.mdtohtml(gptbody);
-        //发送邮件
-        EmailUtil.sendEmail(UtilConstants.MaillSender.we, "明日天气预报，请查收~", html);
+    public String task() throws Exception {
+        try {
+            msg = new StringBuffer();
+            String gd = getGDAPI();//获取明天天气
+            String gptbody = getgptMsg(gd);//通过qwen2获取信息
+            String html = MDUtil.mdtohtml(gptbody);
+            log.info("html正文：{}",html);
+            //发送邮件
+//            EmailUtil.sendEmail(MailConfig.getWe(), "明日天气预报，请查收~", "test");
+            EmailUtil.sendEmail(MailConfig.getWe(), "明日天气预报，请查收~", html);
+            return msg.toString();
+        }catch (Exception e){
+            throw new Exception(e);
+        }
     }
     /**
      * 获取明天的天气
@@ -36,7 +46,8 @@ public class SendMaillTask {
         //350206,厦门市湖里区
         String url = "https://restapi.amap.com/v3/weather/weatherInfo?key=9073e847b0ab5658da7bd99b6de16f34&city=350206&output=JSOM&extensions=all";
         String msg = HttpUtils.sendGet(url);
-        System.out.println("高德返回消息："+msg);
+        this.msg.append("\n高德返回消息："+msg);
+        log.info("高德返回消息:{}",msg);
         Map map = util.initMap(msg);
         String infocode = util.initstr(map.get("infocode"));
         if(!"10000".equals(infocode)) {
