@@ -18,7 +18,7 @@ import com.hms.quartz.service.ISysJobLogService;
 
 /**
  * 抽象quartz调用
- *
+ * Edit by CYQ 2025年4月10日 成功了也允许返回报文
  * @author ruoyi
  */
 public abstract class AbstractQuartzJob implements Job
@@ -38,16 +38,17 @@ public abstract class AbstractQuartzJob implements Job
         try
         {
             before(context, sysJob);
+            String msg = null;
             if (sysJob != null)
             {
-                doExecute(context, sysJob);
+                msg = doExecute(context, sysJob);
             }
-            after(context, sysJob, null);
+            after(context, sysJob, null,msg);
         }
         catch (Exception e)
         {
             log.error("任务执行异常  - ：", e);
-            after(context, sysJob, e);
+            after(context, sysJob, e,null);
         }
     }
 
@@ -68,7 +69,7 @@ public abstract class AbstractQuartzJob implements Job
      * @param context 工作执行上下文对象
      * @param sysJob 系统计划任务
      */
-    protected void after(JobExecutionContext context, SysJob sysJob, Exception e)
+    protected void after(JobExecutionContext context, SysJob sysJob, Exception e,String msg)
     {
         Date startTime = threadLocal.get();
         threadLocal.remove();
@@ -80,7 +81,8 @@ public abstract class AbstractQuartzJob implements Job
         sysJobLog.setStartTime(startTime);
         sysJobLog.setStopTime(new Date());
         long runMs = sysJobLog.getStopTime().getTime() - sysJobLog.getStartTime().getTime();
-        sysJobLog.setJobMessage(sysJobLog.getJobName() + " 总共耗时：" + runMs + "毫秒");
+        msg=msg==null?"":msg;
+        sysJobLog.setJobMessage(sysJobLog.getJobName() + " 总共耗时：" + runMs + "毫秒\n"+msg);
         if (e != null)
         {
             sysJobLog.setStatus(Constants.FAIL);
@@ -103,5 +105,5 @@ public abstract class AbstractQuartzJob implements Job
      * @param sysJob 系统计划任务
      * @throws Exception 执行过程中的异常
      */
-    protected abstract void doExecute(JobExecutionContext context, SysJob sysJob) throws Exception;
+    protected abstract String doExecute(JobExecutionContext context, SysJob sysJob) throws Exception;
 }

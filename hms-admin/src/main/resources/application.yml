@@ -132,3 +132,8 @@ qwen:
   apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
   model: qwq-plus
   apiKey: sk-d6e71773670f408c9b96e186c6e2dae4
+
+mail:
+  we: chenweidemail@163.com,15286891906@163.com
+  me: 15286891906@163.com
+  mailkey: WVYGSHROVOFNYQNW

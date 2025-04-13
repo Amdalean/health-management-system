@@ -7,12 +7,16 @@ import com.alibaba.fastjson2.JSONObject;
 import com.hms.common.config.QwenConfig;
 import com.hms.common.exception.base.BaseException;
 import com.hms.common.utils.http.HttpUtils;
+import com.hms.quartz.task.SendMaillTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Chat {
+    private static final Logger log = LoggerFactory.getLogger(Chat.class);
     public String getBody(String req) throws BaseException {
         //请将XX，YY替换为身份和昵称
         JSONObject json = new JSONObject();
@@ -29,6 +33,7 @@ public class Chat {
         messages.add(message2);
         json.put("messages", messages);
         json.put("stream", true);
+        log.info("请求内容:{}",json.toString());
 //        stream: true
 //        String url = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation?version-id=v1&task-group=aigc&task=text-generation&function-call=generation";
         String url = QwenConfig.getApiUrl();
@@ -56,7 +61,7 @@ public class Chat {
             return reasoning_content_line== null ? null : reasoning_content_line.toString();
         }).filter(Objects::nonNull) // 使用标准空值过滤
         .collect(Collectors.joining());
-        System.out.println(reasoning_content);
+        log.info("思考过程:{}",reasoning_content);
         String content = array.stream().map(v->{
                     JSONObject obj = (JSONObject)v;
                     JSONArray choices = (JSONArray)obj.get("choices");
@@ -66,7 +71,7 @@ public class Chat {
                     return content_line== null ? null : content_line.toString();
                 }).filter(Objects::nonNull) // 使用标准空值过滤
                 .collect(Collectors.joining());
-        System.out.println(content);
+        log.info("回答正文:{}",content);
 
 
 
