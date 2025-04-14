@@ -1,13 +1,10 @@
 package com.hms.ai.qwen;
 
-import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.hms.common.config.QwenConfig;
 import com.hms.common.exception.base.BaseException;
 import com.hms.common.utils.http.HttpUtils;
-import com.hms.quartz.task.SendMaillTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +22,7 @@ public class Chat {
 
         JSONObject message1 = new JSONObject();
         message1.put("role", "system");
-        message1.put("content", "伟大的多肉小姐姐收留了你,你必须写出真挚动人宠溺的情话来打动她!");
+        message1.put("content", "你的名字是诺玛,卡塞尔学院参考作者江南的《龙族》系列小说中的人工智能诺玛设计了你。你现在需要为我们的明日新星,干员多肉小姐提供帮助。回复请使用markdown语法。");
         JSONObject message2 = new JSONObject();
         message2.put("role", "user");
         message2.put("content", req);
