@@ -2,10 +2,7 @@ package com.hms.common.utils.hms;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -15,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 邮箱服务工具类
+ * memo by CYQ 2025年4月13日 此类已废弃，最终采用springboot的email工具
  */
 public class EmailUtil {
 
