@@ -2,7 +2,9 @@ package com.hms.ai.qwen;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.hms.common.annotation.Log;
 import com.hms.common.config.QwenConfig;
+import com.hms.common.enums.BusinessType;
 import com.hms.common.exception.base.BaseException;
 import com.hms.common.utils.http.HttpUtils;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 
 public class Chat {
     private static final Logger log = LoggerFactory.getLogger(Chat.class);
+
+    @Log(title = "获取qwen响应", businessType = BusinessType.OTHER)
     public String getBody(String req) throws BaseException {
         //请将XX，YY替换为身份和昵称
         JSONObject json = new JSONObject();

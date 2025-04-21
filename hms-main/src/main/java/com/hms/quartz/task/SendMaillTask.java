@@ -5,7 +5,9 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 //import com.hms.ai.qwen.Chat;
 import com.hms.ai.qwen.Chat;
+import com.hms.common.annotation.Log;
 import com.hms.common.config.MailConfig;
+import com.hms.common.enums.BusinessType;
 import com.hms.common.exception.base.BaseException;
 import com.hms.common.utils.hms.CommonUtil;
 import com.hms.common.utils.hms.MDUtil;
@@ -81,6 +83,8 @@ public class SendMaillTask {
             throw new RuntimeException(e);
         }
     }
+
+    @Log(title = "转换md文件", businessType = BusinessType.OTHER)
     public static String removeMarkdownTags(String s) {
         String startTag = "```markdown";
         String endTag = "```";
