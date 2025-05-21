@@ -106,6 +106,16 @@
             v-hasPermi="['main:summary:export']"
         >导出</el-button>
       </el-col>
+      <!-- 财务报表弹窗 -->
+      <el-col :span="1.5">
+        <el-button
+            type="warning"
+            plain
+            icon="Download"
+            @click="forms"
+            v-hasPermi="['main:summary:export']"
+        >统计报表</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -252,11 +262,27 @@
         </div>
       </template>
     </el-dialog>
+    <!-- 在template的el-dialog之后添加统计报表弹窗 -->
+    <el-dialog
+        title="财务统计报表"
+        v-model="showChartDialog"
+        width="90%"
+        top="5vh"
+        destroy-on-close
+    >
+      <FinanceChart :data="chartData" v-if="showChartDialog"/>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="showChartDialog = false">关 闭</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="Summary">
-import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary} from "@/api/main/summary";
+import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary} from "@/api/main/summary";
+import FinanceChart from '@/components/FinanceChart';
 
 const {proxy} = getCurrentInstance();
 const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 'month');
@@ -272,6 +298,10 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+// 新增弹窗控制变量和图表组件
+const showChartDialog = ref(false);
+const chartData = ref({ rows: [] });
+
 
 const data = reactive({
   form: {},
@@ -474,7 +504,6 @@ function addAfter(){
     form.value.month = nextMonth;
     let items = response.data.items;
     items.forEach((detail, index) => {
-      debugger
       detail.index = index + 1;
       detail.summaryId = null; // 清空主表ID
       detail.id = null; // 清空ID
@@ -617,6 +646,28 @@ function handleExport() {
   proxy.download('main/summary/export', {
     ...queryParams.value
   }, `summary_${new Date().getTime()}.xlsx`)
+}
+/** 显示统计报表 */
+function forms() {
+  formsSummary(queryParams.value).then(response => {
+    //请在此处引用forms.index.vue
+    // 处理返回数据格式
+    chartData.value = {
+      ...response,
+      rows: response.rows.map(item => ({
+        ...item,
+        // 确保数值类型正确
+        income: Number(item.income),
+        expense: Number(item.expense),
+        balance: Number(item.balance),
+        startDeposit: Number(item.startDeposit),
+        endDeposit: Number(item.endDeposit)
+      }))
+    };
+    showChartDialog.value = true;
+  }).catch(error => {
+    proxy.$modal.msgError("获取报表数据失败：" + error.message);
+  });
 }
 
 getList();
