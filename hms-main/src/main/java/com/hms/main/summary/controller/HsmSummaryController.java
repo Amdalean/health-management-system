@@ -112,4 +112,15 @@ public class HsmSummaryController extends BaseController
     {
         return toAjax(hsmSummaryService.deleteHsmSummaryByIds(ids));
     }
+    /**
+     * 查询财务报表数据
+     */
+//    @PreAuthorize("@ss.hasPermi('main:summary:list')")
+    @GetMapping("/forms")
+    public TableDataInfo forms(HsmSummary hsmSummary)
+    {
+        startPage();
+        List<HsmSummary> list = hsmSummaryService.selectHsmSummaryList(hsmSummary);
+        return getDataTable(list);
+    }
 }

@@ -48,3 +48,11 @@ export function delSummary(id) {
     method: 'delete'
   })
 }
+// 财务报表弹窗
+export function formsSummary(query) {
+  return request({
+    url: '/main/summary/forms',
+    method: 'get',
+    params: query
+  })
+}
