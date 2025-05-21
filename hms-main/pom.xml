@@ -24,7 +24,7 @@
     <artifactId>hms-main</artifactId>
 
     <description>
-        健康管理系统主模块
+        T1大健康主模块
     </description>
 
     <dependencies>
