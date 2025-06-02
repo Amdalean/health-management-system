@@ -270,7 +270,7 @@
         top="5vh"
         destroy-on-close
     >
-      <FinanceChart :data="chartData" v-if="showChartDialog"/>
+      <FinanceChart :data=chartData v-if="showChartDialog" :chart-data="chartData" />
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="showChartDialog = false">关 闭</el-button>
@@ -278,11 +278,13 @@
       </template>
     </el-dialog>
   </div>
+<!--  <G2Demo />-->
 </template>
 
 <script setup name="Summary">
 import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary} from "@/api/main/summary";
-import FinanceChart from '@/components/FinanceChart';
+// import FinanceChart from '@/components/FinanceChart';
+import FinanceChart from '@/components/G2Demo';
 
 const {proxy} = getCurrentInstance();
 const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 'month');
@@ -649,22 +651,34 @@ function handleExport() {
 }
 /** 显示统计报表 */
 function forms() {
-  formsSummary(queryParams.value).then(response => {
-    //请在此处引用forms.index.vue
-    // 处理返回数据格式
-    chartData.value = {
-      ...response,
-      rows: response.rows.map(item => ({
-        ...item,
-        // 确保数值类型正确
-        income: Number(item.income),
-        expense: Number(item.expense),
-        balance: Number(item.balance),
-        startDeposit: Number(item.startDeposit),
-        endDeposit: Number(item.endDeposit)
-      }))
-    };
+  formsSummary().then(response => {
+    // response示例如下：
+    // {
+    //   "msg": "操作成功",
+    //     "code": 200,
+    //     "data": [
+    //   {
+    //     "date": "2025-1",
+    //     "expense": 12651.10
+    //   },
+    //   {
+    //     "date": "2025-2",
+    //     "expense": 5380.58
+    //   },
+    //   {
+    //     "date": "2025-3",
+    //     "expense": 2937.48
+    //   },
+    //   {
+    //     "date": "2025-4",
+    //     "expense": 7315.94
+    //   }
+    // ]
+    // }
+    chartData.value = response.data;
+    debugger
     showChartDialog.value = true;
+
   }).catch(error => {
     proxy.$modal.msgError("获取报表数据失败：" + error.message);
   });

@@ -51,8 +51,7 @@ export function delSummary(id) {
 // 财务报表弹窗
 export function formsSummary(query) {
   return request({
-    url: '/main/summary/forms',
-    method: 'get',
-    params: query
+    url: '/main/summary/checkExpense',
+    method: 'get'
   })
 }
