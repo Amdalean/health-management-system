@@ -25,7 +25,7 @@ const props = defineProps({
 });
 
 const chartContainer = ref(null);
-const chartType = ref('line');
+const chartType = ref('pie');
 let chartInstance = null;
 
 // 修改后的数据处理方法

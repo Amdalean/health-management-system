@@ -2,6 +2,9 @@ package com.hms.main.summary.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,14 +116,23 @@ public class HsmSummaryController extends BaseController
         return toAjax(hsmSummaryService.deleteHsmSummaryByIds(ids));
     }
     /**
-     * 查询财务报表数据
+     * 检查支出
      */
 //    @PreAuthorize("@ss.hasPermi('main:summary:list')")
-    @GetMapping("/forms")
-    public TableDataInfo forms(HsmSummary hsmSummary)
+    @GetMapping("/checkExpense")
+    public AjaxResult forms()
     {
-        startPage();
+//        startPage();
+        HsmSummary hsmSummary = new HsmSummary();
         List<HsmSummary> list = hsmSummaryService.selectHsmSummaryList(hsmSummary);
-        return getDataTable(list);
+        JSONArray array = new JSONArray();
+        list.stream().forEach(v->{
+            JSONObject json = new JSONObject();
+            json.put("date", v.getYear()+"-"+v.getMonth());
+            json.put("expense", v.getExpense());
+            array.add(json);
+        });
+
+        return success(array);
     }
 }
