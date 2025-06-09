@@ -270,12 +270,11 @@
         top="5vh"
         destroy-on-close
     >
-    
-    <div ref="container" id="container"></div>
-      <FinanceChart :data=chartData v-if="showChartDialog" :chart-data="chartData" />
+      <div ref="container" id="container"></div>
+      <FinanceChart :data="chartData" v-if="showChartDialog" />
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="showChartDialog = false">关 闭</el-button>
+          <el-button @click="closeChartDialog">关 闭</el-button>
         </div>
       </template>
     </el-dialog>
@@ -285,9 +284,8 @@
 
 <script setup name="Summary">
 import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary} from "@/api/main/summary";
-// import FinanceChart from '@/components/FinanceChart';
-import FinanceChart from '@/components/G2Demo';
-import { Chart } from '@antv/g2'
+import FinanceChart from '@/components/FinanceChart';
+// import FinanceChart from '@/components/G2Demo';
 
 const {proxy} = getCurrentInstance();
 const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 'month');
@@ -652,36 +650,17 @@ function handleExport() {
 /** 显示统计报表 */
 function forms() {
   formsSummary().then(response => {
-    // response示例如下：
-    // {
-    //   "msg": "操作成功",
-    //     "code": 200,
-    //     "data": [
-    //   {
-    //     "date": "2025-1",
-    //     "expense": 12651.10
-    //   },
-    //   {
-    //     "date": "2025-2",
-    //     "expense": 5380.58
-    //   },
-    //   {
-    //     "date": "2025-3",
-    //     "expense": 2937.48
-    //   },
-    //   {
-    //     "date": "2025-4",
-    //     "expense": 7315.94
-    //   }
-    // ]
-    // }
     chartData.value = response.data;
-    debugger
     showChartDialog.value = true;
-
   }).catch(error => {
     proxy.$modal.msgError("获取报表数据失败：" + error.message);
   });
+}
+
+/** 关闭统计报表 */
+function closeChartDialog() {
+  showChartDialog.value = false;
+  chartData.value = { rows: [] };
 }
 
 getList();
