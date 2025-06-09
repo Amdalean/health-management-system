@@ -1,138 +1,203 @@
 <template>
-  <!-- 保持模板部分不变 -->
-  <div>
-    <div style="margin-bottom: 20px">
-      <a-radio-group v-model:value="chartType">
-        <a-radio-button value="line">趋势图</a-radio-button>
-        <a-radio-button value="column">柱状图</a-radio-button>
-        <a-radio-button value="pie">占比图</a-radio-button>
-      </a-radio-group>
-    </div>
-    <div ref="chartContainer" class="chart-container"></div>
+  <div class="chart-container">
+    <div ref="chartRef" class="chart"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { Chart } from '@antv/g2';
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import * as echarts from 'echarts'
 
 const props = defineProps({
   data: {
-    type: Object,
-    required: true,
-    default: () => ({ rows: [] })
+    type: Array,
+    required: true
   }
-});
+})
 
-const chartContainer = ref(null);
-const chartType = ref('pie');
-let chartInstance = null;
+const chartRef = ref(null)
+let chart = null
 
-// 修改后的数据处理方法
-const processData = () => {
-  return props.data.rows.map(item => ({
-    month: `${item.year}-${String(item.month).padStart(2, '0')}`,
-    income: item.income,
-    expense: item.expense,
-    endDeposit: item.endDeposit,
-    balance: item.balance
-  }));
-};
+// 判断是否为移动端
+const isMobile = () => window.innerWidth <= 768
 
-// 修复后的创建图表方法
-const createChart = () => {
-  if (!chartContainer.value) return;
-
-  // 销毁旧实例
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
-
-  chartInstance = new Chart({
-    container: chartContainer.value,
-    autoFit: true,
-    height: 400,
-  });
-
-  updateChart();
-};
-
-// 更新后的图表配置方法
-const updateChart = () => {
-  if (!chartInstance) return;
-
-  const data = processData();
-  chartInstance.clear();
-  chartInstance.data(data);
-
-  switch (chartType.value) {
-    case 'line':
-      // 修改后的折线图配置
-      chartInstance
-          .line()
-          .encode('x', 'month')
-          .encode('y', 'value')
-          .encode('color', 'type')
-          .transform({
-            type: 'fold',
-            fields: ['income', 'expense', 'endDeposit'],
-            key: 'type',
-            value: 'value',
-          });
-      break;
-
-    case 'column':
-      // 修改后的柱状图配置
-      chartInstance
-          .interval()
-          .encode('x', 'month')
-          .encode('y', 'value')
-          .encode('color', 'type')
-          .transform({
-            type: 'fold',
-            fields: ['income', 'expense'],
-            key: 'type',
-            value: 'value',
-          })
-          .adjust('stack');
-      break;
-
-    case 'pie':
-      // 饼图配置保持不变
-      const totalIncome = data.reduce((sum, d) => sum + d.income, 0);
-      const pieData = [
-        { name: '总收入', value: totalIncome },
-        { name: '总支出', value: data.reduce((sum, d) => sum + d.expense, 0) }
-      ];
-      chartInstance
-          .interval()
-          .coordinate({ type: 'theta' })
-          .encode('y', 'value')
-          .encode('color', 'name')
-          .data(pieData);
-      break;
-  }
-
-  chartInstance.render();
-};
-
-// 生命周期管理保持不变
-onMounted(createChart);
-onBeforeUnmount(() => chartInstance?.destroy());
-
-// 修改后的监听逻辑
-watch(
-    () => [props.data, chartType.value],
-    () => {
-      createChart();
+// 获取图表配置
+const getChartOption = (data) => {
+  const mobile = isMobile()
+  const isHorizontal = mobile // 移动端横向显示
+  
+  return {
+    tooltip: {
+      trigger: 'axis',
+      confine: true,
+      formatter: (params) => {
+        const param = params[0]
+        return `${param.name}<br/>${param.seriesName}: ${param.value}`
+      }
     },
-    { deep: true }
-);
+    grid: {
+      left: mobile ? '15%' : '3%',
+      right: mobile ? '5%' : '4%',
+      bottom: mobile ? '5%' : '15%',
+      top: mobile ? '5%' : '10%',
+      containLabel: true
+    },
+    xAxis: {
+      type: isHorizontal ? 'value' : 'category',
+      data: isHorizontal ? null : data.map(item => item.date),
+      name: isHorizontal ? '支出' : '日期',
+      nameLocation: 'middle',
+      nameGap: mobile ? 20 : 30,
+      axisLabel: {
+        show: true,
+        rotate: isHorizontal ? 0 : 45,
+        margin: mobile ? 8 : 15,
+        fontSize: mobile ? 10 : 12,
+        color: '#666',
+        formatter: (value) => {
+          if (isHorizontal) {
+            return (value / 1000).toFixed(1) + 'k'
+          }
+          const [year, month] = value.split('-')
+          return mobile ? month + '月' : value
+        }
+      }
+    },
+    yAxis: {
+      type: isHorizontal ? 'category' : 'value',
+      data: isHorizontal ? data.map(item => item.date) : null,
+      name: isHorizontal ? '日期' : '支出',
+      nameLocation: 'middle',
+      nameGap: mobile ? 30 : 40,
+      axisLabel: {
+        fontSize: mobile ? 10 : 12,
+        color: '#666',
+        formatter: (value) => {
+          if (!isHorizontal) {
+            return (value / 1000).toFixed(1) + 'k'
+          }
+          const [year, month] = value.split('-')
+          return mobile ? month + '月' : value
+        }
+      }
+    },
+    series: [{
+      data: data.map(item => ({
+        value: item.expense,
+        itemStyle: {
+          color: '#1890ff'
+        }
+      })),
+      type: 'bar',
+      barWidth: mobile ? '60%' : '40%',
+      itemStyle: {
+        color: '#1890ff',
+        borderRadius: [4, 4, 0, 0]
+      }
+    }],
+    animation: true,
+    animationDuration: 1000,
+    animationEasing: 'cubicInOut'
+  }
+}
+
+// 初始化图表
+const initChart = (data) => {
+  if (chart) {
+    chart.dispose()
+  }
+  
+  const mobile = isMobile()
+  chart = echarts.init(chartRef.value, null, {
+    renderer: 'canvas',
+    useDirtyRect: false,
+    width: mobile ? 300 : 'auto',
+    height: mobile ? 200 : 'auto'
+  })
+  
+  chart.setOption(getChartOption(data))
+}
+
+// 处理图表大小变化
+const handleResize = () => {
+  if (chart) {
+    chart.resize()
+  }
+}
+
+// 处理触摸事件
+const handleTouchStart = (e) => {
+  if (chart) {
+    chart.dispatchAction({
+      type: 'showTip',
+      seriesIndex: 0,
+      dataIndex: Math.floor(e.touches[0].clientX / (chartRef.value.clientWidth / props.data.length))
+    })
+  }
+}
+
+const handleTouchEnd = () => {
+  if (chart) {
+    chart.dispatchAction({
+      type: 'hideTip'
+    })
+  }
+}
+
+// 生命周期钩子
+onMounted(() => {
+  initChart(props.data)
+  window.addEventListener('resize', handleResize)
+  chartRef.value.addEventListener('touchstart', handleTouchStart)
+  chartRef.value.addEventListener('touchend', handleTouchEnd)
+  setTimeout(handleResize, 100)
+})
+
+onUnmounted(() => {
+  if (chart) {
+    chart.dispose()
+    chart = null
+  }
+  window.removeEventListener('resize', handleResize)
+  if (chartRef.value) {
+    chartRef.value.removeEventListener('touchstart', handleTouchStart)
+    chartRef.value.removeEventListener('touchend', handleTouchEnd)
+  }
+})
+
+// 监听数据变化
+watch(
+  () => props.data,
+  (newData) => {
+    if (newData?.length) {
+      initChart(newData)
+    }
+  },
+  { deep: true }
+)
 </script>
 
-<style>
+<style scoped>
 .chart-container {
   width: 100%;
-  min-height: 400px;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  touch-action: none;
+}
+
+.chart {
+  flex: 1;
+  width: 100%;
+  min-height: 500px;
+  min-width: 800px;
+}
+
+@media screen and (max-width: 768px) {
+  .chart-container {
+    padding: 10px;
+  }
 }
 </style>
