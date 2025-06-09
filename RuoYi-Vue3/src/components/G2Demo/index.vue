@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <div ref="chartRef" style="width: 100%; height: 400px;"></div>
-    <div v-if="error" class="error-message">{{ error }}</div>
+  <div class="chart-container">
+    <div ref="chartRef" class="chart"></div>
   </div>
 </template>
 
@@ -16,79 +15,84 @@ const props = defineProps({
   }
 })
 
-const error = ref(null)
 const chartRef = ref(null)
 let chart = null
 
 const initChart = (data) => {
-  try {
-    if (chart) {
-      chart.dispose()
-    }
-    
-    chart = echarts.init(chartRef.value)
-    
-    const option = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '15%',
-        top: '3%',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        data: data.map(item => item.date),
-        name: '日期',
-        nameLocation: 'middle',
-        nameGap: 35,
-        axisLabel: {
-          interval: 0,
-          rotate: 30
-        }
-      },
-      yAxis: {
-        type: 'value',
-        name: '支出',
-        nameLocation: 'middle',
-        nameGap: 35
-      },
-      series: [
-        {
-          data: data.map(item => item.expense),
-          type: 'line',
-          smooth: true,
-          symbol: 'circle',
-          symbolSize: 8,
-          itemStyle: {
-            color: '#1890ff'
-          },
-          lineStyle: {
-            width: 2
-          }
-        }
-      ],
-      animation: false
-    }
-    
-    chart.setOption(option)
-  } catch (e) {
-    error.value = '图表初始化失败: ' + e.message
-    console.error('图表初始化错误:', e)
+  if (chart) {
+    chart.dispose()
   }
+  
+  chart = echarts.init(chartRef.value)
+  
+  const option = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    grid: {
+      left: '5%',
+      right: '5%',
+      bottom: '20%',
+      top: '10%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: data.map(item => item.date),
+      name: '日期',
+      nameLocation: 'middle',
+      nameGap: 50,
+      axisLabel: {
+        show: true,
+        interval: 0,
+        rotate: 45,
+        margin: 20,
+        fontSize: 12,
+        color: '#666'
+      },
+      axisTick: {
+        alignWithLabel: true
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: '支出',
+      nameLocation: 'middle',
+      nameGap: 50,
+      axisLabel: {
+        fontSize: 12,
+        color: '#666'
+      }
+    },
+    series: [
+      {
+        data: data.map(item => item.expense),
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        itemStyle: {
+          color: '#1890ff'
+        },
+        lineStyle: {
+          width: 2
+        }
+      }
+    ],
+    animation: false
+  }
+  
+  chart.setOption(option)
 }
 
-// 监听窗口大小变化
 const handleResize = () => {
-  chart && chart.resize()
+  chart?.resize()
 }
 
 onMounted(() => {
   initChart(props.data)
   window.addEventListener('resize', handleResize)
+  setTimeout(handleResize, 100)
 })
 
 onUnmounted(() => {
@@ -102,7 +106,7 @@ onUnmounted(() => {
 watch(
   () => props.data,
   (newData) => {
-    if (newData && newData.length > 0) {
+    if (newData?.length) {
       initChart(newData)
     }
   },
@@ -111,8 +115,19 @@ watch(
 </script>
 
 <style scoped>
-.error-message {
-  color: red;
-  margin-top: 10px;
+.chart-container {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart {
+  flex: 1;
+  width: 100%;
+  min-height: 500px;
+  min-width: 800px;
 }
 </style>
