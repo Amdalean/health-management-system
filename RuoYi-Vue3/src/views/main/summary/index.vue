@@ -270,6 +270,8 @@
         top="5vh"
         destroy-on-close
     >
+    
+    <div ref="container" id="container"></div>
       <FinanceChart :data=chartData v-if="showChartDialog" :chart-data="chartData" />
       <template #footer>
         <div class="dialog-footer">
@@ -285,6 +287,7 @@
 import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary} from "@/api/main/summary";
 // import FinanceChart from '@/components/FinanceChart';
 import FinanceChart from '@/components/G2Demo';
+import { Chart } from '@antv/g2'
 
 const {proxy} = getCurrentInstance();
 const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 'month');
@@ -529,7 +532,6 @@ function handleUpdate(row) {
 }
 /** add by CYQ 2025年2月5日 编辑后回写表头金额 */
 function afterEvent(row) {
-  debugger
   let sum = sumAmount(hsmDetailList.value);//汇总表体获得月底余额
   form.value.endDeposit = sum;//月底余额
   form.value.balance = subtractValues(sum,form.value.startDeposit)//计算结余，月底余额-月初余额
@@ -550,14 +552,12 @@ function submitForm() {
       if (form.value.id != null) {
         updateSummary(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
-          debugger
           open.value = false;
           getList();
         });
       } else {
         addSummary(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
-          debugger
           open.value = false;
           getList();
         });

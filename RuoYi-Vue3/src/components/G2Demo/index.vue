@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div ref="container" id="container"></div>
+    <div ref="chartRef" style="width: 100%; height: 400px;"></div>
     <div v-if="error" class="error-message">{{ error }}</div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, defineProps } from 'vue'
-import { Chart } from '@antv/g2'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import * as echarts from 'echarts'
 
 const props = defineProps({
   data: {
@@ -17,84 +17,102 @@ const props = defineProps({
 })
 
 const error = ref(null)
-const chart = ref(null)
+const chartRef = ref(null)
+let chart = null
 
 const initChart = (data) => {
   try {
-    // 销毁旧实例
-    if (chart.value) {
-      chart.value.destroy();
-      chart.value = null;
+    if (chart) {
+      chart.dispose()
     }
     
-    chart.value = new Chart({
-      container: 'container',
-      autoFit: true,
-      height: 400,
-    });
-
-    chart.value
-      .line()
-      .data(data)
-      .encode('x', 'date')
-      .encode('y', 'expense')
-      .scale('y', {
-        nice: true,
-      })
-      .axis('x', {
-        title: '日期',
-      })
-      .axis('y', {
-        title: '支出',
-      })
-      .style({
-        stroke: '#1890ff',
-        lineWidth: 2,
-      });
-
-    // 添加数据点
-    chart.value
-      .point()
-      .data(data)
-      .encode('x', 'date')
-      .encode('y', 'expense')
-      .style({
-        fill: '#1890ff',
-        stroke: '#fff',
-        lineWidth: 2,
-      });
-
-    chart.value.render();
+    chart = echarts.init(chartRef.value)
+    
+    const option = {
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '15%',
+        top: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: data.map(item => item.date),
+        name: '日期',
+        nameLocation: 'middle',
+        nameGap: 35,
+        axisLabel: {
+          interval: 0,
+          rotate: 30
+        }
+      },
+      yAxis: {
+        type: 'value',
+        name: '支出',
+        nameLocation: 'middle',
+        nameGap: 35
+      },
+      series: [
+        {
+          data: data.map(item => item.expense),
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 8,
+          itemStyle: {
+            color: '#1890ff'
+          },
+          lineStyle: {
+            width: 2
+          }
+        }
+      ],
+      animation: false
+    }
+    
+    chart.setOption(option)
   } catch (e) {
-    error.value = '图表初始化失败: ' + e.message;
-    console.error('图表初始化错误:', e);
+    error.value = '图表初始化失败: ' + e.message
+    console.error('图表初始化错误:', e)
   }
 }
 
-// 生命周期管理
+// 监听窗口大小变化
+const handleResize = () => {
+  chart && chart.resize()
+}
+
 onMounted(() => {
-  initChart(props.data);
-});
+  initChart(props.data)
+  window.addEventListener('resize', handleResize)
+})
 
 onUnmounted(() => {
-  if (chart.value) {
-    chart.value.destroy();
-    chart.value = null;
+  if (chart) {
+    chart.dispose()
+    chart = null
   }
-});
+  window.removeEventListener('resize', handleResize)
+})
 
-// 修改后的监听逻辑
 watch(
   () => props.data,
   (newData) => {
     if (newData && newData.length > 0) {
-      initChart(newData);
+      initChart(newData)
     }
   },
   { deep: true }
-);
+)
 </script>
 
 <style scoped>
-/* 样式部分保持不变 */
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
 </style>
