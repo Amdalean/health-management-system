@@ -278,7 +278,7 @@
       </template>
     </el-dialog>
   </div>
-<!--  <G2Demo />-->
+ <!-- <G2Demo /> -->
 </template>
 
 <script setup name="Summary">
