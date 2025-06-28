@@ -26,7 +26,7 @@ import com.hms.common.core.page.TableDataInfo;
 
 /**
  * 财务汇总主Controller
- * 
+ *
  * @author CYQ
  * @date 2025-02-05
  */
@@ -110,7 +110,7 @@ public class HsmSummaryController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('main:summary:remove')")
     @Log(title = "财务汇总主", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(hsmSummaryService.deleteHsmSummaryByIds(ids));
@@ -120,19 +120,8 @@ public class HsmSummaryController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('main:summary:list')")
     @GetMapping("/checkExpense")
-    public AjaxResult forms()
+    public AjaxResult checkExpense()
     {
-//        startPage();
-        HsmSummary hsmSummary = new HsmSummary();
-        List<HsmSummary> list = hsmSummaryService.selectHsmSummaryList(hsmSummary);
-        JSONArray array = new JSONArray();
-        list.stream().forEach(v->{
-            JSONObject json = new JSONObject();
-            json.put("date", v.getYear()+"-"+v.getMonth());
-            json.put("expense", v.getExpense());
-            array.add(json);
-        });
-
-        return success(array);
+        return success(hsmSummaryService.getYearlyExpenseData());
     }
 }
