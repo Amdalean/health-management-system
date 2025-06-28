@@ -82,4 +82,11 @@ public interface IHsmSummaryService
      * @return 存款计划执行数据
      */
     public JSONArray getDepositPlanData();
+    
+    /**
+     * 获取存款预测数据
+     *
+     * @return 存款预测数据
+     */
+    public JSONObject getDepositPrediction();
 }

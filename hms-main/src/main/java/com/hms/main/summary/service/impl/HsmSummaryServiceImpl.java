@@ -217,6 +217,104 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         return array;
     }
 
+    @Override
+    public JSONObject getDepositPrediction() {
+        HsmSummary hsmSummary = new HsmSummary();
+        List<HsmSummary> list = hsmSummaryMapper.selectHsmSummaryList(hsmSummary);
+        
+        // 获取当前年份
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+        
+        // 获取历史数据（过去6个月，如果不足6个月则取所有可用数据）
+        List<BigDecimal> monthlyDeposits = new ArrayList<>();
+        List<BigDecimal> monthlyGrowths = new ArrayList<>();
+        
+        BigDecimal lastDeposit = null;
+        for (int month = 1; month <= currentMonth; month++) {
+            BigDecimal monthDeposit = BigDecimal.ZERO;
+            for (HsmSummary summary : list) {
+                if (summary.getYear() != null && summary.getYear() == currentYear && 
+                    summary.getMonth() != null && summary.getMonth() == month) {
+                    monthDeposit = summary.getEndDeposit() != null ? summary.getEndDeposit() : BigDecimal.ZERO;
+                    break;
+                }
+            }
+            
+            if (monthDeposit.compareTo(BigDecimal.ZERO) > 0) {
+                monthlyDeposits.add(monthDeposit);
+                if (lastDeposit != null) {
+                    BigDecimal growth = monthDeposit.subtract(lastDeposit);
+                    monthlyGrowths.add(growth);
+                }
+                lastDeposit = monthDeposit;
+            }
+        }
+        
+        // 计算平均月增长
+        BigDecimal avgMonthlyGrowth = BigDecimal.ZERO;
+        if (!monthlyGrowths.isEmpty()) {
+            BigDecimal totalGrowth = monthlyGrowths.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+            avgMonthlyGrowth = totalGrowth.divide(new BigDecimal(monthlyGrowths.size()), 2, BigDecimal.ROUND_HALF_UP);
+        }
+        
+        // 预测年底存款
+        BigDecimal currentDeposit = lastDeposit != null ? lastDeposit : BigDecimal.ZERO;
+        int remainingMonths = 12 - currentMonth;
+        BigDecimal predictedYearEndDeposit = currentDeposit.add(avgMonthlyGrowth.multiply(new BigDecimal(remainingMonths)));
+        
+        // 计算目标存款（年初存款 + 10万）
+        BigDecimal targetYearEndDeposit = BigDecimal.ZERO;
+        if (!monthlyDeposits.isEmpty()) {
+            BigDecimal startDeposit = monthlyDeposits.get(0);
+            targetYearEndDeposit = startDeposit.add(new BigDecimal("100000"));
+        }
+        
+        // 计算达成率和差距
+        BigDecimal gap = predictedYearEndDeposit.subtract(targetYearEndDeposit);
+        double achievementRate = 0.0;
+        if (targetYearEndDeposit.compareTo(BigDecimal.ZERO) > 0) {
+            achievementRate = predictedYearEndDeposit.divide(targetYearEndDeposit, 4, BigDecimal.ROUND_HALF_UP)
+                    .multiply(new BigDecimal("100")).doubleValue();
+        }
+        
+        // 生成建议
+        List<String> recommendations = new ArrayList<>();
+        if (gap.compareTo(BigDecimal.ZERO) < 0) {
+            recommendations.add("当前趋势下可能无法达成年底目标");
+            recommendations.add("建议增加月度储蓄目标");
+            recommendations.add("关注支出控制，减少不必要开支");
+        } else {
+            recommendations.add("当前趋势良好，有望达成目标");
+            recommendations.add("继续保持当前的储蓄习惯");
+        }
+        
+        if (avgMonthlyGrowth.compareTo(BigDecimal.ZERO) < 0) {
+            recommendations.add("月度存款呈下降趋势，需要调整财务策略");
+        }
+        
+        // 构建返回结果
+        JSONObject result = new JSONObject();
+        
+        JSONObject prediction = new JSONObject();
+        prediction.put("yearEndDeposit", predictedYearEndDeposit);
+        prediction.put("targetGap", gap);
+        prediction.put("achievementRate", Math.round(achievementRate * 100.0) / 100.0);
+        prediction.put("targetYearEndDeposit", targetYearEndDeposit);
+        result.put("prediction", prediction);
+        
+        JSONObject trend = new JSONObject();
+        trend.put("avgMonthlyGrowth", avgMonthlyGrowth);
+        trend.put("currentDeposit", currentDeposit);
+        trend.put("remainingMonths", remainingMonths);
+        trend.put("dataPoints", monthlyDeposits.size());
+        result.put("trend", trend);
+        
+        result.put("recommendations", recommendations);
+        
+        return result;
+    }
+
     private static LocalDate getLastMonth() {
         LocalDate date = LocalDate.now();
         // 获取上一个月的日期
