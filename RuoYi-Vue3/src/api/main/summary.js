@@ -55,3 +55,11 @@ export function formsSummary(query) {
         method: 'get'
     })
 }
+
+// 存款计划执行情况
+export function getDepositPlanData() {
+    return request({
+        url: '/main/summary/depositPlan',
+        method: 'get'
+    })
+}

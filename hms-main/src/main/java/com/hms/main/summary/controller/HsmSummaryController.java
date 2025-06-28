@@ -124,4 +124,14 @@ public class HsmSummaryController extends BaseController
     {
         return success(hsmSummaryService.getYearlyExpenseData());
     }
+    
+    /**
+     * 获取存款计划执行情况
+     */
+//    @PreAuthorize("@ss.hasPermi('main:summary:list')")
+    @GetMapping("/depositPlan")
+    public AjaxResult getDepositPlanData()
+    {
+        return success(hsmSummaryService.getDepositPlanData());
+    }
 }

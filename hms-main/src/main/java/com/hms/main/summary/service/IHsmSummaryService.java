@@ -75,4 +75,11 @@ public interface IHsmSummaryService
      * @return 全年支出数据
      */
     public JSONArray getYearlyExpenseData();
+    
+    /**
+     * 获取存款计划执行数据
+     *
+     * @return 存款计划执行数据
+     */
+    public JSONArray getDepositPlanData();
 }
