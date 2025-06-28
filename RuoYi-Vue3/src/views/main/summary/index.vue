@@ -181,10 +181,10 @@
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="收入" prop="income">
-          <el-input v-model="form.income" placeholder="请输入收入" />
+          <el-input v-model="form.income" placeholder="请输入收入" @input="calculateExpenseOnInput" />
         </el-form-item>
         <el-form-item label="支出" prop="expense">
-          <el-input v-model="form.expense" placeholder="请输入支出" />
+          <el-input v-model="form.expense" placeholder="系统自动计算" disabled />
         </el-form-item>
         <el-form-item label="结余" prop="balance">
           <el-input v-model="form.balance" placeholder="请输入结余" disabled/>
@@ -240,7 +240,12 @@
           </el-table-column>
           <el-table-column label="金额" prop="amount" width="150">
             <template #default="scope">
-              <el-input v-model="scope.row.amount" placeholder="请输入金额" @input="afterEvent(scope.row)" />
+              <el-input 
+                v-model="scope.row.amount" 
+                placeholder="金额或公式(如=1+1，回车计算)" 
+                @input="handleAmountInput(scope.row)" 
+                @keyup.enter="calculateFormulaOnEnter(scope.row)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="变化量" prop="changeAmount" width="150">
@@ -577,6 +582,10 @@ function afterEvent(row) {
   let sum = sumAmount(hsmDetailList.value);//汇总表体获得月底余额
   form.value.endDeposit = sum;//月底余额
   form.value.balance = subtractValues(sum,form.value.startDeposit)//计算结余，月底余额-月初余额
+  
+  // 当结余变化时，自动计算支出
+  calculateExpense();
+  
   //回写表体变化量
   hsmDetailList.value.forEach((item) => {
     if(item.index == row.index){
@@ -584,12 +593,92 @@ function afterEvent(row) {
       item.changeAmount = amount + (Number(row.amount) || 0); // 设置金额
     }
   });
-
 }
+
+/**
+ * 处理金额输入（不触发公式计算）
+ */
+function handleAmountInput(row) {
+  // 只更新变化量，不计算公式
+  let sum = sumAmount(hsmDetailList.value);
+  form.value.endDeposit = sum;
+  form.value.balance = subtractValues(sum,form.value.startDeposit);
+  
+  // 当结余变化时，自动计算支出
+  calculateExpense();
+  
+  hsmDetailList.value.forEach((item) => {
+    if(item.index == row.index){
+      let amount = item.changeAmountOld===null?0:item.changeAmountOld;
+      item.changeAmount = amount + (Number(row.amount) || 0);
+    }
+  });
+}
+
+/**
+ * 回车键触发公式计算
+ */
+function calculateFormulaOnEnter(row) {
+  // 检查是否为公式输入（以等号开头）
+  if (row.amount && typeof row.amount === 'string' && row.amount.startsWith('=')) {
+    try {
+      const result = calculateSimpleFormula(row.amount)
+      if (result !== null) {
+        row.amount = result
+        // 计算完成后更新汇总
+        afterEvent(row)
+      }
+    } catch (error) {
+      console.error('公式计算错误:', error)
+    }
+  }
+}
+
+/**
+ * 计算简单公式（类似Excel）
+ * @param {string} formula 公式字符串，如 "=1+1" 或 "=A1+B2"
+ * @returns {number|null} 计算结果
+ */
+function calculateSimpleFormula(formula) {
+  if (!formula.startsWith('=')) {
+    return null
+  }
+  
+  let expression = formula.substring(1)
+  
+  // 替换变量引用 A1, A2, A3... 为实际数值
+  expression = expression.replace(/A(\d+)/g, (match, index) => {
+    const rowIndex = parseInt(index) - 1
+    if (hsmDetailList.value[rowIndex] && hsmDetailList.value[rowIndex].amount) {
+      return parseFloat(hsmDetailList.value[rowIndex].amount) || 0
+    }
+    return 0
+  })
+  
+  // 安全计算
+  try {
+    const result = Function('"use strict"; return (' + expression + ')')()
+    return isNaN(result) ? null : parseFloat(result.toFixed(2))
+  } catch (error) {
+    console.error('公式计算错误:', error)
+    return null
+  }
+}
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["summaryRef"].validate(valid => {
     if (valid) {
+      // 校验收入不能为0
+      const income = parseFloat(form.value.income) || 0;
+      if (income <= 0) {
+        proxy.$modal.msgError("收入不能为0或负数，请检查输入");
+        return;
+      }
+      
+      // 自动计算支出
+      calculateExpense();
+      
       form.value.hsmDetailList = hsmDetailList.value;
       if (form.value.id != null) {
         updateSummary(form.value).then(response => {
@@ -607,6 +696,38 @@ function submitForm() {
     }
   });
 }
+
+/**
+ * 自动计算支出
+ * 支出 = 收入 - 结余
+ */
+function calculateExpense() {
+  const income = parseFloat(form.value.income) || 0;
+  const balance = parseFloat(form.value.balance) || 0;
+  
+  // 支出 = 收入 - 结余
+  const expense = income - balance;
+  
+  // 确保支出不为负数
+  if (expense >= 0) {
+    form.value.expense = expense.toFixed(2);
+  } else {
+    // 如果计算结果为负数，给出提示
+    proxy.$modal.msgWarning("计算出的支出为负数，请检查收入和结余数据");
+    form.value.expense = "0.00";
+  }
+}
+
+/**
+ * 收入输入时实时计算支出
+ */
+function calculateExpenseOnInput() {
+  // 延迟计算，避免频繁更新
+  setTimeout(() => {
+    calculateExpense();
+  }, 100);
+}
+
 function sumAmount(jsonArray) {
   const total = jsonArray.reduce((accumulator, currentValue) => {
     // 尝试将 amount 字段转换为数值
