@@ -106,22 +106,12 @@
             v-hasPermi="['main:summary:export']"
         >导出</el-button>
       </el-col>
-      <!-- 财务报表弹窗 -->
-      <el-col :span="1.5">
-        <el-button
-            type="warning"
-            plain
-            icon="Download"
-            @click="forms"
-            v-hasPermi="['main:summary:export']"
-        >统计报表</el-button>
-      </el-col>
       <!-- 计划执行情况 -->
       <el-col :span="1.5">
         <el-button
-            type="info"
+            type="success"
             plain
-            icon="TrendCharts"
+            icon="DataAnalysis"
             @click="showDepositPlan"
             v-hasPermi="['main:summary:export']"
         >计划执行情况</el-button>
@@ -291,16 +281,35 @@
     
     <!-- 计划执行情况弹窗 -->
     <el-dialog
-        title="存款计划执行情况"
+        title="存款计划执行情况与预测"
         v-model="showDepositPlanDialog"
+        width="98%"
+        top="2vh"
+        destroy-on-close
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        class="deposit-plan-dialog"
+    >
+      <DepositPlanChart :data="depositPlanData" :predictionData="predictionData" v-if="showDepositPlanDialog" />
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="closeDepositPlanDialog">关 闭</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    
+    <!-- 执行预测弹窗 -->
+    <el-dialog
+        title="存款执行预测"
+        v-model="showPredictionDialog"
         width="90%"
         top="5vh"
         destroy-on-close
     >
-      <DepositPlanChart :data="depositPlanData" v-if="showDepositPlanDialog" />
+      <DepositPredictionChart :data="predictionData" v-if="showPredictionDialog" />
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="closeDepositPlanDialog">关 闭</el-button>
+          <el-button @click="closePredictionDialog">关 闭</el-button>
         </div>
       </template>
     </el-dialog>
@@ -309,9 +318,10 @@
 </template>
 
 <script setup name="Summary">
-import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary, getDepositPlanData} from "@/api/main/summary";
+import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary, getDepositPlanData, getDepositPrediction} from "@/api/main/summary";
 import FinanceChart from '@/components/FinanceChart';
 import DepositPlanChart from '@/components/DepositPlanChart';
+import DepositPredictionChart from '@/components/DepositPredictionChart';
 // import FinanceChart from '@/components/G2Demo';
 
 const {proxy} = getCurrentInstance();
@@ -335,6 +345,10 @@ const chartData = ref({ rows: [] });
 // 计划执行情况相关变量
 const showDepositPlanDialog = ref(false);
 const depositPlanData = ref([]);
+
+// 执行预测相关变量
+const showPredictionDialog = ref(false);
+const predictionData = ref([]);
 
 const data = reactive({
   form: {},
@@ -695,11 +709,16 @@ function closeChartDialog() {
 
 /** 显示计划执行情况 */
 function showDepositPlan() {
-  getDepositPlanData().then(response => {
-    depositPlanData.value = response.data;
+  // 同时获取计划数据和预测数据
+  Promise.all([
+    getDepositPlanData(),
+    getDepositPrediction()
+  ]).then(([planResponse, predictionResponse]) => {
+    depositPlanData.value = planResponse.data;
+    predictionData.value = predictionResponse.data;
     showDepositPlanDialog.value = true;
   }).catch(error => {
-    proxy.$modal.msgError("获取计划执行数据失败：" + error.message);
+    proxy.$modal.msgError("获取数据失败：" + error.message);
   });
 }
 
@@ -709,5 +728,42 @@ function closeDepositPlanDialog() {
   depositPlanData.value = [];
 }
 
+/** 执行预测 */
+function showDepositPrediction() {
+  getDepositPrediction().then(response => {
+    predictionData.value = response.data;
+    showPredictionDialog.value = true;
+  }).catch(error => {
+    proxy.$modal.msgError("获取预测数据失败：" + error.message);
+  });
+}
+
+/** 关闭执行预测弹窗 */
+function closePredictionDialog() {
+  showPredictionDialog.value = false;
+  predictionData.value = {};
+}
+
 getList();
 </script>
+
+<style scoped>
+.deposit-plan-dialog :deep(.el-dialog) {
+  height: 90vh;
+  max-height: 90vh;
+}
+
+.deposit-plan-dialog :deep(.el-dialog__body) {
+  height: calc(90vh - 120px);
+  overflow-y: auto;
+  padding: 0;
+}
+
+.deposit-plan-dialog :deep(.el-dialog__header) {
+  padding: 20px 20px 10px 20px;
+}
+
+.deposit-plan-dialog :deep(.el-dialog__footer) {
+  padding: 10px 20px 20px 20px;
+}
+</style>

@@ -63,3 +63,11 @@ export function getDepositPlanData() {
         method: 'get'
     })
 }
+
+// 存款预测数据
+export function getDepositPrediction() {
+    return request({
+        url: '/main/summary/depositPrediction',
+        method: 'get'
+    })
+}

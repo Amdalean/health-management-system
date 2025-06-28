@@ -1,6 +1,172 @@
 <template>
   <div class="chart-container">
-    <div ref="chartRef" class="chart"></div>
+    <!-- 概览卡片 -->
+    <div class="overview-cards">
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <el-card class="prediction-card">
+            <div class="card-content">
+              <div class="card-icon">📊</div>
+              <div class="card-title">预测年底存款</div>
+              <div class="card-value">¥{{ formatMoney(predictionData.prediction?.yearEndDeposit) }}</div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="6">
+          <el-card class="prediction-card">
+            <div class="card-content">
+              <div class="card-icon">🎯</div>
+              <div class="card-title">目标存款</div>
+              <div class="card-value">¥{{ formatMoney(predictionData.prediction?.targetYearEndDeposit) }}</div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="6">
+          <el-card class="prediction-card">
+            <div class="card-content">
+              <div class="card-icon">📈</div>
+              <div class="card-title">达成率</div>
+              <div class="card-value" :class="getAchievementClass()">
+                {{ predictionData.prediction?.achievementRate || 0 }}%
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="6">
+          <el-card class="prediction-card">
+            <div class="card-content">
+              <div class="card-icon">⚖️</div>
+              <div class="card-title">差距</div>
+              <div class="card-value" :class="getGapClass()">
+                ¥{{ formatMoney(predictionData.prediction?.targetGap) }}
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+      <!-- 图表区域 -->
+      <el-row :gutter="20" class="chart-row">
+        <el-col :span="16">
+          <el-card class="chart-card">
+            <template #header>
+              <div class="card-header">
+                <div class="header-left">
+                  <span class="header-title">存款计划执行情况与预测</span>
+                </div>
+                <div class="header-right">
+                  <el-switch
+                    v-model="showPrediction"
+                    active-text="显示预测"
+                    inactive-text="隐藏预测"
+                    @change="updateChart"
+                    class="prediction-switch"
+                  />
+                </div>
+              </div>
+            </template>
+            <div ref="chartRef" class="chart"></div>
+          </el-card>
+        </el-col>
+        <el-col :span="8">
+          <el-card class="gauge-card">
+            <template #header>
+              <div class="card-header">
+                <span class="header-title">🎯 目标达成度</span>
+              </div>
+            </template>
+            <div class="gauge-content">
+              <div class="gauge-chart-container">
+                <div ref="gaugeRef" class="gauge-chart"></div>
+              </div>
+              <div class="gauge-info">
+                <div class="info-item">
+                  <span class="info-label">当前达成：</span>
+                  <span class="info-value" :class="getAchievementClass()">
+                    {{ predictionData.prediction?.achievementRate || 0 }}%
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">目标：</span>
+                  <span class="info-value">100%</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">状态：</span>
+                  <span class="info-value" :class="getStatusClass()">
+                    {{ getStatusText() }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <!-- 分析区域 -->
+      <el-row :gutter="20" class="analysis-row">
+        <el-col :span="12">
+          <el-card class="analysis-card">
+            <template #header>
+              <div class="card-header">
+                <span class="header-title">📈 趋势分析</span>
+              </div>
+            </template>
+            <div class="trend-info">
+              <div class="trend-item">
+                <div class="trend-icon">📊</div>
+                <div class="trend-content">
+                  <div class="trend-label">平均月增长</div>
+                  <div class="trend-value">¥{{ formatMoney(predictionData.trend?.avgMonthlyGrowth) }}</div>
+                </div>
+              </div>
+              <div class="trend-item">
+                <div class="trend-icon">💰</div>
+                <div class="trend-content">
+                  <div class="trend-label">当前存款</div>
+                  <div class="trend-value">¥{{ formatMoney(predictionData.trend?.currentDeposit) }}</div>
+                </div>
+              </div>
+              <div class="trend-item">
+                <div class="trend-icon">⏰</div>
+                <div class="trend-content">
+                  <div class="trend-label">剩余月数</div>
+                  <div class="trend-value">{{ predictionData.trend?.remainingMonths || 0 }}个月</div>
+                </div>
+              </div>
+              <div class="trend-item">
+                <div class="trend-icon">📋</div>
+                <div class="trend-content">
+                  <div class="trend-label">数据点数</div>
+                  <div class="trend-value">{{ predictionData.trend?.dataPoints || 0 }}个</div>
+                </div>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="analysis-card">
+            <template #header>
+              <div class="card-header">
+                <span class="header-title">💡 改进建议</span>
+              </div>
+            </template>
+            <div class="recommendations">
+              <div 
+                v-for="(recommendation, index) in predictionData.recommendations" 
+                :key="index"
+                class="recommendation-item"
+              >
+                <div class="recommendation-icon">💡</div>
+                <div class="recommendation-text">{{ recommendation }}</div>
+              </div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -12,22 +178,138 @@ const props = defineProps({
   data: {
     type: Array,
     required: true
+  },
+  predictionData: {
+    type: Object,
+    default: () => ({})
   }
 })
 
 const chartRef = ref(null)
+const gaugeRef = ref(null)
 let chart = null
+let gaugeChart = null
+const showPrediction = ref(true)
 
 // 判断是否为移动端
 const isMobile = () => window.innerWidth <= 768
 
+// 格式化金额
+const formatMoney = (amount) => {
+  if (!amount) return '0.00'
+  return (Number(amount) / 10000).toFixed(2)
+}
+
+// 获取达成率样式
+const getAchievementClass = () => {
+  const rate = props.predictionData.prediction?.achievementRate || 0
+  if (rate >= 100) return 'success-text'
+  if (rate >= 80) return 'warning-text'
+  return 'danger-text'
+}
+
+// 获取差距样式
+const getGapClass = () => {
+  const gap = props.predictionData.prediction?.targetGap || 0
+  if (gap >= 0) return 'success-text'
+  return 'danger-text'
+}
+
+// 获取状态样式
+const getStatusClass = () => {
+  const rate = props.predictionData.prediction?.achievementRate || 0
+  if (rate >= 100) return 'success-text'
+  if (rate >= 80) return 'warning-text'
+  return 'danger-text'
+}
+
+// 获取状态文本
+const getStatusText = () => {
+  const rate = props.predictionData.prediction?.achievementRate || 0
+  if (rate >= 100) return '已完成'
+  if (rate >= 80) return '进行中'
+  return '未完成'
+}
+
 // 获取图表配置
-const getChartOption = (data) => {
+const getChartOption = (data, showPredictionData = true) => {
   const mobile = isMobile()
+  
+  const series = [
+    {
+      name: '实际存款',
+      type: 'line',
+      data: data.map(item => item.actualDeposit),
+      smooth: true,
+      lineStyle: {
+        color: '#1890ff',
+        width: 3
+      },
+      itemStyle: {
+        color: '#1890ff'
+      },
+      symbol: 'circle',
+      symbolSize: 6
+    },
+    {
+      name: '计划存款',
+      type: 'line',
+      data: data.map(item => item.plannedDeposit),
+      smooth: true,
+      lineStyle: {
+        color: '#ff4d4f',
+        width: 3,
+        type: 'dashed'
+      },
+      itemStyle: {
+        color: '#ff4d4f'
+      },
+      symbol: 'diamond',
+      symbolSize: 6
+    }
+  ]
+
+  // 如果显示预测且有预测数据，添加预测线
+  if (showPredictionData && props.predictionData.prediction) {
+    const currentMonth = new Date().getMonth() + 1
+    const predictedData = []
+    
+    // 填充已过去月份的实际数据
+    for (let i = 0; i < currentMonth; i++) {
+      predictedData.push(data[i]?.actualDeposit || 0)
+    }
+    
+    // 填充预测数据
+    const currentDeposit = props.predictionData.trend?.currentDeposit || 0
+    const avgGrowth = props.predictionData.trend?.avgMonthlyGrowth || 0
+    
+    for (let i = currentMonth; i < 12; i++) {
+      const monthsAhead = i - currentMonth + 1
+      const predictedValue = currentDeposit + (avgGrowth * monthsAhead)
+      predictedData.push(predictedValue)
+    }
+    
+    series.push({
+      name: '预测存款',
+      type: 'line',
+      data: predictedData,
+      smooth: true,
+      lineStyle: {
+        color: '#52c41a',
+        width: 3,
+        type: 'dotted'
+      },
+      itemStyle: {
+        color: '#52c41a'
+      },
+      symbol: 'triangle',
+      symbolSize: 6
+    })
+  }
   
   return {
     title: {
-      text: '存款计划执行情况',
+      text: '存款计划执行情况与预测',
       left: 'center',
       textStyle: {
         fontSize: mobile ? 14 : 16,
@@ -47,7 +329,7 @@ const getChartOption = (data) => {
       }
     },
     legend: {
-      data: ['实际存款', '计划存款'],
+      data: series.map(s => s.name),
       top: mobile ? 30 : 40,
       left: 'center'
     },
@@ -89,39 +371,7 @@ const getChartOption = (data) => {
         }
       }
     },
-    series: [
-      {
-        name: '实际存款',
-        type: 'line',
-        data: data.map(item => item.actualDeposit),
-        smooth: true,
-        lineStyle: {
-          color: '#1890ff',
-          width: 3
-        },
-        itemStyle: {
-          color: '#1890ff'
-        },
-        symbol: 'circle',
-        symbolSize: 6
-      },
-      {
-        name: '计划存款',
-        type: 'line',
-        data: data.map(item => item.plannedDeposit),
-        smooth: true,
-        lineStyle: {
-          color: '#ff4d4f',
-          width: 3,
-          type: 'dashed'
-        },
-        itemStyle: {
-          color: '#ff4d4f'
-        },
-        symbol: 'diamond',
-        symbolSize: 6
-      }
-    ],
+    series: series,
     animation: true,
     animationDuration: 1000,
     animationEasing: 'cubicInOut'
@@ -129,7 +379,7 @@ const getChartOption = (data) => {
 }
 
 // 初始化图表
-const initChart = (data) => {
+const initChart = (data, showPredictionData = true) => {
   if (chart) {
     chart.dispose()
   }
@@ -142,7 +392,125 @@ const initChart = (data) => {
     height: mobile ? 200 : 'auto'
   })
   
-  chart.setOption(getChartOption(data))
+  chart.setOption(getChartOption(data, showPredictionData))
+}
+
+// 初始化仪表盘
+const initGaugeChart = () => {
+  if (gaugeChart) {
+    gaugeChart.dispose()
+    gaugeChart = null
+  }
+  gaugeChart = echarts.init(gaugeRef.value)
+  const achievementRate = props.predictionData.prediction?.achievementRate || 0
+  const option = {
+    series: [{
+      type: 'gauge',
+      startAngle: 200,
+      endAngle: -20,
+      min: 0,
+      max: 120,
+      splitNumber: 12,
+      center: ['50%', '50%'],
+      radius: '80%',
+      itemStyle: {
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0, color: '#67c23a'
+          }, {
+            offset: 0.5, color: '#e6a23c'
+          }, {
+            offset: 1, color: '#f56c6c'
+          }]
+        },
+        shadowColor: 'rgba(0,138,255,0.45)',
+        shadowBlur: 10,
+        shadowOffsetX: 2,
+        shadowOffsetY: 2
+      },
+      progress: {
+        show: true,
+        roundCap: true,
+        width: 20,
+        itemStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [{
+              offset: 0, color: '#67c23a'
+            }, {
+              offset: 0.5, color: '#e6a23c'
+            }, {
+              offset: 1, color: '#f56c6c'
+            }]
+          }
+        }
+      },
+      pointer: {
+        icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+        length: '60%',
+        width: 8,
+        offsetCenter: [0, '5%']
+      },
+      axisLine: {
+        roundCap: true,
+        lineStyle: {
+          width: 20,
+          color: [
+            [0.3, '#f56c6c'],
+            [0.7, '#e6a23c'],
+            [1, '#67c23a']
+          ]
+        }
+      },
+      axisTick: {
+        splitNumber: 2,
+        lineStyle: {
+          width: 2,
+          color: '#999'
+        }
+      },
+      splitLine: {
+        length: 15,
+        lineStyle: {
+          width: 3,
+          color: '#999'
+        }
+      },
+      axisLabel: {
+        distance: 35,
+        color: '#999',
+        fontSize: 12
+      },
+      title: {
+        show: false
+      },
+      detail: {
+        show: false
+      },
+      data: [{
+        value: Math.min(achievementRate, 120),
+        name: '目标达成度'
+      }]
+    }]
+  }
+  
+  gaugeChart.setOption(option)
+}
+
+// 更新图表
+const updateChart = () => {
+  if (props.data?.length) {
+    initChart(props.data, showPrediction.value)
+  }
 }
 
 // 处理图表大小变化
@@ -150,11 +518,19 @@ const handleResize = () => {
   if (chart) {
     chart.resize()
   }
+  if (gaugeChart) {
+    gaugeChart.resize()
+  }
 }
 
 // 生命周期钩子
 onMounted(() => {
-  initChart(props.data)
+  if (props.data?.length) {
+    initChart(props.data, showPrediction.value)
+  }
+  if (props.predictionData.prediction) {
+    initGaugeChart()
+  }
   window.addEventListener('resize', handleResize)
   setTimeout(handleResize, 100)
 })
@@ -164,6 +540,10 @@ onUnmounted(() => {
     chart.dispose()
     chart = null
   }
+  if (gaugeChart) {
+    gaugeChart.dispose()
+    gaugeChart = null
+  }
   window.removeEventListener('resize', handleResize)
 })
 
@@ -172,7 +552,19 @@ watch(
   () => props.data,
   (newData) => {
     if (newData?.length) {
-      initChart(newData)
+      initChart(newData, showPrediction.value)
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.predictionData,
+  (newData) => {
+    if (newData?.prediction) {
+      setTimeout(() => {
+        initGaugeChart()
+      }, 100)
     }
   },
   { deep: true }
@@ -181,19 +573,333 @@ watch(
 
 <style scoped>
 .chart-container {
-  width: 100%;
-  height: 100%;
   padding: 20px;
-  box-sizing: border-box;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.overview-cards {
+  margin-bottom: 15px;
+}
+
+.main-content {
+  margin-bottom: 0;
+}
+
+.chart-row {
+  margin-bottom: 15px;
+}
+
+.analysis-row {
+  margin-bottom: 0;
+}
+
+.prediction-card {
+  text-align: center;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border: none;
+}
+
+.prediction-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.prediction-card :deep(.el-card__body) {
+  padding: 20px 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.card-content {
+  padding: 0;
+}
+
+.card-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.card-title {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-text {
+  color: #67c23a;
+}
+
+.warning-text {
+  color: #e6a23c;
+}
+
+.danger-text {
+  color: #f56c6c;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.chart-card :deep(.el-card__header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: none;
+  color: white;
+  border-radius: 16px 16px 0 0;
+  padding: 16px 20px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-left {
   display: flex;
   flex-direction: column;
 }
 
-.chart {
-  flex: 1;
+.header-title {
+  font-weight: bold;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.header-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.prediction-switch :deep(.el-switch__label) {
+  color: white;
+  font-size: 12px;
+}
+
+.gauge-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: none;
+}
+
+.gauge-card :deep(.el-card__header) {
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  border-radius: 16px 16px 0 0;
+  padding: 16px 20px;
+}
+
+.gauge-card :deep(.el-card__body) {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gauge-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 15px;
+}
+
+.gauge-chart-container {
+  height: 160px;
   width: 100%;
-  min-height: 500px;
-  min-width: 800px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-chart {
+  height: 160px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.gauge-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-item {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.info-value {
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+}
+
+.analysis-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.analysis-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.analysis-card :deep(.el-card__header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: none;
+  color: white;
+  border-radius: 16px 16px 0 0;
+  padding: 16px 20px;
+}
+
+.analysis-card :deep(.el-card__body) {
+  padding: 20px;
+  height: 300px;
+  overflow-y: auto;
+}
+
+.chart {
+  height: 300px;
+  width: 100%;
+}
+
+.trend-info {
+  padding: 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  margin: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.trend-item {
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.trend-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.trend-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  min-width: 32px;
+  text-align: center;
+}
+
+.trend-content {
+  flex: 1;
+}
+
+.trend-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.trend-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.recommendations {
+  margin: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.recommendation-item {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #666;
+  padding: 12px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  border-left: 4px solid #67c23a;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+}
+
+.recommendation-item:hover {
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  transform: translateX(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-icon {
+  font-size: 18px;
+  margin-right: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.recommendation-text {
+  flex: 1;
+  line-height: 1.5;
 }
 
 @media screen and (max-width: 768px) {
@@ -201,9 +907,72 @@ watch(
     padding: 10px;
   }
   
+  .card-value {
+    font-size: 16px;
+  }
+  
+  .card-icon {
+    font-size: 18px;
+  }
+  
+  .gauge-chart {
+    height: 120px;
+  }
+  
+  .gauge-chart-container {
+    height: 120px;
+  }
+  
+  .gauge-content {
+    gap: 10px;
+  }
+  
+  .gauge-info {
+    padding: 12px;
+  }
+  
+  .info-label {
+    font-size: 11px;
+    margin-right: 6px;
+  }
+  
+  .info-value {
+    font-size: 12px;
+  }
+  
   .chart {
-    min-height: 300px;
-    min-width: 300px;
+    height: 250px;
+  }
+  
+  .gauge-card :deep(.el-card__body) {
+    height: 250px;
+    padding: 15px;
+  }
+  
+  .analysis-card :deep(.el-card__body) {
+    height: 250px;
+    padding: 15px;
+  }
+  
+  .trend-item {
+    padding: 8px;
+  }
+  
+  .trend-icon {
+    font-size: 16px;
+    margin-right: 6px;
+  }
+  
+  .recommendation-item {
+    padding: 8px;
+  }
+  
+  .overview-cards {
+    margin-bottom: 10px;
+  }
+  
+  .chart-row {
+    margin-bottom: 10px;
   }
 }
 </style> 
