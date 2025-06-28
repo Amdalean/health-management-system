@@ -116,6 +116,16 @@
             v-hasPermi="['main:summary:export']"
         >统计报表</el-button>
       </el-col>
+      <!-- 计划执行情况 -->
+      <el-col :span="1.5">
+        <el-button
+            type="info"
+            plain
+            icon="TrendCharts"
+            @click="showDepositPlan"
+            v-hasPermi="['main:summary:export']"
+        >计划执行情况</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -278,13 +288,30 @@
         </div>
       </template>
     </el-dialog>
+    
+    <!-- 计划执行情况弹窗 -->
+    <el-dialog
+        title="存款计划执行情况"
+        v-model="showDepositPlanDialog"
+        width="90%"
+        top="5vh"
+        destroy-on-close
+    >
+      <DepositPlanChart :data="depositPlanData" v-if="showDepositPlanDialog" />
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="closeDepositPlanDialog">关 闭</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
   <!-- <G2Demo /> -->
 </template>
 
 <script setup name="Summary">
-import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary} from "@/api/main/summary";
+import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSummary,formsSummary, getDepositPlanData} from "@/api/main/summary";
 import FinanceChart from '@/components/FinanceChart';
+import DepositPlanChart from '@/components/DepositPlanChart';
 // import FinanceChart from '@/components/G2Demo';
 
 const {proxy} = getCurrentInstance();
@@ -305,6 +332,9 @@ const title = ref("");
 const showChartDialog = ref(false);
 const chartData = ref({ rows: [] });
 
+// 计划执行情况相关变量
+const showDepositPlanDialog = ref(false);
+const depositPlanData = ref([]);
 
 const data = reactive({
   form: {},
@@ -661,6 +691,22 @@ function forms() {
 function closeChartDialog() {
   showChartDialog.value = false;
   chartData.value = { rows: [] };
+}
+
+/** 显示计划执行情况 */
+function showDepositPlan() {
+  getDepositPlanData().then(response => {
+    depositPlanData.value = response.data;
+    showDepositPlanDialog.value = true;
+  }).catch(error => {
+    proxy.$modal.msgError("获取计划执行数据失败：" + error.message);
+  });
+}
+
+/** 关闭计划执行情况弹窗 */
+function closeDepositPlanDialog() {
+  showDepositPlanDialog.value = false;
+  depositPlanData.value = [];
 }
 
 getList();

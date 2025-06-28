@@ -157,6 +157,66 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         return array;
     }
 
+    @Override
+    public JSONArray getDepositPlanData() {
+        HsmSummary hsmSummary = new HsmSummary();
+        List<HsmSummary> list = hsmSummaryMapper.selectHsmSummaryList(hsmSummary);
+        
+        // 获取当前年份
+        int currentYear = LocalDate.now().getYear();
+        
+        // 查找年初存款（第一个月的月初存款）
+        BigDecimal startDeposit = BigDecimal.ZERO;
+        for (HsmSummary summary : list) {
+            if (summary.getYear() != null && summary.getYear() == currentYear && 
+                summary.getMonth() != null && summary.getMonth() == 1) {
+                startDeposit = summary.getStartDeposit() != null ? summary.getStartDeposit() : BigDecimal.ZERO;
+                break;
+            }
+        }
+        
+        // 如果找不到年初数据，使用第一个找到的月初存款
+        if (startDeposit.compareTo(BigDecimal.ZERO) == 0) {
+            for (HsmSummary summary : list) {
+                if (summary.getYear() != null && summary.getYear() == currentYear && 
+                    summary.getStartDeposit() != null) {
+                    startDeposit = summary.getStartDeposit();
+                    break;
+                }
+            }
+        }
+        
+        // 年底目标增长10万
+        BigDecimal targetGrowth = new BigDecimal("100000");
+        BigDecimal monthlyGrowth = targetGrowth.divide(new BigDecimal("12"), 2, BigDecimal.ROUND_HALF_UP);
+        
+        // 创建全年12个月的数据数组
+        JSONArray array = new JSONArray();
+        for (int month = 1; month <= 12; month++) {
+            JSONObject json = new JSONObject();
+            json.put("date", currentYear + "-" + String.format("%02d", month));
+            
+            // 查找对应月份的实际存款数据
+            BigDecimal actualDeposit = BigDecimal.ZERO;
+            for (HsmSummary summary : list) {
+                if (summary.getYear() != null && summary.getYear() == currentYear && 
+                    summary.getMonth() != null && summary.getMonth() == month) {
+                    actualDeposit = summary.getEndDeposit() != null ? summary.getEndDeposit() : BigDecimal.ZERO;
+                    break;
+                }
+            }
+            
+            // 计算计划存款（年初存款 + 累计增长）
+            BigDecimal plannedDeposit = startDeposit.add(monthlyGrowth.multiply(new BigDecimal(month)));
+            
+            json.put("actualDeposit", actualDeposit);
+            json.put("plannedDeposit", plannedDeposit);
+            array.add(json);
+        }
+        
+        return array;
+    }
+
     private static LocalDate getLastMonth() {
         LocalDate date = LocalDate.now();
         // 获取上一个月的日期
