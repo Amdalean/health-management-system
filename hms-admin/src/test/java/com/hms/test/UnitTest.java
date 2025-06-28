@@ -34,7 +34,7 @@ public class UnitTest {
     @DisplayName("检查支出")
     @Test
     public void checkExpense(){
-        System.out.println(hsmSummaryController.forms());
+        System.out.println(hsmSummaryController.checkExpense());
     }
 
 }

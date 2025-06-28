@@ -15,22 +15,23 @@ import com.hms.main.summary.domain.HsmDetail;
 import com.hms.main.summary.mapper.HsmSummaryMapper;
 import com.hms.main.summary.domain.HsmSummary;
 import com.hms.main.summary.service.IHsmSummaryService;
+import java.math.BigDecimal;
 
 /**
  * 财务汇总主Service业务层处理
- * 
+ *
  * @author CYQ
  * @date 2025-02-05
  */
 @Service
-public class HsmSummaryServiceImpl implements IHsmSummaryService 
+public class HsmSummaryServiceImpl implements IHsmSummaryService
 {
     @Autowired
     private HsmSummaryMapper hsmSummaryMapper;
 
     /**
      * 查询财务汇总主
-     * 
+     *
      * @param id 财务汇总主主键
      * @return 财务汇总主
      */
@@ -42,7 +43,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
 
     /**
      * 查询财务汇总主列表
-     * 
+     *
      * @param hsmSummary 财务汇总主
      * @return 财务汇总主
      */
@@ -54,7 +55,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
 
     /**
      * 新增财务汇总主
-     * 
+     *
      * @param hsmSummary 财务汇总主
      * @return 结果
      */
@@ -70,7 +71,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
 
     /**
      * 修改财务汇总主
-     * 
+     *
      * @param hsmSummary 财务汇总主
      * @return 结果
      */
@@ -86,7 +87,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
 
     /**
      * 批量删除财务汇总主
-     * 
+     *
      * @param ids 需要删除的财务汇总主主键
      * @return 结果
      */
@@ -100,7 +101,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
 
     /**
      * 删除财务汇总主信息
-     * 
+     *
      * @param id 财务汇总主主键
      * @return 结果
      */
@@ -125,6 +126,37 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         json.put("items",JSONArray.parse(items));
         return json;
     }
+    
+    @Override
+    public JSONArray getYearlyExpenseData() {
+        HsmSummary hsmSummary = new HsmSummary();
+        List<HsmSummary> list = hsmSummaryMapper.selectHsmSummaryList(hsmSummary);
+        
+        // 获取当前年份
+        int currentYear = LocalDate.now().getYear();
+        
+        // 创建全年12个月的数据数组
+        JSONArray array = new JSONArray();
+        for (int month = 1; month <= 12; month++) {
+            JSONObject json = new JSONObject();
+            json.put("date", currentYear + "-" + String.format("%02d", month));
+            
+            // 查找对应月份的数据
+            BigDecimal expense = BigDecimal.ZERO;
+            for (HsmSummary summary : list) {
+                if (summary.getYear() != null && summary.getYear() == currentYear && 
+                    summary.getMonth() != null && summary.getMonth() == month) {
+                    expense = summary.getExpense() != null ? summary.getExpense() : BigDecimal.ZERO;
+                    break;
+                }
+            }
+            json.put("expense", expense);
+            array.add(json);
+        }
+        
+        return array;
+    }
+
     private static LocalDate getLastMonth() {
         LocalDate date = LocalDate.now();
         // 获取上一个月的日期
@@ -133,7 +165,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
 
     /**
      * 新增财务明细子表信息
-     * 
+     *
      * @param hsmSummary 财务汇总主对象
      */
     public void insertHsmDetail(HsmSummary hsmSummary)

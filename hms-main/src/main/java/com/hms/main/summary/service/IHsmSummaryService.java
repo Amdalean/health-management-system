@@ -3,20 +3,21 @@ package com.hms.main.summary.service;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
 import com.hms.main.summary.domain.HsmSummary;
 
 /**
  * 财务汇总主Service接口
- * 
+ *
  * @author CYQ
  * @date 2025-02-05
  */
 //@Component
-public interface IHsmSummaryService 
+public interface IHsmSummaryService
 {
     /**
      * 查询财务汇总主
-     * 
+     *
      * @param id 财务汇总主主键
      * @return 财务汇总主
      */
@@ -24,7 +25,7 @@ public interface IHsmSummaryService
 
     /**
      * 查询财务汇总主列表
-     * 
+     *
      * @param hsmSummary 财务汇总主
      * @return 财务汇总主集合
      */
@@ -32,7 +33,7 @@ public interface IHsmSummaryService
 
     /**
      * 新增财务汇总主
-     * 
+     *
      * @param hsmSummary 财务汇总主
      * @return 结果
      */
@@ -40,7 +41,7 @@ public interface IHsmSummaryService
 
     /**
      * 修改财务汇总主
-     * 
+     *
      * @param hsmSummary 财务汇总主
      * @return 结果
      */
@@ -48,7 +49,7 @@ public interface IHsmSummaryService
 
     /**
      * 批量删除财务汇总主
-     * 
+     *
      * @param ids 需要删除的财务汇总主主键集合
      * @return 结果
      */
@@ -56,7 +57,7 @@ public interface IHsmSummaryService
 
     /**
      * 删除财务汇总主信息
-     * 
+     *
      * @param id 财务汇总主主键
      * @return 结果
      */
@@ -67,4 +68,11 @@ public interface IHsmSummaryService
      * @return 财务汇总主
      */
     public JSONObject initHsmSummary();
+    
+    /**
+     * 获取全年支出数据
+     *
+     * @return 全年支出数据
+     */
+    public JSONArray getYearlyExpenseData();
 }
