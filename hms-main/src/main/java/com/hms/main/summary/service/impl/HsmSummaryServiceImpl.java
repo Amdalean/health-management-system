@@ -6,9 +6,12 @@ import java.util.List;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.hms.common.utils.DateUtils;
+import com.hms.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import com.hms.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import com.hms.main.summary.domain.HsmDetail;
@@ -64,6 +67,9 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     public int insertHsmSummary(HsmSummary hsmSummary)
     {
         hsmSummary.setCreateTime(DateUtils.getNowDate());
+        //add by CYQ 2025年8月29日 增加制单人逻辑
+        String userId = SecurityUtils.getUserId()+"";
+        hsmSummary.setCreateBy(userId);
         int rows = hsmSummaryMapper.insertHsmSummary(hsmSummary);
         insertHsmDetail(hsmSummary);
         return rows;
@@ -80,6 +86,9 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     public int updateHsmSummary(HsmSummary hsmSummary)
     {
         hsmSummary.setUpdateTime(DateUtils.getNowDate());
+        //add by CYQ 2025年8月29日 增加制单人
+        String userId = SecurityUtils.getUserId()+"";
+        hsmSummary.setUpdateBy(userId);
         hsmSummaryMapper.deleteHsmDetailBySummaryId(hsmSummary.getId());
         insertHsmDetail(hsmSummary);
         return hsmSummaryMapper.updateHsmSummary(hsmSummary);
@@ -117,8 +126,10 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     public JSONObject initHsmSummary() {
         LocalDate date = getLastMonth();
 //        HsmSummary data = hsmSummaryMapper.selectHsmDetailByDate(date.getYear(),date.getMonth().getValue());
-        HsmSummary data = hsmSummaryMapper.selectLastData();
-        List<HsmDetail> detail = hsmSummaryMapper.selectLastDetail();
+        //add by CYQ 2025年8月29日 增加制单人逻辑
+        String userId = SecurityUtils.getUserId()+"";
+        HsmSummary data = hsmSummaryMapper.selectLastData(userId);
+        List<HsmDetail> detail = hsmSummaryMapper.selectLastDetail(userId);
         JSONObject json = new JSONObject();
         String head = JSONObject.toJSONString(data);
         String items = JSONArray.toJSONString(detail);
@@ -311,6 +322,60 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         result.put("trend", trend);
         
         result.put("recommendations", recommendations);
+        
+        return result;
+    }
+
+    /**
+     * 获取存款结构数据
+     *
+     * @return 存款结构数据
+     */
+    @Override
+    public Map<String, Object> getDepositStructure() {
+        Map<String, Object> result = new HashMap<>();
+
+        //add by CYQ 2025年8月29日 增加制单人逻辑
+        String userId = SecurityUtils.getUserId()+"";
+        // 查询最新的财务明细数据
+        List<HsmDetail> detailList = hsmSummaryMapper.selectLastDetail(userId);
+        if (detailList == null || detailList.isEmpty()) {
+            result.put("current", 0);
+            result.put("fixed", 0);
+            result.put("wealth", 0);
+            result.put("total", 0);
+            return result;
+        }
+        
+        BigDecimal currentDeposit = BigDecimal.ZERO; // 活期存款
+        BigDecimal fixedDeposit = BigDecimal.ZERO;   // 定期存款
+        BigDecimal wealthDeposit = BigDecimal.ZERO;  // 理财存款
+        
+        // 遍历明细数据，根据category分类统计
+        for (HsmDetail detail : detailList) {
+            if (detail.getCategory() != null) {
+                switch (detail.getCategory()) {
+                    case "活期存款":
+                        currentDeposit = currentDeposit.add(detail.getAmount() != null ? detail.getAmount() : BigDecimal.ZERO);
+                        break;
+                    case "定期存款":
+                        fixedDeposit = fixedDeposit.add(detail.getAmount() != null ? detail.getAmount() : BigDecimal.ZERO);
+                        break;
+                    case "理财存款":
+                        wealthDeposit = wealthDeposit.add(detail.getAmount() != null ? detail.getAmount() : BigDecimal.ZERO);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        BigDecimal totalDeposit = currentDeposit.add(fixedDeposit.add(wealthDeposit));
+        
+        result.put("current", currentDeposit);
+        result.put("fixed", fixedDeposit);
+        result.put("wealth", wealthDeposit);
+        result.put("total", totalDeposit);
         
         return result;
     }

@@ -63,8 +63,8 @@ spring:
   # 服务模块
   devtools:
     restart:
-      # 热部署开关
-      enabled: true
+      # 热部署开关,memo by CYQ 2025年8月29日 这里写成true会导致改完代码自动重启
+      enabled: false
   # redis 配置
   redis:
     # 地址
@@ -142,11 +142,13 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
+# 通意千问大模型参数
 qwen:
   apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
   model: qwq-plus
   apiKey: sk-d6e71773670f408c9b96e186c6e2dae4
 
+# 邮箱参数
 mail:
   we: chenweidemail@163.com,15286891906@163.com
   me: 15286891906@163.com

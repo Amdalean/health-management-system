@@ -21,43 +21,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="收入" prop="income">
+      <el-form-item label="制单人" prop="createBy">
         <el-input
-            v-model="queryParams.income"
-            placeholder="请输入收入"
+            v-model="queryParams.createBy"
+            placeholder="制单人"
             clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="支出" prop="expense">
-        <el-input
-            v-model="queryParams.expense"
-            placeholder="请输入支出"
-            clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="结余" prop="balance">
-        <el-input
-            v-model="queryParams.balance"
-            placeholder="请输入结余"
-            clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="月初存款" prop="startDeposit">
-        <el-input
-            v-model="queryParams.startDeposit"
-            placeholder="请输入月初存款"
-            clearable
-            @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="月底存款" prop="endDeposit">
-        <el-input
-            v-model="queryParams.endDeposit"
-            placeholder="请输入月底存款"
-            clearable
+            readonly="true"
             @keyup.enter="handleQuery"
         />
       </el-form-item>
@@ -327,7 +296,10 @@ import {listSummary, getSummary, delSummary, addSummary, updateSummary, initSumm
 import FinanceChart from '@/components/FinanceChart';
 import DepositPlanChart from '@/components/DepositPlanChart';
 import DepositPredictionChart from '@/components/DepositPredictionChart';
+import useUserStore from '@/store/modules/user'
 // import FinanceChart from '@/components/G2Demo';
+// import jwtDecode from 'jwt-decode';
+// import store from "@/store";
 
 const {proxy} = getCurrentInstance();
 const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 'month');
@@ -355,6 +327,17 @@ const depositPlanData = ref([]);
 const showPredictionDialog = ref(false);
 const predictionData = ref([]);
 
+
+// const token = localStorage.getItem('user-token');
+// const decoded = jwtDecode(token);
+// const userId = decoded.userId;
+// import store from "@/store";
+// const userId = store.state.user.id//将缓存的用户id赋值给userId
+// const userStore = store()
+// const { id: userId } = userStore
+
+
+
 const data = reactive({
   form: {},
   queryParams: {
@@ -366,7 +349,8 @@ const data = reactive({
     expense: null,
     balance: null,
     startDeposit: null,
-    endDeposit: null
+    endDeposit: null,
+    createBy:null
   },
   rules: {
     year: [
@@ -398,9 +382,11 @@ const data = reactive({
     ]
   }
 });
-
 const {queryParams, form, rules} = toRefs(data);
 
+const userStore = useUserStore()
+const { id } = userStore
+data.queryParams.createBy = id;
 /** 查询财务汇总主列表 */
 function getList() {
   loading.value = true;

@@ -92,7 +92,7 @@ public interface HsmSummaryMapper
      * */
     public HsmSummary selectHsmDetailByDate(@Param("year")Integer year, @Param("month")Integer month);
     /** 查询最新数据 */
-    public HsmSummary selectLastData();
+    public HsmSummary selectLastData(String createBy);
     /** 查询最新明细 */
-    public List<HsmDetail> selectLastDetail();
+    public List<HsmDetail> selectLastDetail(String createBy);
 }

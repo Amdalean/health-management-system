@@ -1,6 +1,7 @@
 package com.hms.main.summary.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONArray;
@@ -89,4 +90,6 @@ public interface IHsmSummaryService
      * @return 存款预测数据
      */
     public JSONObject getDepositPrediction();
+
+    Map<String, Object> getDepositStructure();
 }

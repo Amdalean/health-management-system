@@ -58,7 +58,7 @@
           </div>
           <div class="body">
             <p>
-              <i class="el-icon-user-solid"></i> tel：15286891906
+              <i class="el-icon-user-solid"></i> tel：18600105496
             </p>
           </div>
         </el-card>
@@ -69,7 +69,11 @@
             <span>更新日志</span>
           </div>
           <el-collapse accordion>
-            
+            <el-collapse-item title="v1.0 - 2025-04-03">
+              <ol>
+                <li>1.调整附件预览功能</li>
+              </ol>
+            </el-collapse-item>
             <el-collapse-item title="v0.1.1 - 2025-04-03">
               <ol>
                 <li>1.调整上传文件大小限制</li>
@@ -77,7 +81,7 @@
                 <li>3.上传资料时会自动带出时间</li>
               </ol>
             </el-collapse-item>
-            <el-collapse-item title="v0.1.0 - 2024-10-17">
+            <el-collapse-item title="v1.0 - 2024-10-17">
               <ol>
                 <li>T1大健康系统发布</li>
               </ol>
