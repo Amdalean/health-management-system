@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="文件名称" prop="fileName">
@@ -152,7 +152,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <!-- <el-button type="primary" @click="submitForm">确 定</el-button> -->
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>

@@ -16,6 +16,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="balance"    column="balance"    />
         <result property="startDeposit"    column="start_deposit"    />
         <result property="endDeposit"    column="end_deposit"    />
+        <!-- 添加createBy和updateBy字段映射 -->
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
     </resultMap>
 
     <resultMap id="HsmSummaryHsmDetailResult" type="HsmSummary" extends="HsmSummaryResult">
@@ -31,10 +34,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="changeAmount"    column="change_amount"    />
         <result property="remark"    column="remark"    />
         <result property="name"    column="name"    />
+        <!-- 添加createBy和updateBy字段映射 -->
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
     </resultMap>
 
     <sql id="selectHsmSummaryVo">
-        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit from hsm_summary
+        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit, create_by, update_by from hsm_summary
     </sql>
 
     <select id="selectHsmSummaryList" parameterType="HsmSummary" resultMap="HsmSummaryResult">
@@ -47,17 +53,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null "> and balance = #{balance}</if>
             <if test="startDeposit != null "> and start_deposit = #{startDeposit}</if>
             <if test="endDeposit != null "> and end_deposit = #{endDeposit}</if>
+            <!-- 添加createBy和updateBy的查询条件 -->
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
         </where>
     </select>
     
     <select id="selectHsmSummaryById" parameterType="Long" resultMap="HsmSummaryHsmDetailResult">
-        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit
+        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit, create_by, update_by
         from hsm_summary
         where id = #{id}
     </select>
 
-    <select id="selectHsmDetailList" resultMap="HsmDetailResult">
-        select id, summary_id, category, type, amount, change_amount, remark, name
+    <select id="selectHsmDetailList" parameterType="Long" resultMap="HsmDetailResult">
+        select id, summary_id, category, type, amount, change_amount, remark, name, create_by, update_by
         from hsm_detail
         where summary_id = #{summary_id}
     </select>
@@ -75,6 +84,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null">balance,</if>
             <if test="startDeposit != null">start_deposit,</if>
             <if test="endDeposit != null">end_deposit,</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="year != null">#{year},</if>
@@ -87,6 +99,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null">#{balance},</if>
             <if test="startDeposit != null">#{startDeposit},</if>
             <if test="endDeposit != null">#{endDeposit},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
          </trim>
     </insert>
 
@@ -103,6 +118,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="balance != null">balance = #{balance},</if>
             <if test="startDeposit != null">start_deposit = #{startDeposit},</if>
             <if test="endDeposit != null">end_deposit = #{endDeposit},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
         </trim>
         where id = #{id}
     </update>
@@ -130,22 +148,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="batchHsmDetail">
-        insert into hsm_detail( id, summary_id, category, type, amount, change_amount, remark, name) values
+        insert into hsm_detail( id, summary_id, category, type, amount, change_amount, remark, name, create_by, update_by) values
         <foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.id}, #{item.summaryId}, #{item.category}, #{item.type}, #{item.amount}, #{item.changeAmount}, #{item.remark}, #{item.name})
+            ( #{item.id}, #{item.summaryId}, #{item.category}, #{item.type}, #{item.amount}, #{item.changeAmount}, #{item.remark}, #{item.name}, #{item.createBy}, #{item.updateBy})
         </foreach>
     </insert>
 
     <select id="selectHsmDetailByDate" parameterType="Integer" resultMap="HsmSummaryHsmDetailResult">
-        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit
+        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit, create_by, update_by
         from hsm_summary
         where year = #{year} and month = #{month}
     </select>
-    <select id="selectLastData" resultMap="HsmSummaryHsmDetailResult">
-        select * from hsm_summary order by year,month desc limit 1
+    <select id="selectLastData" resultMap="HsmSummaryHsmDetailResult" parameterType="String">
+        select * from hsm_summary where create_by = #{createBy} order by year,month desc limit 1
     </select>
-    <select id="selectLastDetail" resultMap="HsmDetailResult">
+    <select id="selectLastDetail" resultMap="HsmDetailResult" parameterType="String">
         select d.* from hsm_detail d
-        inner join (select id from hsm_summary order by year,month desc limit 1)s on s.id=d.summary_id
+        inner join (select id from hsm_summary where create_by = #{createBy} order by year,month desc limit 1)s on s.id=d.summary_id
     </select>
 </mapper>

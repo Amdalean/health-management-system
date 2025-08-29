@@ -24,10 +24,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="def3"    column="def3"    />
         <result property="def4"    column="def4"    />
         <result property="def5"    column="def5"    />
+        <!-- 添加createBy和updateBy字段映射 -->
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
     </resultMap>
 
     <sql id="selectHmsStudentVo">
-        select id, student_number, name, gender, birthdate, admission_date, grade, classname, major, status, email, phone, created_at, updated_at, def1, def2, def3, def4, def5 from hms_student
+        select id, student_number, name, gender, birthdate, admission_date, grade, classname, major, status, email, phone, created_at, updated_at, def1, def2, def3, def4, def5, create_by, update_by from hms_student
     </sql>
 
     <select id="selectHmsStudentList" parameterType="HmsStudent" resultMap="HmsStudentResult">
@@ -40,6 +43,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="classname != null  and classname != ''"> and classname like concat('%', #{classname}, '%')</if>
             <if test="major != null  and major != ''"> and major = #{major}</if>
             <if test="status != null "> and status = #{status}</if>
+            <!-- 添加createBy和updateBy的查询条件 -->
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
         </where>
     </select>
     
@@ -69,6 +75,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="def3 != null">def3,</if>
             <if test="def4 != null">def4,</if>
             <if test="def5 != null">def5,</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="studentNumber != null and studentNumber != ''">#{studentNumber},</if>
@@ -89,6 +98,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="def3 != null">#{def3},</if>
             <if test="def4 != null">#{def4},</if>
             <if test="def5 != null">#{def5},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
          </trim>
     </insert>
 
@@ -113,6 +125,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="def3 != null">def3 = #{def3},</if>
             <if test="def4 != null">def4 = #{def4},</if>
             <if test="def5 != null">def5 = #{def5},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
         </trim>
         where id = #{id}
     </update>

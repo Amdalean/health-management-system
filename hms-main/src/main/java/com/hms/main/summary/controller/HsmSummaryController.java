@@ -75,7 +75,7 @@ public class HsmSummaryController extends BaseController
     /**
      * 获取财务汇总主详细信息
      */
-    @PreAuthorize("@ss.hasPermi('main:summary:init')")
+//    @PreAuthorize("@ss.hasPermi('main:summary:init')")
     @GetMapping(value = "/init")
     public AjaxResult getInit()
     {
