@@ -75,29 +75,29 @@
           <el-card class="gauge-card">
             <template #header>
               <div class="card-header">
-                <span class="header-title">🎯 目标达成度</span>
+                <span class="header-title">🏦 存款类型占比</span>
               </div>
             </template>
             <div class="gauge-content">
               <div class="gauge-chart-container">
-                <div ref="gaugeRef" class="gauge-chart"></div>
+                <div ref="pieChartRef" class="gauge-chart"></div>
               </div>
               <div class="gauge-info">
                 <div class="info-item">
-                  <span class="info-label">当前达成：</span>
-                  <span class="info-value" :class="getAchievementClass()">
-                    {{ predictionData.prediction?.achievementRate || 0 }}%
-                  </span>
+                  <span class="info-label">活期存款：</span>
+                  <span class="info-value">¥{{ formatMoney(depositTypeData.current || 0) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">目标：</span>
-                  <span class="info-value">100%</span>
+                  <span class="info-label">定期存款：</span>
+                  <span class="info-value">¥{{ formatMoney(depositTypeData.fixed || 0) }}</span>
                 </div>
                 <div class="info-item">
-                  <span class="info-label">状态：</span>
-                  <span class="info-value" :class="getStatusClass()">
-                    {{ getStatusText() }}
-                  </span>
+                  <span class="info-label">理财存款：</span>
+                  <span class="info-value">¥{{ formatMoney(depositTypeData.wealth || 0) }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">总计：</span>
+                  <span class="info-value">¥{{ formatMoney(depositTypeData.total || 0) }}</span>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import * as echarts from 'echarts'
 
 const props = defineProps({
@@ -182,13 +182,53 @@ const props = defineProps({
   predictionData: {
     type: Object,
     default: () => ({})
+  },
+  // 添加HsmDetail数据属性
+  hsmDetailData: {
+    type: Array,
+    default: () => ([])
   }
 })
 
+// 添加计算存款类型数据的方法
+const calculateDepositTypeData = () => {
+  const typeData = {
+    current: 0,
+    fixed: 0,
+    wealth: 0,
+    total: 0
+  };
+
+  if (props.hsmDetailData && props.hsmDetailData.length > 0) {
+    props.hsmDetailData.forEach(item => {
+      // 根据HsmDetail的category分类统计
+      switch (item.category) {
+        case '活期存款':
+          typeData.current += item.amount || 0;
+          break;
+        case '定期存款':
+          typeData.fixed += item.amount || 0;
+          break;
+        case '理财存款':
+          typeData.wealth += item.amount || 0;
+          break;
+      }
+    });
+    
+    typeData.total = typeData.current + typeData.fixed + typeData.wealth;
+  }
+
+  return typeData;
+};
+
+// 修改存款类型数据为计算属性
+const depositTypeData = computed(() => calculateDepositTypeData());
+
 const chartRef = ref(null)
 const gaugeRef = ref(null)
+const pieChartRef = ref(null) // 新增饼图引用
 let chart = null
-let gaugeChart = null
+let pieChart = null // 新增饼图实例
 const showPrediction = ref(true)
 
 // 判断是否为移动端
@@ -395,115 +435,67 @@ const initChart = (data, showPredictionData = true) => {
   chart.setOption(getChartOption(data, showPredictionData))
 }
 
-// 初始化仪表盘
-const initGaugeChart = () => {
-  if (gaugeChart) {
-    gaugeChart.dispose()
-    gaugeChart = null
-  }
-  gaugeChart = echarts.init(gaugeRef.value)
-  const achievementRate = props.predictionData.prediction?.achievementRate || 0
-  const option = {
-    series: [{
-      type: 'gauge',
-      startAngle: 200,
-      endAngle: -20,
-      min: 0,
-      max: 120,
-      splitNumber: 12,
-      center: ['50%', '50%'],
-      radius: '80%',
-      itemStyle: {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [{
-            offset: 0, color: '#67c23a'
-          }, {
-            offset: 0.5, color: '#e6a23c'
-          }, {
-            offset: 1, color: '#f56c6c'
-          }]
-        },
-        shadowColor: 'rgba(0,138,255,0.45)',
-        shadowBlur: 10,
-        shadowOffsetX: 2,
-        shadowOffsetY: 2
-      },
-      progress: {
-        show: true,
-        roundCap: true,
-        width: 20,
-        itemStyle: {
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [{
-              offset: 0, color: '#67c23a'
-            }, {
-              offset: 0.5, color: '#e6a23c'
-            }, {
-              offset: 1, color: '#f56c6c'
-            }]
-          }
-        }
-      },
-      pointer: {
-        icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
-        length: '60%',
-        width: 8,
-        offsetCenter: [0, '5%']
-      },
-      axisLine: {
-        roundCap: true,
-        lineStyle: {
-          width: 20,
-          color: [
-            [0.3, '#f56c6c'],
-            [0.7, '#e6a23c'],
-            [1, '#67c23a']
-          ]
-        }
-      },
-      axisTick: {
-        splitNumber: 2,
-        lineStyle: {
-          width: 2,
-          color: '#999'
-        }
-      },
-      splitLine: {
-        length: 15,
-        lineStyle: {
-          width: 3,
-          color: '#999'
-        }
-      },
-      axisLabel: {
-        distance: 35,
-        color: '#999',
-        fontSize: 12
-      },
-      title: {
-        show: false
-      },
-      detail: {
-        show: false
-      },
-      data: [{
-        value: Math.min(achievementRate, 120),
-        name: '目标达成度'
-      }]
-    }]
+// 初始化饼图
+const initPieChart = () => {
+  if (pieChart) {
+    pieChart.dispose();
   }
   
-  gaugeChart.setOption(option)
+  pieChart = echarts.init(pieChartRef.value);
+  
+  // 使用计算后的存款类型数据
+  const currentData = calculateDepositTypeData();
+  
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      top: 'middle',
+      textStyle: {
+        fontSize: 12
+      }
+    },
+    series: [
+      {
+        name: '存款类型',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        center: ['65%', '50%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 6,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '14',
+            fontWeight: 'bold',
+            formatter: '{b}\n{d}%'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: currentData.current, name: '活期存款', itemStyle: { color: '#1890ff' } },
+          { value: currentData.fixed, name: '定期存款', itemStyle: { color: '#52c41a' } },
+          { value: currentData.wealth, name: '理财存款', itemStyle: { color: '#faad14' } }
+        ]
+      }
+    ]
+  };
+  
+  pieChart.setOption(option);
 }
 
 // 更新图表
@@ -518,8 +510,8 @@ const handleResize = () => {
   if (chart) {
     chart.resize()
   }
-  if (gaugeChart) {
-    gaugeChart.resize()
+  if (pieChart) { // 修改为处理饼图
+    pieChart.resize()
   }
 }
 
@@ -528,9 +520,8 @@ onMounted(() => {
   if (props.data?.length) {
     initChart(props.data, showPrediction.value)
   }
-  if (props.predictionData.prediction) {
-    initGaugeChart()
-  }
+  // 初始化饼图而不是仪表盘
+  initPieChart()
   window.addEventListener('resize', handleResize)
   setTimeout(handleResize, 100)
 })
@@ -540,9 +531,9 @@ onUnmounted(() => {
     chart.dispose()
     chart = null
   }
-  if (gaugeChart) {
-    gaugeChart.dispose()
-    gaugeChart = null
+  if (pieChart) { // 修改为处理饼图
+    pieChart.dispose()
+    pieChart = null
   }
   window.removeEventListener('resize', handleResize)
 })
@@ -569,6 +560,28 @@ watch(
   },
   { deep: true }
 )
+
+watch(
+  () => depositTypeData.value, // 监听存款类型数据变化
+  () => {
+    setTimeout(() => {
+      initPieChart()
+    }, 100)
+  },
+  { deep: true }
+)
+
+// 修改监听器以监听HsmDetail数据变化
+watch(
+  () => props.hsmDetailData,
+  () => {
+    setTimeout(() => {
+      initPieChart();
+    }, 100);
+  },
+  { deep: true }
+);
+
 </script>
 
 <style scoped>
@@ -975,4 +988,4 @@ watch(
     margin-bottom: 10px;
   }
 }
-</style> 
+</style>
