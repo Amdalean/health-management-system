@@ -98,9 +98,10 @@ export default {
     return {
       current: 0,
       swiperDotIndex: 0,
-      data: [{
-        image: '/static/images/banner/banner01.jpg'
-      },
+      data: [
+	  // {
+   //      image: '/static/images/banner/banner01.jpg'
+   //    },
       {
         image: '/static/images/banner/banner02.jpg'
       },

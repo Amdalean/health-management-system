@@ -3,7 +3,7 @@
     <view class="logo-content  pt-[15%] w-full items-center justify-center flex">
       <image class="w-[100rpx] h-[100rpx]" :src="globalConfig.appInfo.logo" mode="widthFix">
       </image>
-      <text class="ml-2.5 text-xl">若依移动端登录</text>
+      <text class="ml-2.5 text-xl">T1大健康登录</text>
     </view>
     <view class="login-form-content">
       <view class="input-item flex items-center">
@@ -47,11 +47,11 @@ export default {
       codeUrl: "",
       captchaEnabled: true,
       // 用户注册开关
-      register: false,
+      register: true,
       globalConfig: getApp().globalData.config,
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "",
+        password: "",
         code: "",
         uuid: ''
       }
