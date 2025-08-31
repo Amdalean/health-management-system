@@ -64,18 +64,36 @@
           </view>
         </uni-grid-item>
         <uni-grid-item>
-          <view class="grid-item-box">
+          <view class="grid-item-box" @click="showDocument">
             <uni-icons type="wallet-filled" size="30"></uni-icons>
-            <text class="text">日志管理</text>
+            <text class="text">资料管理</text>
           </view>
         </uni-grid-item>
       </uni-grid>
     </view>
+
+    <!-- 资料管理弹窗 -->
+    <uni-popup ref="documentPopup" type="center" :mask-click="false">
+      <view class="popup-content">
+        <view class="popup-header">
+          <text class="popup-title">资料管理</text>
+          <uni-icons type="close" size="20" @click="closeDocument"></uni-icons>
+        </view>
+        <view class="popup-body">
+          <DocumentIndex ref="documentIndexRef" />
+        </view>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
 <script>
+import DocumentIndex from '../document/index.vue'
+
 export default {
+  components: {
+    DocumentIndex
+  },
   data() {
     return {
       current: 0,
@@ -100,7 +118,18 @@ export default {
       this.current = e.detail.current
     },
     changeGrid(e) {
-      this.$modal.showToast('模块建设中~')
+      // this.$modal.showToast('模块建设中~')
+    },
+    showDocument() {
+      this.$refs.documentPopup.open()
+      setTimeout(() => {
+        if (this.$refs.documentIndexRef && this.$refs.documentIndexRef.getList) {
+          this.$refs.documentIndexRef.getList()
+        }
+      }, 300)
+    },
+    closeDocument() {
+      this.$refs.documentPopup.close()
     }
   }
 }
@@ -179,5 +208,31 @@ view {
   .image {
     width: 100%;
   }
+}
+
+.popup-content {
+  width: 90vw;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.popup-body {
+  max-height: 70vh;
+  overflow-y: auto;
 }
 </style>
