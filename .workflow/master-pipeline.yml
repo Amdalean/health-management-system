@@ -1,0 +1,128 @@
+version: '1.0'
+name: master-pipeline
+displayName: MasterPipeline
+triggers:
+  trigger: auto
+  push:
+    branches:
+      include:
+        - master
+stages:
+  - name: compile
+    displayName: 编译
+    strategy: naturally
+    trigger: auto
+    steps:
+      - step: build@maven
+        name: build_maven
+        displayName: Maven 构建
+        jdkVersion: 8
+        mavenVersion: 3.3.9
+        commands:
+          - mvn -B clean package -Dmaven.test.skip=true
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./hms-admin/target/*.jar
+  - name: deploy_agent
+    displayName: 部署
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: deploy@agent
+        name: deploy_agent
+        displayName: 主机部署
+        hostGroupID:
+          ID: T1
+          hostID:
+            - f1d69b10-7e70-48d1-b811-2bb291704c73
+        deployArtifact:
+          - source: build
+            name: output
+            target: /www/wwwroot/hms/deploy
+            dependArtifact: BUILD_ARTIFACT
+        script:
+          - '#!/bin/bash'
+          - ''
+          - '# ================= 配置区域 ================='
+          - '# 制品包路径 (Gitee Go 默认上传路径)'
+          - DEPLOY_PACKAGE="/www/wwwroot/hms/deploy/output.tar.gz"
+          - ''
+          - '# 应用部署目录 (你的 jar 包所在目录)'
+          - DEPLOY_DIR="/www/wwwroot/hms"
+          - ''
+          - '# 应用名称'
+          - APP_NAME="hms-admin.jar"
+          - ''
+          - '# 指定 JDK 路径 (根据你提供的路径)'
+          - JAVA_PATH="/www/server/java/jdk1.8.0_371/bin/java"
+          - ''
+          - '# JVM 参数 (根据你提供的参数)'
+          - JVM_OPTS="-Xmx1024M -Xms256M"
+          - ''
+          - '# 日志目录'
+          - LOG_DIR="$DEPLOY_DIR/logs"
+          - '# =========================================='
+          - ''
+          - echo "========== HMS 系统部署脚本 =========="
+          - ''
+          - '# 1. 检查制品包是否存在'
+          - echo ">>> 检查制品包..."
+          - if [ ! -f "$DEPLOY_PACKAGE" ]; then
+          - '    echo "❌ 错误：制品包 $DEPLOY_PACKAGE 不存在！"'
+          - '    exit 1'
+          - fi
+          - ''
+          - '# 2. 创建必要的目录'
+          - echo ">>> 创建目录结构..."
+          - mkdir -p $DEPLOY_DIR
+          - mkdir -p $LOG_DIR
+          - ''
+          - '# 3. 解压覆盖文件'
+          - echo ">>> 正在解压并覆盖文件..."
+          - '# -C 指定解压目录'
+          - '# --strip-components=1 用于去除压缩包内的顶层目录结构'
+          - tar zxvf $DEPLOY_PACKAGE -C $DEPLOY_DIR --strip-components=1
+          - ''
+          - if [ $? -eq 0 ]; then
+          - '    echo "✅ 文件覆盖成功"'
+          - else
+          - '    echo "❌ 解压失败"'
+          - '    exit 1'
+          - fi
+          - ''
+          - '# 4. 确保 jar 包有执行权限'
+          - chmod +x $DEPLOY_DIR/$APP_NAME
+          - ''
+          - '# 5. 停止旧进程'
+          - echo ">>> 正在停止旧应用进程..."
+          - '# 查找包含 hms-admin.jar 且是 java 进程的 PID'
+          - PID=$(ps -ef | grep java | grep "$DEPLOY_DIR/$APP_NAME" | grep -v grep | awk '{print $2}')
+          - ''
+          - if [ -n "$PID" ]; then
+          - '    echo "⏹️ 发现进程 $PID，正在停止..."'
+          - '    kill $PID'
+          - '    sleep 3'
+          - '    # 再次检查，如果还在则强制终止'
+          - '    if ps -p $PID > /dev/null; then'
+          - '        kill -9 $PID'
+          - '        echo "⚠️ 进程 $PID 强制终止"'
+          - '    else'
+          - '        echo "✅ 进程 $PID 已停止"'
+          - '    fi'
+          - else
+          - '    echo "ℹ️ 未发现运行中的进程"'
+          - fi
+          - ''
+          - '# 6. 启动新应用'
+          - echo ">>> 正在启动新应用..."
+          - '# 使用指定的 JDK 路径和参数启动'
+          - nohup $JAVA_PATH -jar $JVM_OPTS $DEPLOY_DIR/$APP_NAME > $LOG_DIR/app.log 2>&1 &
+          - ''
+          - echo "🚀 应用启动命令已发送"
+          - 'echo "📄 日志路径: $LOG_DIR/app.log"'
+          - echo "✅ 部署脚本执行完毕"
+        notify: []
+        strategy:
+          retry: '0'

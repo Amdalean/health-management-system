@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.jotdown.mapper.HsmJotdownMapper">
+    
+    <resultMap type="HsmJotdown" id="HsmJotdownResult">
+        <result property="id"    column="id"    />
+        <result property="personnel"    column="personnel"    />
+        <result property="auxiliaryAccounting"    column="auxiliary_accounting"    />
+        <result property="description"    column="description"    />
+        <result property="amount"    column="amount"    />
+        <result property="date"    column="date"    />
+        <result property="accountingPeriod"    column="accounting_period"    />
+        <result property="expenseType"    column="expense_type"    />
+        <result property="remarks"    column="remarks"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectHsmJotdownVo">
+        select id, personnel, auxiliary_accounting, description, amount, date, accounting_period, expense_type, remarks, created_at, updated_at from hsm_jotdown
+    </sql>
+
+    <select id="selectHsmJotdownList" parameterType="HsmJotdown" resultMap="HsmJotdownResult">
+        <include refid="selectHsmJotdownVo"/>
+        <where>  
+            <if test="personnel != null  and personnel != ''"> and personnel = #{personnel}</if>
+            <if test="auxiliaryAccounting != null  and auxiliaryAccounting != ''"> and auxiliary_accounting = #{auxiliaryAccounting}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="accountingPeriod != null  and accountingPeriod != ''"> and accounting_period = #{accountingPeriod}</if>
+            <if test="expenseType != null  and expenseType != ''"> and expense_type = #{expenseType}</if>
+        </where>
+    </select>
+    
+    <select id="selectHsmJotdownById" parameterType="Long" resultMap="HsmJotdownResult">
+        <include refid="selectHsmJotdownVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHsmJotdown" parameterType="HsmJotdown" useGeneratedKeys="true" keyProperty="id">
+        insert into hsm_jotdown
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="personnel != null and personnel != ''">personnel,</if>
+            <if test="auxiliaryAccounting != null and auxiliaryAccounting != ''">auxiliary_accounting,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="amount != null">amount,</if>
+            <if test="date != null">date,</if>
+            <if test="accountingPeriod != null and accountingPeriod != ''">accounting_period,</if>
+            <if test="expenseType != null and expenseType != ''">expense_type,</if>
+            <if test="remarks != null">remarks,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="personnel != null and personnel != ''">#{personnel},</if>
+            <if test="auxiliaryAccounting != null and auxiliaryAccounting != ''">#{auxiliaryAccounting},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="date != null">#{date},</if>
+            <if test="accountingPeriod != null and accountingPeriod != ''">#{accountingPeriod},</if>
+            <if test="expenseType != null and expenseType != ''">#{expenseType},</if>
+            <if test="remarks != null">#{remarks},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHsmJotdown" parameterType="HsmJotdown">
+        update hsm_jotdown
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personnel != null and personnel != ''">personnel = #{personnel},</if>
+            <if test="auxiliaryAccounting != null and auxiliaryAccounting != ''">auxiliary_accounting = #{auxiliaryAccounting},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="accountingPeriod != null and accountingPeriod != ''">accounting_period = #{accountingPeriod},</if>
+            <if test="expenseType != null and expenseType != ''">expense_type = #{expenseType},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHsmJotdownById" parameterType="Long">
+        delete from hsm_jotdown where id = #{id}
+    </delete>
+
+    <delete id="deleteHsmJotdownByIds" parameterType="String">
+        delete from hsm_jotdown where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

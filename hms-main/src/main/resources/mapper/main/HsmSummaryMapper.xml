@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.summary.mapper.HsmSummaryMapper">
+    
+    <resultMap type="HsmSummary" id="HsmSummaryResult">
+        <result property="id"    column="id"    />
+        <result property="year"    column="year"    />
+        <result property="month"    column="month"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="income"    column="income"    />
+        <result property="expense"    column="expense"    />
+        <result property="balance"    column="balance"    />
+        <result property="startDeposit"    column="start_deposit"    />
+        <result property="endDeposit"    column="end_deposit"    />
+        <!-- 添加createBy和updateBy字段映射 -->
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+    
+    <resultMap type="HsmSummaryVO" id="HsmSummaryVOResult" extends="HsmSummaryResult">
+        <result property="createByName"    column="create_by_name"    />
+        <result property="updateByName"    column="update_by_name"    />
+    </resultMap>
+
+    <resultMap id="HsmSummaryHsmDetailResult" type="HsmSummary" extends="HsmSummaryResult">
+        <collection property="hsmDetailList" ofType="HsmDetail" column="id" select="selectHsmDetailList" />
+    </resultMap>
+
+    <resultMap type="HsmDetail" id="HsmDetailResult">
+        <result property="id"    column="id"    />
+        <result property="summaryId"    column="summary_id"    />
+        <result property="category"    column="category"    />
+        <result property="type"    column="type"    />
+        <result property="amount"    column="amount"    />
+        <result property="changeAmount"    column="change_amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="name"    column="name"    />
+        <!-- 添加createBy和updateBy字段映射 -->
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectHsmSummaryVo">
+        select id, year, month, t1.remark, t1.create_time, t1.update_time, income, expense, balance, start_deposit, end_deposit, t1.create_by, t1.update_by
+        ,u.nick_name as create_by_name, u2.nick_name as update_by_name
+        from hsm_summary t1
+        left join sys_user u on t1.create_by = u.user_id
+        left join sys_user u2 on t1.update_by = u2.user_id
+    </sql>
+
+    <select id="selectHsmSummaryList" parameterType="HsmSummary" resultMap="HsmSummaryVOResult">
+        <include refid="selectHsmSummaryVo"/>
+        <where>
+            <if test="year != null "> and year = #{year}</if>
+            <if test="month != null "> and month = #{month}</if>
+            <if test="income != null "> and income = #{income}</if>
+            <if test="expense != null "> and expense = #{expense}</if>
+            <if test="balance != null "> and balance = #{balance}</if>
+            <if test="startDeposit != null "> and start_deposit = #{startDeposit}</if>
+            <if test="endDeposit != null "> and end_deposit = #{endDeposit}</if>
+            <!-- 添加createBy和updateBy的查询条件 -->
+            <if test="createBy != null  and createBy != ''"> and t1.create_by = #{createBy}</if>
+            <if test="updateBy != null  and updateBy != ''"> and t1.update_by = #{updateBy}</if>
+            <!-- 适配权限控制 -->
+            ${params.dataScope}
+        </where>
+        order by year asc,month asc
+    </select>
+    
+    <select id="selectHsmSummaryById" parameterType="Long" resultMap="HsmSummaryHsmDetailResult">
+        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit, create_by, update_by
+        from hsm_summary
+        where id = #{id}
+    </select>
+
+    <select id="selectHsmDetailList" parameterType="Long" resultMap="HsmDetailResult">
+        select id, summary_id, category, type, amount, change_amount, remark, name, create_by, update_by
+        from hsm_detail
+        where summary_id = #{summary_id}
+    </select>
+
+    <insert id="insertHsmSummary" parameterType="HsmSummary" useGeneratedKeys="true" keyProperty="id">
+        insert into hsm_summary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="income != null">income,</if>
+            <if test="expense != null">expense,</if>
+            <if test="balance != null">balance,</if>
+            <if test="startDeposit != null">start_deposit,</if>
+            <if test="endDeposit != null">end_deposit,</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="income != null">#{income},</if>
+            <if test="expense != null">#{expense},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="startDeposit != null">#{startDeposit},</if>
+            <if test="endDeposit != null">#{endDeposit},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHsmSummary" parameterType="HsmSummary">
+        update hsm_summary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="income != null">income = #{income},</if>
+            <if test="expense != null">expense = #{expense},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="startDeposit != null">start_deposit = #{startDeposit},</if>
+            <if test="endDeposit != null">end_deposit = #{endDeposit},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHsmSummaryById" parameterType="Long">
+        delete from hsm_summary where id = #{id}
+    </delete>
+
+    <delete id="deleteHsmSummaryByIds" parameterType="String">
+        delete from hsm_summary where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteHsmDetailBySummaryIds" parameterType="String">
+        delete from hsm_detail where summary_id in 
+        <foreach item="summaryId" collection="array" open="(" separator="," close=")">
+            #{summaryId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteHsmDetailBySummaryId" parameterType="Long">
+        delete from hsm_detail where summary_id = #{summaryId}
+    </delete>
+
+    <insert id="batchHsmDetail">
+        insert into hsm_detail( id, summary_id, category, type, amount, change_amount, remark, name, create_by, update_by) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.summaryId}, #{item.category}, #{item.type}, #{item.amount}, #{item.changeAmount}, #{item.remark}, #{item.name}, #{item.createBy}, #{item.updateBy})
+        </foreach>
+    </insert>
+
+    <select id="selectHsmDetailByDate" parameterType="Integer" resultMap="HsmSummaryHsmDetailResult">
+        select id, year, month, remark, create_time, update_time, income, expense, balance, start_deposit, end_deposit, create_by, update_by
+        from hsm_summary
+        where year = #{year} and month = #{month}
+    </select>
+    <select id="selectLastData" resultMap="HsmSummaryHsmDetailResult" parameterType="String">
+        select * from hsm_summary where create_by = #{createBy} order by year asc,month asc limit 1
+    </select>
+    <select id="selectLastDetail" resultMap="HsmDetailResult" parameterType="String">
+        select d.* from hsm_detail d
+        inner join (select id from hsm_summary where create_by = #{createBy} order by year asc,month asc limit 1)s on s.id=d.summary_id
+    </select>
+
+    <select id="selectLastSummaryDetailByType" parameterType="Long" resultMap="SummaryDetailVoResult">
+        SELECT dict_data.dict_label,sum(detail.amount) mny
+        FROM hsm_detail detail
+        JOIN (
+            SELECT id
+            FROM hsm_summary
+            WHERE create_by = #{createBy}
+            ORDER BY year asc, month asc
+            LIMIT 1
+        ) summary ON summary.id = detail.summary_id
+        LEFT JOIN (SELECT dict_label,dict_value FROM sys_dict_data WHERE dict_type = 'sztype' ORDER BY dict_sort) dict_data ON dict_data.dict_value = detail.type
+        GROUP BY dict_data.dict_label
+    </select>
+
+    <resultMap type="SummaryDetailVo" id="SummaryDetailVoResult">
+        <result property="dictLabel"    column="dict_label"    />
+        <result property="mny"    column="mny"    />
+    </resultMap>
+</mapper>

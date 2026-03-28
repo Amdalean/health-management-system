@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.student.mapper.HmsStudentMapper">
+    
+    <resultMap type="HmsStudent" id="HmsStudentResult">
+        <result property="id"    column="id"    />
+        <result property="studentNumber"    column="student_number"    />
+        <result property="name"    column="name"    />
+        <result property="gender"    column="gender"    />
+        <result property="birthdate"    column="birthdate"    />
+        <result property="admissionDate"    column="admission_date"    />
+        <result property="grade"    column="grade"    />
+        <result property="classname"    column="classname"    />
+        <result property="major"    column="major"    />
+        <result property="status"    column="status"    />
+        <result property="email"    column="email"    />
+        <result property="phone"    column="phone"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+        <result property="def1"    column="def1"    />
+        <result property="def2"    column="def2"    />
+        <result property="def3"    column="def3"    />
+        <result property="def4"    column="def4"    />
+        <result property="def5"    column="def5"    />
+        <!-- 添加createBy和updateBy字段映射 -->
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectHmsStudentVo">
+        select id, student_number, name, gender, birthdate, admission_date, grade, classname, major, status, email, phone, created_at, updated_at, def1, def2, def3, def4, def5, create_by, update_by from hms_student
+    </sql>
+
+    <select id="selectHmsStudentList" parameterType="HmsStudent" resultMap="HmsStudentResult">
+        <include refid="selectHmsStudentVo"/>
+        <where>  
+            <if test="studentNumber != null  and studentNumber != ''"> and student_number = #{studentNumber}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="gender != null "> and gender = #{gender}</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="classname != null  and classname != ''"> and classname like concat('%', #{classname}, '%')</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <!-- 添加createBy和updateBy的查询条件 -->
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectHmsStudentById" parameterType="Long" resultMap="HmsStudentResult">
+        <include refid="selectHmsStudentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertHmsStudent" parameterType="HmsStudent" useGeneratedKeys="true" keyProperty="id">
+        insert into hms_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentNumber != null and studentNumber != ''">student_number,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="gender != null">gender,</if>
+            <if test="birthdate != null">birthdate,</if>
+            <if test="admissionDate != null">admission_date,</if>
+            <if test="grade != null">grade,</if>
+            <if test="classname != null">classname,</if>
+            <if test="major != null">major,</if>
+            <if test="status != null">status,</if>
+            <if test="email != null">email,</if>
+            <if test="phone != null">phone,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+            <if test="def1 != null">def1,</if>
+            <if test="def2 != null">def2,</if>
+            <if test="def3 != null">def3,</if>
+            <if test="def4 != null">def4,</if>
+            <if test="def5 != null">def5,</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="updateBy != null and updateBy != ''">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentNumber != null and studentNumber != ''">#{studentNumber},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="birthdate != null">#{birthdate},</if>
+            <if test="admissionDate != null">#{admissionDate},</if>
+            <if test="grade != null">#{grade},</if>
+            <if test="classname != null">#{classname},</if>
+            <if test="major != null">#{major},</if>
+            <if test="status != null">#{status},</if>
+            <if test="email != null">#{email},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+            <if test="def1 != null">#{def1},</if>
+            <if test="def2 != null">#{def2},</if>
+            <if test="def3 != null">#{def3},</if>
+            <if test="def4 != null">#{def4},</if>
+            <if test="def5 != null">#{def5},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHmsStudent" parameterType="HmsStudent">
+        update hms_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentNumber != null and studentNumber != ''">student_number = #{studentNumber},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birthdate != null">birthdate = #{birthdate},</if>
+            <if test="admissionDate != null">admission_date = #{admissionDate},</if>
+            <if test="grade != null">grade = #{grade},</if>
+            <if test="classname != null">classname = #{classname},</if>
+            <if test="major != null">major = #{major},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+            <if test="def1 != null">def1 = #{def1},</if>
+            <if test="def2 != null">def2 = #{def2},</if>
+            <if test="def3 != null">def3 = #{def3},</if>
+            <if test="def4 != null">def4 = #{def4},</if>
+            <if test="def5 != null">def5 = #{def5},</if>
+            <!-- 添加createBy和updateBy字段 -->
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHmsStudentById" parameterType="Long">
+        delete from hms_student where id = #{id}
+    </delete>
+
+    <delete id="deleteHmsStudentByIds" parameterType="String">
+        delete from hms_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

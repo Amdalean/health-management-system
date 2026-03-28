@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.reminder.mapper.HmsReminderMapper">
+    
+    <resultMap type="HmsReminder" id="HmsReminderResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="remindDate"    column="remind_date"    />
+        <result property="calendarType"    column="calendar_type"    />
+        <result property="remindEmail"    column="remind_email"    />
+        <result property="aiPrompt"    column="ai_prompt"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHmsReminderVo">
+        select t1.id, t1.title, t1.remind_date, t1.calendar_type, t1.remind_email, t1.ai_prompt, t1.status, t1.create_by, t1.create_time, t1.update_by, t1.update_time, t1.remark from hms_reminder t1
+        left join sys_user u on t1.create_by = u.user_id
+    </sql>
+
+    <select id="selectHmsReminderList" parameterType="HmsReminder" resultMap="HmsReminderResult">
+        <include refid="selectHmsReminderVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="remindDate != null  and remindDate != ''"> and remind_date = #{remindDate}</if>
+            <if test="calendarType != null  and calendarType != ''"> and calendar_type = #{calendarType}</if>
+            <if test="remindEmail != null  and remindEmail != ''"> and remind_email = #{remindEmail}</if>
+            <if test="aiPrompt != null  and aiPrompt != ''"> and ai_prompt = #{aiPrompt}</if>
+            <if test="status != null  and status != ''"> and t1.status = #{status}</if>
+            <!-- 添加createBy和updateBy的查询条件 -->
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+             <!-- 适配权限控制 -->
+            ${params.dataScope}
+        </where>
+    </select>
+    
+    <select id="selectHmsReminderById" parameterType="Long" resultMap="HmsReminderResult">
+        <include refid="selectHmsReminderVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectUserNameById" parameterType="String" resultType="String">
+        select nick_name from sys_user where user_id = #{id}
+    </select>
+    <insert id="insertHmsReminder" parameterType="HmsReminder" useGeneratedKeys="true" keyProperty="id">
+        insert into hms_reminder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="remindDate != null and remindDate != ''">remind_date,</if>
+            <if test="calendarType != null">calendar_type,</if>
+            <if test="remindEmail != null">remind_email,</if>
+            <if test="aiPrompt != null">ai_prompt,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="remindDate != null and remindDate != ''">#{remindDate},</if>
+            <if test="calendarType != null">#{calendarType},</if>
+            <if test="remindEmail != null">#{remindEmail},</if>
+            <if test="aiPrompt != null">#{aiPrompt},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHmsReminder" parameterType="HmsReminder">
+        update hms_reminder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="remindDate != null and remindDate != ''">remind_date = #{remindDate},</if>
+            <if test="calendarType != null">calendar_type = #{calendarType},</if>
+            <if test="remindEmail != null">remind_email = #{remindEmail},</if>
+            <if test="aiPrompt != null">ai_prompt = #{aiPrompt},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHmsReminderById" parameterType="Long">
+        delete from hms_reminder where id = #{id}
+    </delete>
+
+    <delete id="deleteHmsReminderByIds" parameterType="String">
+        delete from hms_reminder where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
