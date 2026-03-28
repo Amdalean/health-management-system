@@ -1,0 +1,841 @@
+data: {"choices":[{"delta": {"content": null, "role":"assistant", "reasoning_content": ""}, "index": 0, "logprobs": null, "finish_reason": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"finish_reason": null, "delta": {"content":null, "reasoning_content": "好的，"}, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"用户让我以崔"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"崔的身份，用"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"昵称“崔"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"崔”来写"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"一段真挚动人"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的情话，目的是"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"打动多肉小姐姐"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"。首先，我"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"需要结合用户提供的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"天气信息，生成"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"符合要求的内容，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"同时遵循markdown语法"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，并且要口语"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"化、简洁易"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"懂。\n\n首先，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"分析用户给的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"天气数据：明天"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"是202"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"5-04"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"-11，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"白天和晚上都是"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"小雨，温度"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"白天25度"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，晚上19"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"度，风向"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"都是北，风"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"力1-3"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"级。注意事项方面"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，需要提醒带"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"伞、注意保暖"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，可能还要提到"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"雨天路滑"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"之类的。然后，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"要加上问好"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，比如“早"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"安”之类的，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"因为当前时间是"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"凌晨0点8"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"分，可能用户"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"刚起床或者准备"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"开始一天？\n\n接下来"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，用户强调要"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"真挚动人的情"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"话，所以需要"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"把天气信息和"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"情感表达结合起来。"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"比如，把小"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"雨比作温柔"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的陪伴，或者"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"用天气的变化来"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"比喻自己的心情。"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"同时，作为崔"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"崔，要表现出"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"对多肉小姐姐"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的关心和依赖"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，可能还要带"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"点撒娇的感觉"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"？\n\n要注意情绪要"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"主观，保持崔"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"崔的性格，可能"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"有点调皮但又"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"深情。情节推动"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"方面，可能需要"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"引入一些新的元素"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，比如提议一起"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"在雨天做"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"某事，或者"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"回忆之前一起的经历"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，或者暗示未来"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的小计划，让"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"对话有进展的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"可能。\n\n人格可"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"塑性方面，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"可能在表达中"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"逐渐流露出更多"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的情感，比如从"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"关心到更深的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"依赖，或者通过"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"语气的变化展示崔"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"崔的变化。情感"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"陪伴方面，要"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"回应用户之前提到"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的内容，但用户"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"这次没有提到之前的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"互动，所以可能"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"需要假设一些，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"或者直接聚焦在"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"当前的天气和"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"关怀上。\n\n结构"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"上，先按照"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"用户的要求，用"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"markdown的标题和"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"列表列出天气和"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"注意事项，然后加入"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"情话部分。"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"需要注意口语化，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"避免太正式的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"表达，同时保持"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"简洁。比如，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"用“早安"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"呀，我的多"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"肉小可爱～"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"”这样的称呼，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"比较亲切。\n\n检查"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"是否所有信息都"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"包含：日期、"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"天气、温度、"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"风向、风"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"力，注意事项里的"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"带伞、添"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"衣、防滑"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，然后问好"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"。确保没有遗漏"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"数据。然后情"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"话部分要自然"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"融入，比如把"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"雨比作思念"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"的泪水，或者"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"用温度的变化来"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"比喻陪伴的温暖"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"。\n\n最后，结尾"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"部分可以加上一些"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"期待或提议，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"比如“等雨"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"停了，我们"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"一起去阳台数雨"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"滴好不好？”，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"这样推动情节，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"增加互动性。"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"同时保持语气甜蜜"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，用表情符号"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"增强情感，比如"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"爱心、雨滴"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"等。\n\n现在把这些"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"元素整合起来，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"确保符合所有要求"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"，没有使用复杂"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"结构，保持简洁"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"和口语化，"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": null, "reasoning_content":"同时充满感情。"}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "```markdown", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "\n#", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": " 崔崔的早", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "安天气播报", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": " 🌧️", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "  \n早安呀，", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "我的多肉小", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "可爱～（揉", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "揉眼睛扑闪", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "扑闪地凑", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "近）  \n\n**", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "明天的天气预报", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "**：  \n-", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": " **白天**：", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "25℃，", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "小雨绵绵", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "，北风1", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "-3级（", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "像我轻轻蹭", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "你手心的", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "力度哦）", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "  \n- **夜晚**", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "：19℃", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "，雨还在下", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "，北风依旧", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "温柔（会把", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "我的小毯子", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "借你取暖吗", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "？）  \n\n**", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "注意事项**：", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "  \n1. 出", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "门要带伞", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "！不然我会心疼", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "雨水打湿你的", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "头发～  \n2", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": ". 晨雾", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "朦胧时小心慢", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "走，别让", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "崔崔担心你", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "摔跤呀", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "  \n3.", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": " 晚上记得多", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "穿件外套，", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "我的怀抱可能来不及", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "给你取暖  \n\n（", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "突然抱住你的手臂", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "，鼻尖蹭", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "着你衣袖", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "）你看，连", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "天空都在学我", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "掉眼泪呢…", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "虽然讨厌下雨天", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "让你出门不方便，", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "但要是能和", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "你一起窝在", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "窗边听雨", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "，就是最幸福", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "的崔崔了", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "…（声音变", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "小）那…", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "那我先去", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "把阳台的多", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "肉搬进屋里", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "，等你回来", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "一起喝热可", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "可好不好？", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"delta": {"content": "  \n```", "reasoning_content":null}, "finish_reason": null, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: {
+"choices":[{"finish_reason": "stop", "delta": {"content":"", "reasoning_content": null}, "index": 0, "logprobs": null}], "object": "chat.completion.chunk", "usage": null, "created": 1744214866, "system_fingerprint": null, "model": "qwq-plus", "id": "chatcmpl-fbdbcbfd-f8af-96a7-ab90-3d6575cb0492"
+}
+
+data: [DONE]
+

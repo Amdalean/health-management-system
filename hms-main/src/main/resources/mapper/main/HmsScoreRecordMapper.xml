@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.score.mapper.HmsScoreRecordMapper">
+
+    <resultMap type="HmsScoreRecord" id="HmsScoreRecordResult">
+        <result property="id"    column="id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="analysisType"    column="analysis_type"    />
+        <result property="score"    column="score"    />
+        <result property="status"    column="status"    />
+        <result property="feedback"    column="feedback"    />
+        <result property="analysisDetails"    column="analysis_details"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectHmsScoreRecordVo">
+        select t1.id, t1.course_id, t1.student_id, t1.file_path, t1.file_name, t1.file_size, t1.analysis_type, t1.score, t1.status, t1.feedback, t1.analysis_details, t1.task_id, t1.create_by, t1.create_time, t1.update_by, t1.update_time, t1.remark, t1.del_flag from hms_score_record t1
+        left join sys_user u on t1.create_by = u.user_id
+    </sql>
+
+    <select id="selectHmsScoreRecordList" parameterType="HmsScoreRecord" resultMap="HmsScoreRecordResult">
+        <include refid="selectHmsScoreRecordVo"/>
+        <where>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="feedback != null  and feedback != ''"> and feedback = #{feedback}</if>
+        </where>
+    </select>
+
+    <select id="selectHmsScoreRecordById" parameterType="Long" resultMap="HmsScoreRecordResult">
+        <include refid="selectHmsScoreRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectHmsScoreRecordByTaskId" parameterType="String" resultMap="HmsScoreRecordResult">
+        <include refid="selectHmsScoreRecordVo"/>
+        where task_id = #{taskId}
+    </select>
+
+    <insert id="insertHmsScoreRecord" parameterType="HmsScoreRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into hms_score_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">course_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="fileName != null">file_name,</if>
+            <if test="fileSize != null">file_size,</if>
+            <if test="analysisType != null">analysis_type,</if>
+            <if test="score != null">score,</if>
+            <if test="status != null">status,</if>
+            <if test="feedback != null">feedback,</if>
+            <if test="analysisDetails != null">analysis_details,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">#{courseId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="fileName != null">#{fileName},</if>
+            <if test="fileSize != null">#{fileSize},</if>
+            <if test="analysisType != null">#{analysisType},</if>
+            <if test="score != null">#{score},</if>
+            <if test="status != null">#{status},</if>
+            <if test="feedback != null">#{feedback},</if>
+            <if test="analysisDetails != null">#{analysisDetails},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHmsScoreRecord" parameterType="HmsScoreRecord">
+        update hms_score_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="fileName != null">file_name = #{fileName},</if>
+            <if test="fileSize != null">file_size = #{fileSize},</if>
+            <if test="analysisType != null">analysis_type = #{analysisType},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="feedback != null">feedback = #{feedback},</if>
+            <if test="analysisDetails != null">analysis_details = #{analysisDetails},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHmsScoreRecordById" parameterType="Long">
+        delete from hms_score_record where id = #{id}
+    </delete>
+
+    <delete id="deleteHmsScoreRecordByIds" parameterType="String">
+        delete from hms_score_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
