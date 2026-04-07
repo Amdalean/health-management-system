@@ -47,12 +47,14 @@
             <version>5.0.0-alpha.14</version>
         </dependency>
 
-        <!-- ollama模型依赖 -->
+        <!-- ollama模型依赖 - 已注释，使用HTTP方式调用Ollama API，避免Java版本冲突 -->
+        <!--
         <dependency>
             <groupId>io.github.amithkoujalgi</groupId>
             <artifactId>ollama4j</artifactId>
             <version>1.0.73</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.bouncycastle</groupId>

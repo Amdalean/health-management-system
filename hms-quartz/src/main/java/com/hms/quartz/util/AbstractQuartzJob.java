@@ -81,13 +81,21 @@ public abstract class AbstractQuartzJob implements Job
         sysJobLog.setStartTime(startTime);
         sysJobLog.setStopTime(new Date());
         long runMs = sysJobLog.getStopTime().getTime() - sysJobLog.getStartTime().getTime();
-        msg=msg==null?"":msg;
-        sysJobLog.setJobMessage(sysJobLog.getJobName() + " 总共耗时：" + runMs + "毫秒\n"+msg);
+        
+        msg = msg == null ? "" : msg;
+        String jobName = sysJob.getJobName() == null ? "未知任务" : sysJob.getJobName();
+        
+        // 过滤 Emoji 表情字符（4字节 UTF-8），避免 MySQL utf8 编码问题
+        String filteredMsg = removeEmoji(msg);
+        String filteredJobName = removeEmoji(jobName);
+        
+        sysJobLog.setJobMessage(filteredJobName + " 总共耗时：" + runMs + "毫秒\n" + filteredMsg);
         if (e != null)
         {
             sysJobLog.setStatus(Constants.FAIL);
             String errorMsg = StringUtils.substring(ExceptionUtil.getExceptionMessage(e), 0, 2000);
-            sysJobLog.setExceptionInfo(errorMsg);
+            // 过滤异常信息中的 Emoji
+            sysJobLog.setExceptionInfo(removeEmoji(errorMsg));
         }
         else
         {
@@ -96,6 +104,22 @@ public abstract class AbstractQuartzJob implements Job
 
         // 写入数据库当中
         SpringUtils.getBean(ISysJobLogService.class).addJobLog(sysJobLog);
+    }
+
+    /**
+     * 移除 Emoji 表情字符（4字节 UTF-8）
+     * 解决 MySQL utf8 编码不支持 Emoji 的问题
+     * 
+     * add by CYQ 2026年4月6日
+     * @param text 原始文本
+     * @return 过滤后的文本
+     */
+    private String removeEmoji(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+        // 移除 4 字节 UTF-8 字符（包括 Emoji 表情）
+        return text.replaceAll("[\\x{10000}-\\x{10FFFF}]", "");
     }
 
     /**

@@ -172,11 +172,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where year = #{year} and month = #{month}
     </select>
     <select id="selectLastData" resultMap="HsmSummaryHsmDetailResult" parameterType="String">
-        select * from hsm_summary where create_by = #{createBy} order by year asc,month asc limit 1
+        select * from hsm_summary where create_by = #{createBy} order by year desc,month desc limit 1
     </select>
     <select id="selectLastDetail" resultMap="HsmDetailResult" parameterType="String">
         select d.* from hsm_detail d
-        inner join (select id from hsm_summary where create_by = #{createBy} order by year asc,month asc limit 1)s on s.id=d.summary_id
+        inner join (select id from hsm_summary where create_by = #{createBy} order by year desc,month desc limit 1)s on s.id=d.summary_id
     </select>
 
     <select id="selectLastSummaryDetailByType" parameterType="Long" resultMap="SummaryDetailVoResult">
@@ -186,7 +186,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             SELECT id
             FROM hsm_summary
             WHERE create_by = #{createBy}
-            ORDER BY year asc, month asc
+            ORDER BY year desc, month desc
             LIMIT 1
         ) summary ON summary.id = detail.summary_id
         LEFT JOIN (SELECT dict_label,dict_value FROM sys_dict_data WHERE dict_type = 'sztype' ORDER BY dict_sort) dict_data ON dict_data.dict_value = detail.type

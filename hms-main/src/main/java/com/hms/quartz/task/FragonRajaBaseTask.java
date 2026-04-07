@@ -45,6 +45,9 @@ public class FragonRajaBaseTask {
         String now = DateUtil.now();
         String req = "请讲述天气及注意事项，并问好。干员将在厦门市湖里区出勤,现在的时间是"+now+"，以下是明天的天气信息："+data;
 //        String msg = new Chat().getBody(req);
+        //调用本地AI
+//        String response = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OLLAMA,AIChatFactory.StrategyType.DragonRaja).chat(req, null);
+        //调用云AI
         String response = AIChatFactory.createAIChat(AIChatFactory.StrategyType.DragonRaja).chat(req, null);
         this.msg.append("\nqwen返回消息："+response);
 //        String msg="";
