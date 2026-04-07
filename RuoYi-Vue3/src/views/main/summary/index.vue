@@ -366,8 +366,8 @@ const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
-    pageSize: 10,
-    year: null,
+    pageSize: 20,
+    year: new Date().getFullYear(), // 默认本年
     month: null,
     income: null,
     expense: null,

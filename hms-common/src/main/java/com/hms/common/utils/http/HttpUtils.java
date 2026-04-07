@@ -291,9 +291,12 @@ public class HttpUtils
      * @return
      * @throws Exception
      */
-    public static String dopost_OKHttp(String url, String param, Map<String,String> head) throws BaseException {
+    public static String dopost_OKHttp(String url, String param, Map<String,String> head) throws Exception {
         try {
             OkHttpClient client = new OkHttpClient().newBuilder()
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(600, TimeUnit.SECONDS)
+                    .writeTimeout(600, TimeUnit.SECONDS)
                     .build();
             MediaType mediaType = MediaType.parse("application/json");
             RequestBody body = RequestBody.create(mediaType, param);
@@ -324,7 +327,7 @@ public class HttpUtils
             return buffer.clone().readString(charset);
         } catch (Exception e) {
             // TODO: handle exception
-            throw new BaseException(e.getMessage());
+            throw e;
         }
     }
     public static JSONArray postStreamingResponse(String url, String requestBody, Map<String, String> headers) {

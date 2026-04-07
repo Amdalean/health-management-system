@@ -15,7 +15,12 @@ public class SendMaillTask extends FragonRajaBaseTask{
 
     @Autowired
     private JavaMailSender mailSender;
+
     public String task() throws Exception {
+        return task(MailConfig.getWe());
+    }
+
+    public String task(String to) throws Exception {
         try {
             msg = new StringBuffer();
             String gd = getGDAPI();//获取明天天气
@@ -30,7 +35,7 @@ public class SendMaillTask extends FragonRajaBaseTask{
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper simpleMailMessage = new MimeMessageHelper(message, true);
             simpleMailMessage.setFrom(MailConfig.getMe());
-            simpleMailMessage.setTo(MailConfig.getWe().split(","));
+            simpleMailMessage.setTo(to.split(","));
             simpleMailMessage.setSubject("明日天气预报，请查收~");
             simpleMailMessage.setText(html,true);
             mailSender.send(message);
