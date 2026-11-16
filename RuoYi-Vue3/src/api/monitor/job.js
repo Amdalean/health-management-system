@@ -69,3 +69,12 @@ export function runJob(jobId, jobGroup) {
     data: data
   })
 }
+
+// 获取当前正在执行的任务ID列表
+// add by CYQ 2026-08-19
+export function getRunningJobs() {
+  return request({
+    url: '/monitor/job/running',
+    method: 'get'
+  })
+}

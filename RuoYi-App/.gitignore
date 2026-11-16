@@ -12,5 +12,8 @@
 /.hbuilderx/*
 
 package-lock.json
-
-
+harmony-configs
+uni_modules
+!uni_modules/hms-flash-ball/
+!uni_modules/hms-flash-ball/**
+.playwright-cli

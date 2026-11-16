@@ -112,7 +112,7 @@
           <dict-tag :options="month" :value="scope.row.month"/>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="备注" align="center" prop="remark" show-overflow-tooltip />
       <el-table-column label="收入" align="center" prop="income" />
       <el-table-column label="支出" align="center" prop="expense" />
       <el-table-column label="结余" align="center" prop="balance" />
@@ -174,7 +174,7 @@
           <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="收入" prop="income">
-          <el-input v-model="form.income" placeholder="请输入收入" @input="calculateExpenseOnInput" />
+          <el-input v-model="form.income" placeholder="由「收入构成」自动汇总" disabled />
         </el-form-item>
         <el-form-item label="支出" prop="expense">
           <el-input v-model="form.expense" placeholder="系统自动计算" disabled />
@@ -188,15 +188,16 @@
         <el-form-item label="月底存款" prop="endDeposit">
           <el-input v-model="form.endDeposit" placeholder="请输入月底存款" disabled />
         </el-form-item>
-        <el-divider content-position="center">财务明细子表信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="Plus" @click="handleAddHsmDetail">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="Delete" @click="handleDeleteHsmDetail">删除</el-button>
-          </el-col>
-        </el-row>
+        <el-tabs v-model="activeTab" type="border-card" class="summary-tabs">
+          <el-tab-pane label="财务明细" name="detail">
+            <el-row :gutter="10" class="mb8">
+              <el-col :span="1.5">
+                <el-button type="primary" icon="Plus" @click="handleAddHsmDetail">添加</el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button type="danger" icon="Delete" @click="handleDeleteHsmDetail">删除</el-button>
+              </el-col>
+            </el-row>
         <el-table :data="hsmDetailList" :row-class-name="rowHsmDetailIndex" @selection-change="handleHsmDetailSelectionChange" ref="hsmDetail">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
@@ -252,6 +253,40 @@
             </template>
           </el-table-column>
         </el-table>
+          </el-tab-pane>
+          <el-tab-pane label="收入构成" name="income">
+            <el-row :gutter="10" class="mb8">
+              <el-col :span="1.5">
+                <el-button type="primary" icon="Plus" @click="handleAddIncome">添加</el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button type="danger" icon="Delete" @click="handleDeleteIncome">删除</el-button>
+              </el-col>
+              <el-col :span="22" style="text-align: right; line-height: 32px;">
+                收入合计：<span style="color: #f56c6c; font-weight: bold; font-size: 16px;">¥{{ incomeTotal }}</span>
+              </el-col>
+            </el-row>
+            <el-table :data="incomeList" :row-class-name="rowIncomeIndex" @selection-change="handleIncomeSelectionChange" ref="incomeTable">
+              <el-table-column type="selection" width="50" align="center" />
+              <el-table-column label="序号" align="center" prop="index" width="50" />
+              <el-table-column label="收入项目" prop="itemName" min-width="200">
+                <template #default="scope">
+                  <el-input v-model="scope.row.itemName" placeholder="如：工资 / 项目回款 / 炒股收益 / 基金收益" />
+                </template>
+              </el-table-column>
+              <el-table-column label="金额" prop="amount" width="180">
+                <template #default="scope">
+                  <el-input v-model="scope.row.amount" placeholder="请输入金额" @input="handleIncomeAmountInput" />
+                </template>
+              </el-table-column>
+              <el-table-column label="备注" prop="remark" min-width="200">
+                <template #default="scope">
+                  <el-input v-model="scope.row.remark" placeholder="请输入备注" />
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-tab-pane>
+        </el-tabs>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -330,6 +365,13 @@ const {year, cktype, sztype, month} = proxy.useDict('year', 'cktype', 'sztype', 
 
 const summaryList = ref([]);
 const hsmDetailList = ref([]);
+const incomeList = ref([]);
+const checkedIncome = ref([]);
+const activeTab = ref("detail");
+const incomeTotal = computed(() => {
+  const total = incomeList.value.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+  return total.toFixed(2);
+});
 const open = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -443,6 +485,9 @@ function reset() {
     endDeposit: 0
   };
   hsmDetailList.value = [];
+  incomeList.value = [];
+  checkedIncome.value = [];
+  activeTab.value = "detail";
   proxy.resetForm("summaryRef");
 }
 /**add by CYQ 2025年2月5日 增加默认赋值 */
@@ -574,6 +619,21 @@ function addAfter(){
       detail.amount = 0; // 清空金额
     });
     hsmDetailList.value = items;
+
+    //add by CYQ 2026-09-21 沿用上月收入构成（金额清零）
+    let incomeItems = response.data.incomeItems || [];
+    if (incomeItems.length > 0) {
+      incomeItems.forEach((item, index) => {
+        item.id = null;
+        item.summaryId = null;
+        item.amount = 0;
+        item.index = index + 1;
+      });
+      incomeList.value = incomeItems;
+    } else {
+      incomeList.value = defaultIncomeItems();
+    }
+    recalcIncome();
   })
 }
 /** 修改按钮操作 */
@@ -583,6 +643,16 @@ function handleUpdate(row) {
   getSummary(_id).then(response => {
     form.value = response.data;
     hsmDetailList.value = response.data.hsmDetailList;
+    //add by CYQ 2026-09-21 加载收入构成
+    incomeList.value = (response.data.incomeList || []).map((item, index) => {
+      item.index = index + 1;
+      return item;
+    });
+    // 历史数据无收入构成时，用表头收入兜底生成一条，避免回写清零
+    if (incomeList.value.length === 0 && Number(form.value.income) > 0) {
+      incomeList.value = [{ itemName: "收入", amount: Number(form.value.income), remark: "", index: 1 }];
+    }
+    recalcIncome();
     
     // 在修改模式下，确保每个明细项都有changeAmountOld值，避免计算错误
     hsmDetailList.value.forEach((item) => {
@@ -640,10 +710,13 @@ function handleAmountInput(row) {
 function calculateFormulaOnEnter(row) {
   // 检查是否为公式输入（以等号开头）
   if (row.amount && typeof row.amount === 'string' && row.amount.startsWith('=')) {
+    const formula = row.amount.trim()
     try {
-      const result = calculateSimpleFormula(row.amount)
+      const result = calculateSimpleFormula(formula)
       if (result !== null) {
         row.amount = result
+        //add by CYQ 2026-10-29 计算完成后自动把公式写入备注
+        writeFormulaToRemark(row, formula, result)
         // 计算完成后更新汇总
         afterEvent(row)
       }
@@ -651,6 +724,15 @@ function calculateFormulaOnEnter(row) {
       console.error('公式计算错误:', error)
     }
   }
+}
+
+/**
+ * 把计算公式覆盖写入备注，形如：100+200 = 300
+ * 原有备注直接丢弃，重复回车时用最新公式替换
+ * add by CYQ 2026-10-29
+ */
+function writeFormulaToRemark(row, formula, result) {
+  row.remark = `${formula.replace(/^=/, '')} = ${result}`
 }
 
 /**
@@ -697,8 +779,11 @@ function submitForm() {
       
       // 自动计算支出
       calculateExpense();
-      
+
       form.value.hsmDetailList = hsmDetailList.value;
+      //add by CYQ 2026-09-21 收入构成随表头一起提交
+      form.value.incomeList = incomeList.value;
+      recalcIncome();
       if (form.value.id != null) {
         updateSummary(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
@@ -824,6 +909,61 @@ function handleDeleteHsmDetail() {
 /** 复选框选中数据 */
 function handleHsmDetailSelectionChange(selection) {
   checkedHsmDetail.value = selection.map(item => item.index)
+}
+
+/** 收入构成：默认项目 add by CYQ 2026-09-21 */
+function defaultIncomeItems() {
+  return ["工资", "项目回款", "炒股收益", "基金收益"].map((name, index) => ({
+    itemName: name,
+    amount: 0,
+    remark: "",
+    index: index + 1
+  }));
+}
+
+/** 收入构成：重算表头收入并联动支出 */
+function recalcIncome() {
+  const total = incomeList.value.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+  form.value.income = total.toFixed(2);
+  calculateExpense();
+}
+
+/** 收入构成：金额输入 */
+function handleIncomeAmountInput() {
+  recalcIncome();
+}
+
+/** 收入构成：序号 */
+function rowIncomeIndex({row, rowIndex}) {
+  row.index = rowIndex + 1;
+}
+
+/** 收入构成：添加 */
+function handleAddIncome() {
+  incomeList.value.push({
+    itemName: "",
+    amount: 0,
+    remark: "",
+    index: incomeList.value.length + 1
+  });
+}
+
+/** 收入构成：删除 */
+function handleDeleteIncome() {
+  if (checkedIncome.value.length == 0) {
+    proxy.$modal.msgError("请先选择要删除的收入构成数据");
+  } else {
+    const checked = checkedIncome.value;
+    incomeList.value = incomeList.value.filter(function (item) {
+      return checked.indexOf(item.index) == -1
+    });
+    recalcIncome();
+  }
+}
+
+/** 收入构成：复选框选中数据 */
+function handleIncomeSelectionChange(selection) {
+  checkedIncome.value = selection.map(item => item.index)
 }
 
 /** 导出按钮操作 */

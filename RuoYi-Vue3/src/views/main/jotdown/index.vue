@@ -1,22 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="人员" prop="personnel">
-        <el-input
-          v-model="queryParams.personnel"
-          placeholder="请输入人员"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="辅助核算" prop="auxiliaryAccounting">
-        <el-input
-          v-model="queryParams.auxiliaryAccounting"
-          placeholder="请输入辅助核算"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="说明" prop="description">
         <el-input
           v-model="queryParams.description"
@@ -41,21 +25,15 @@
           placeholder="请选择日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="会计期间" prop="accountingPeriod">
-        <el-input
-          v-model="queryParams.accountingPeriod"
-          placeholder="请输入会计期间"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="费用类型" prop="expenseType">
-        <el-input
-          v-model="queryParams.expenseType"
-          placeholder="请输入费用类型"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+        <el-select v-model="queryParams.expenseType" placeholder="请选择费用类型" clearable style="width: 200px">
+          <el-option
+              v-for="dict in jotdown_expense_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -107,9 +85,6 @@
 
     <el-table v-loading="loading" :data="jotdownList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
-      <el-table-column label="人员" align="center" prop="personnel" />
-      <el-table-column label="辅助核算" align="center" prop="auxiliaryAccounting" />
       <el-table-column label="说明" align="center" prop="description" />
       <el-table-column label="金额" align="center" prop="amount" />
       <el-table-column label="日期" align="center" prop="date" width="180">
@@ -117,9 +92,12 @@
           <span>{{ parseTime(scope.row.date, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="会计期间" align="center" prop="accountingPeriod" />
-      <el-table-column label="费用类型" align="center" prop="expenseType" />
-      <el-table-column label="备注" align="center" prop="remarks" />
+      <el-table-column label="费用类型" align="center" prop="expenseType">
+        <template #default="scope">
+          <dict-tag :options="jotdown_expense_type" :value="scope.row.expenseType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remarks" show-overflow-tooltip />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['main:jotdown:edit']">修改</el-button>
@@ -139,11 +117,11 @@
     <!-- 添加或修改随手记对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="jotdownRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="人员" prop="personnel">
-          <el-input v-model="form.personnel" placeholder="请输入人员" />
-        </el-form-item>
-        <el-form-item label="辅助核算" prop="auxiliaryAccounting">
-          <el-input v-model="form.auxiliaryAccounting" placeholder="请输入辅助核算" />
+        <el-form-item>
+          <input ref="fileInputRef" type="file" accept="image/*" style="display:none" @change="handleFileChange" />
+          <el-button type="warning" plain :loading="aiLoading" @click="openFileInput">
+            图片识别录入
+          </el-button>
         </el-form-item>
         <el-form-item label="说明" prop="description">
           <el-input v-model="form.description" placeholder="请输入说明" />
@@ -159,30 +137,18 @@
             placeholder="请选择日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="会计期间" prop="accountingPeriod">
-          <el-input v-model="form.accountingPeriod" placeholder="请输入会计期间" />
-        </el-form-item>
         <el-form-item label="费用类型" prop="expenseType">
-          <el-input v-model="form.expenseType" placeholder="请输入费用类型" />
+          <el-select v-model="form.expenseType" placeholder="请选择费用类型">
+            <el-option
+                v-for="dict in jotdown_expense_type"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="form.remarks" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="创建时间" prop="createdAt">
-          <el-date-picker clearable
-            v-model="form.createdAt"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="请选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="更新时间" prop="updatedAt">
-          <el-date-picker clearable
-            v-model="form.updatedAt"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="请选择更新时间">
-          </el-date-picker>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -196,9 +162,12 @@
 </template>
 
 <script setup name="Jotdown">
-import { listJotdown, getJotdown, delJotdown, addJotdown, updateJotdown } from "@/api/main/jotdown";
+import { listJotdown, getJotdown, delJotdown, addJotdown, updateJotdown, aiRecognizeJotdown } from "@/api/main/jotdown";
+import useUserStore from '@/store/modules/user'
 
 const { proxy } = getCurrentInstance();
+const { jotdown_expense_type } = proxy.useDict('jotdown_expense_type');
+const userStore = useUserStore();
 
 const jotdownList = ref([]);
 const open = ref(false);
@@ -209,27 +178,20 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const fileInputRef = ref(null);
+const aiLoading = ref(false);
 
 const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    personnel: null,
-    auxiliaryAccounting: null,
     description: null,
     amount: null,
     date: null,
-    accountingPeriod: null,
     expenseType: null,
   },
   rules: {
-    personnel: [
-      { required: true, message: "人员不能为空", trigger: "blur" }
-    ],
-    auxiliaryAccounting: [
-      { required: true, message: "辅助核算不能为空", trigger: "blur" }
-    ],
     description: [
       { required: true, message: "说明不能为空", trigger: "blur" }
     ],
@@ -238,9 +200,6 @@ const data = reactive({
     ],
     date: [
       { required: true, message: "日期不能为空", trigger: "blur" }
-    ],
-    accountingPeriod: [
-      { required: true, message: "会计期间不能为空", trigger: "blur" }
     ],
     expenseType: [
       { required: true, message: "费用类型不能为空", trigger: "blur" }
@@ -271,15 +230,11 @@ function reset() {
   form.value = {
     id: null,
     personnel: null,
-    auxiliaryAccounting: null,
     description: null,
     amount: null,
     date: null,
-    accountingPeriod: null,
     expenseType: null,
     remarks: null,
-    createdAt: null,
-    updatedAt: null
   };
   proxy.resetForm("jotdownRef");
 }
@@ -306,8 +261,36 @@ function handleSelectionChange(selection) {
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
+  form.value.personnel = userStore.id;
   open.value = true;
   title.value = "添加随手记";
+}
+
+/** 打开文件选择器 */
+function openFileInput() {
+  fileInputRef.value.click();
+}
+
+/** 图片上传并AI识别 */
+async function handleFileChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  aiLoading.value = true;
+  try {
+    const res = await aiRecognizeJotdown(file);
+    const data = res.data;
+    if (data.description) form.value.description = data.description;
+    if (data.amount) form.value.amount = data.amount;
+    if (data.date) form.value.date = data.date;
+    if (data.expenseType) form.value.expenseType = String(data.expenseType);
+    if (data.remarks) form.value.remarks = data.remarks;
+    proxy.$modal.msgSuccess("AI识别完成，请核对后提交");
+  } catch (err) {
+    proxy.$modal.msgError("AI识别失败，请重试");
+  } finally {
+    aiLoading.value = false;
+    fileInputRef.value.value = '';
+  }
 }
 
 /** 修改按钮操作 */

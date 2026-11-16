@@ -97,3 +97,6 @@ doc/论文/
 # 第三方依赖快照
 playwright/node_modules/
 RuoYi-App/unpackage/
+
+# 个人电子书/资料（含第三方版权内容，勿提交）
+doc/book/

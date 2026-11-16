@@ -1,10 +1,10 @@
-import store from '@/store'
 import config from '@/config'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
-import { toast, showConfirm, tansParams } from '@/utils/common'
+import { toast, tansParams } from '@/utils/common'
+import { handleSessionExpired, promptRelogin } from '@/utils/wxAuth'
 
-let timeout = 10000
+let timeout = 300000 // 默认5分钟超时，支持大文件上传
 const baseUrl = config.baseUrl
 
 export default function upload(config) {
@@ -35,14 +35,27 @@ export default function upload(config) {
         if (code === 200) {
           resolve(result)
         } else if (code == 401) {
-          showConfirm("登录状态已过期，您可以继续留在该页面，或者重新登录?").then(res => {
-            if (res.confirm) {
-              store.dispatch('LogOut').then(res => {
-                uni.reLaunch({ url: '/pages/login/login' })
-              })
+          const expiredMsg = '无效的会话，或者会话已过期，请重新登录。'
+          // 会话过期：小程序端先尝试「已绑定微信」静默续登，成功则重传本文件
+          // add by CYQ 2026-11-14 已绑定微信的会话过期自动续登
+          if (isToken) {
+            // 匿名上传 401 不弹框，交给调用方处理
+            reject(expiredMsg)
+            return
+          }
+          if (config._wxRetried) {
+            promptRelogin()
+            reject(expiredMsg)
+            return
+          }
+          handleSessionExpired().then((renewed) => {
+            if (!renewed) {
+              reject(expiredMsg)
+              return
             }
+            const retryConfig = Object.assign({}, config, { params: undefined, _wxRetried: true })
+            upload(retryConfig).then(resolve).catch(reject)
           })
-          reject('无效的会话，或者会话已过期，请重新登录。')
         } else if (code === 500) {
           toast(msg)
           reject('500')

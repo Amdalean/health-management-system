@@ -68,7 +68,7 @@ const props = defineProps({
 });
 
 const { proxy } = getCurrentInstance();
-const emit = defineEmits();
+const emit = defineEmits(['update:modelValue', 'file-info']);
 const number = ref(0);
 const uploadList = ref([]);
 const baseUrl = import.meta.env.VITE_APP_BASE_API;
@@ -142,6 +142,7 @@ function handleUploadError(err) {
 function handleUploadSuccess(res, file) {
   if (res.code === 200) {
     uploadList.value.push({ name: res.fileName, url: res.fileName });
+    emit('file-info', { name: file.name, size: file.size });
     uploadedSuccessfully();
   } else {
     number.value--;

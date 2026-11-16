@@ -9,14 +9,6 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="提醒日期" prop="remindDate">
-        <el-input
-          v-model="queryParams.remindDate"
-          placeholder="请输入提醒日期"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="历法类型" prop="calendarType">
         <el-select v-model="queryParams.calendarType" placeholder="请选择历法类型" clearable style="width: 120px">
           <el-option
@@ -26,6 +18,35 @@
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="提醒日期" prop="remindDate">
+        <el-date-picker
+          v-if="queryParams.calendarType === '0'"
+          v-model="queryParams.remindDate"
+          type="date"
+          value-format="MM-DD"
+          format="MM-DD"
+          placeholder="选择日期"
+          clearable
+          style="width: 130px"
+        />
+        <el-select
+          v-else-if="queryParams.calendarType === '1'"
+          v-model="queryParams.remindDate"
+          placeholder="选择月份"
+          clearable
+          style="width: 130px"
+        >
+          <el-option v-for="item in lunarMonths" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+        <el-input
+          v-else
+          v-model="queryParams.remindDate"
+          placeholder="请输入提醒日期"
+          clearable
+          style="width: 130px"
+          @keyup.enter="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="提醒邮箱" prop="remindEmail">
         <el-input
@@ -156,9 +177,6 @@
         <el-form-item label="提醒标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入提醒标题" />
         </el-form-item>
-        <el-form-item label="提醒日期" prop="remindDate">
-          <el-input v-model="form.remindDate" placeholder="公历示例：01-26;农历示例：腊月初八 或 十二月初八" />
-        </el-form-item>
         <el-form-item label="历法类型" prop="calendarType">
           <el-select v-model="form.calendarType" placeholder="请选择历法类型">
             <el-option
@@ -168,6 +186,26 @@
               :value="dict.value"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="提醒日期" prop="remindDate">
+          <el-date-picker
+            v-if="form.calendarType === '0'"
+            v-model="form.remindDate"
+            type="date"
+            value-format="MM-DD"
+            format="MM-DD"
+            placeholder="选择日期"
+            style="width: 100%"
+          />
+          <template v-else-if="form.calendarType === '1'">
+            <el-select v-model="lunarMonth" placeholder="选择月份" style="width: 120px; margin-right: 8px;">
+              <el-option v-for="item in lunarMonths" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select v-model="lunarDay" placeholder="选择日期" style="width: 120px;">
+              <el-option v-for="item in lunarDays" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </template>
+          <el-input v-else v-model="form.remindDate" placeholder="请先选择历法类型" />
         </el-form-item>
         <el-form-item label="提醒邮箱" prop="remindEmail">
           <el-input v-model="form.remindEmail" placeholder="请输入提醒邮箱" />
@@ -199,11 +237,36 @@
 </template>
 
 <script setup name="Reminder">
+import { watch } from 'vue'
 import { listReminder, getReminder, delReminder, addReminder, updateReminder } from "@/api/main/reminder";
 import useUserStore from '@/store/modules/user'
 
 const { proxy } = getCurrentInstance();
 const { enable_state, sys_calendar_type } = proxy.useDict('enable_state', 'sys_calendar_type');
+
+// 农历月份选项
+const lunarMonths = [
+  { value: '正月', label: '正月' },
+  { value: '二月', label: '二月' },
+  { value: '三月', label: '三月' },
+  { value: '四月', label: '四月' },
+  { value: '五月', label: '五月' },
+  { value: '六月', label: '六月' },
+  { value: '七月', label: '七月' },
+  { value: '八月', label: '八月' },
+  { value: '九月', label: '九月' },
+  { value: '十月', label: '十月' },
+  { value: '冬月', label: '冬月' },
+  { value: '腊月', label: '腊月' },
+]
+
+// 农历日期选项
+const lunarDayNames = [
+  '初一','初二','初三','初四','初五','初六','初七','初八','初九','初十',
+  '十一','十二','十三','十四','十五','十六','十七','十八','十九','二十',
+  '廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十',
+]
+const lunarDays = lunarDayNames.map(d => ({ value: d, label: d }))
 
 const reminderList = ref([]);
 const open = ref(false);
@@ -214,6 +277,8 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const lunarMonth = ref(null);
+const lunarDay = ref(null);
 
 const data = reactive({
   form: {},
@@ -225,7 +290,7 @@ const data = reactive({
     calendarType: null,
     remindEmail: null,
     aiPrompt: null,
-    status: null,
+    status: '1',
     createBy:null
   },
   rules: {
@@ -277,8 +342,28 @@ function reset() {
     updateTime: null,
     remark: null
   };
+  lunarMonth.value = null;
+  lunarDay.value = null;
   proxy.resetForm("reminderRef");
 }
+
+// 农历月日组合成 remindDate
+watch([lunarMonth, lunarDay], ([month, day]) => {
+  if (month && day) {
+    form.value.remindDate = month + day
+  } else if (!month && !day) {
+    form.value.remindDate = null
+  }
+})
+
+// 切换历法类型时清空提醒日期（排除初始加载场景）
+watch(() => form.value.calendarType, (newType, oldType) => {
+  if (oldType !== null && newType !== oldType) {
+    form.value.remindDate = null
+    lunarMonth.value = null
+    lunarDay.value = null
+  }
+})
 
 /** 搜索按钮操作 */
 function handleQuery() {
@@ -312,6 +397,17 @@ function handleUpdate(row) {
   const _id = row.id || ids.value
   getReminder(_id).then(response => {
     form.value = response.data;
+    // 解析农历日期回填到下拉框
+    if (form.value.calendarType === '1' && form.value.remindDate) {
+      const monthNames = lunarMonths.map(m => m.value)
+      for (const m of monthNames) {
+        if (form.value.remindDate.startsWith(m)) {
+          lunarMonth.value = m
+          lunarDay.value = form.value.remindDate.substring(m.length)
+          break
+        }
+      }
+    }
     open.value = true;
     title.value = "修改提醒管理";
   });

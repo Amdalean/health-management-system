@@ -1,90 +1,156 @@
 {
   "pages": [{
+    "path": "pages/index",
+    "style": { "navigationBarTitleText": "Caelum", "navigationStyle": "custom" }
+  }, {
     "path": "pages/login",
-    "style": {
-      "navigationBarTitleText": "登录"
-    }
+    "style": { "navigationBarTitleText": "登录" }
+  }, {
+    "path": "pages/wxbind",
+    "style": { "navigationBarTitleText": "绑定账号" }
   }, {
     "path": "pages/register",
-    "style": {
-      "navigationBarTitleText": "注册"
-    }
-  }, {
-    "path": "pages/index",
-    "style": {
-      "navigationBarTitleText": "T1大健康移动端框架",
-      "navigationStyle": "custom"
-    }
+    "style": { "navigationBarTitleText": "注册" }
   }, {
     "path": "pages/work/index",
-    "style": {
-      "navigationBarTitleText": "工作台"
-    }
+    "style": { "navigationBarTitleText": "工作台" }
   }, {
     "path": "pages/mine/index",
-    "style": {
-      "navigationBarTitleText": "我的"
-    }
+    "style": { "navigationBarTitleText": "我的" }
   }, {
     "path": "pages/mine/avatar/index",
-    "style": {
-      "navigationBarTitleText": "修改头像"
-    }
+    "style": { "navigationBarTitleText": "修改头像" }
   }, {
     "path": "pages/mine/info/index",
-    "style": {
-      "navigationBarTitleText": "个人信息"
-    }
+    "style": { "navigationBarTitleText": "个人信息" }
   }, {
     "path": "pages/mine/info/edit",
-    "style": {
-      "navigationBarTitleText": "编辑资料"
-    }
+    "style": { "navigationBarTitleText": "编辑资料" }
   }, {
     "path": "pages/mine/pwd/index",
-    "style": {
-      "navigationBarTitleText": "修改密码"
-    }
+    "style": { "navigationBarTitleText": "修改密码" }
   }, {
     "path": "pages/mine/setting/index",
-    "style": {
-      "navigationBarTitleText": "应用设置"
-    }
+    "style": { "navigationBarTitleText": "应用设置" }
   }, {
     "path": "pages/mine/help/index",
-    "style": {
-      "navigationBarTitleText": "常见问题"
-    }
+    "style": { "navigationBarTitleText": "常见问题" }
   }, {
     "path": "pages/mine/about/index",
-    "style": {
-      "navigationBarTitleText": "关于我们"
-    }
+    "style": { "navigationBarTitleText": "关于我们" }
   }, {
     "path": "pages/common/webview/index",
-    "style": {
-      "navigationBarTitleText": "浏览网页"
-    }
+    "style": { "navigationBarTitleText": "浏览网页" }
   }, {
     "path": "pages/common/textview/index",
-    "style": {
-      "navigationBarTitleText": "浏览文本"
-    }
-  },{
-    "path": "pages/document/index",
-    "style": { "navigationBarTitleText": "资料库管理" }
-  },
-  {
-    "path": "pages/document/add",
-    "style": { "navigationBarTitleText": "新增资料" }
-  },
-  {
-    "path": "pages/document/edit",
-    "style": { "navigationBarTitleText": "编辑资料" }
-  },
-  {
-    "path": "pages/document/preview",
-    "style": { "navigationBarTitleText": "预览资料" }
+    "style": { "navigationBarTitleText": "浏览文本" }
+  }, {
+    "path": "pages/common/push-demo/index",
+    "style": { "navigationBarTitleText": "推送调试" }
+  }, {
+    "path": "pages/mine/clockin/index",
+    "style": { "navigationBarTitleText": "打卡" }
+  }, {
+    "path": "pages/mine/notification/index",
+    "style": { "navigationBarTitleText": "消息通知", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }
+  }, {
+    "path": "pages/tbk/index",
+    "style": { "navigationBarTitleText": "优惠查询" }
+  }, {
+    "path": "pages/tbk/ai-pick",
+    "style": { "navigationBarTitleText": "AI 帮你挑" }
+  }],
+  "subPackages": [{
+    "root": "pages/document",
+    "pages": [{
+      "path": "index",
+      "style": { "navigationBarTitleText": "资料库管理" }
+    }, {
+      "path": "add",
+      "style": { "navigationBarTitleText": "新增资料" }
+    }, {
+      "path": "edit",
+      "style": { "navigationBarTitleText": "编辑资料" }
+    }, {
+      "path": "preview",
+      "style": { "navigationBarTitleText": "预览资料" }
+    }]
+  }, {
+    "root": "pages/reminder",
+    "pages": [{
+      "path": "index",
+      "style": { "navigationBarTitleText": "提醒管理" }
+    }, {
+      "path": "add",
+      "style": { "navigationBarTitleText": "新增提醒" }
+    }, {
+      "path": "edit",
+      "style": { "navigationBarTitleText": "编辑提醒" }
+    }]
+  }, {
+    "root": "pages/scoreRecord",
+    "pages": [{
+      "path": "index",
+      "style": { "navigationBarTitleText": "成绩智能分析" }
+    }, {
+      "path": "detail",
+      "style": { "navigationBarTitleText": "成绩智能分析详情" }
+    }, {
+      "path": "add",
+      "style": { "navigationBarTitleText": "成绩智能分析" }
+    }]
+  }, {
+    "root": "pages/jotdown",
+    "pages": [{
+      "path": "index",
+      "style": {
+        "navigationBarTitleText": "随手记",
+        "enablePullDownRefresh": true,
+        "backgroundTextStyle": "dark",
+        "onReachBottomDistance": 80
+      }
+    }, {
+      "path": "add",
+      "style": { "navigationBarTitleText": "记一笔" }
+    }]
+  }, {
+    "root": "pages/timeDiary",
+    "pages": [{
+      "path": "index",
+      "style": {
+        "navigationBarTitleText": "时间管理局",
+        "enablePullDownRefresh": true,
+        "backgroundTextStyle": "dark",
+        "onReachBottomDistance": 80
+      }
+    }, {
+      "path": "add",
+      "style": { "navigationBarTitleText": "记录时间" }
+    }]
+  }, {
+    "root": "pages/stock",
+    "pages": [{
+      "path": "index",
+      "style": {
+        "navigationBarTitleText": "量化交易",
+        "enablePullDownRefresh": true,
+        "backgroundTextStyle": "dark"
+      }
+    }]
+  }, {
+    "root": "pages/summary",
+    "pages": [{
+      "path": "index",
+      "style": {
+        "navigationBarTitleText": "财务汇总",
+        "enablePullDownRefresh": true,
+        "backgroundTextStyle": "dark",
+        "onReachBottomDistance": 80
+      }
+    }, {
+      "path": "add",
+      "style": { "navigationBarTitleText": "财务填报" }
+    }]
   }],
   "tabBar": {
     "color": "#000000",
@@ -92,22 +158,21 @@
     "borderStyle": "white",
     "backgroundColor": "#ffffff",
     "list": [{
-        "pagePath": "pages/index",
-        "iconPath": "static/images/tabbar/home.png",
-        "selectedIconPath": "static/images/tabbar/home_.png",
-        "text": "首页"
-      }, {
-        "pagePath": "pages/work/index",
-        "iconPath": "static/images/tabbar/work.png",
-        "selectedIconPath": "static/images/tabbar/work_.png",
-        "text": "工作台"
-      }, {
-        "pagePath": "pages/mine/index",
-        "iconPath": "static/images/tabbar/mine.png",
-        "selectedIconPath": "static/images/tabbar/mine_.png",
-        "text": "我的"
-      }
-    ]
+      "pagePath": "pages/index",
+      "iconPath": "static/images/tabbar/home.png",
+      "selectedIconPath": "static/images/tabbar/home_.png",
+      "text": "首页"
+    }, {
+      "pagePath": "pages/work/index",
+      "iconPath": "static/images/tabbar/work.png",
+      "selectedIconPath": "static/images/tabbar/work_.png",
+      "text": "工作台"
+    }, {
+      "pagePath": "pages/mine/index",
+      "iconPath": "static/images/tabbar/mine.png",
+      "selectedIconPath": "static/images/tabbar/mine_.png",
+      "text": "我的"
+    }]
   },
   "globalStyle": {
     "navigationBarTextStyle": "black",

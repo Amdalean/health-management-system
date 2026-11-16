@@ -1,0 +1,61 @@
+// HMS-FloatWindow Android 原生插件 — JAR 构建配置
+// add by Qwen 2026-06-03
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'com.hms.plugin.floatwindow'
+
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 35
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src']
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+// 单独打包 JAR（不含 stub 类，不含 AndroidManifest）
+// HBuilder X 从 android/AndroidManifest.xml 读取权限和组件声明
+task jarRelease(type: Jar, dependsOn: 'compileReleaseJavaWithJavac') {
+    from "$buildDir/intermediates/javac/release/classes"
+    exclude 'io/dcloud/**'
+    archiveFileName = 'HMS-FloatWindow.jar'
+    destinationDirectory = file('libs')
+}
+
+dependencies {
+    // uni-app SDK stub — compileOnly，云打包时由 dc_weexsdk_v8 提供真实类
+    compileOnly fileTree(dir: '../lib', include: ['*.jar'])
+
+    // AndroidX NotificationCompat（FloatWindowService 中使用）
+    compileOnly 'androidx.core:core:1.13.0'
+}

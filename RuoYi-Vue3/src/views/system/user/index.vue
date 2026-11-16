@@ -73,7 +73,20 @@
                   ></el-switch>
                 </template>
               </el-table-column>
-              <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" width="160">
+              <!-- 当前城市：由 App 定位自动上报，PC 端只读展示 add by Qwen 2026-10-26 -->
+              <el-table-column label="当前城市" align="center" key="currentCity" v-if="columns[6].visible" width="150">
+                <template #default="scope">
+                  <el-tooltip v-if="scope.row.currentCity" placement="top">
+                    <template #content>
+                      <div>adcode：{{ scope.row.currentAdcode }}</div>
+                      <div>上报时间：{{ parseTime(scope.row.locationTime) }}</div>
+                    </template>
+                    <span>{{ scope.row.currentCity }}{{ scope.row.currentDistrict || '' }}</span>
+                  </el-tooltip>
+                  <span v-else>-</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[7].visible" width="160">
                 <template #default="scope">
                   <span>{{ parseTime(scope.row.createTime) }}</span>
                 </template>
@@ -125,6 +138,13 @@
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="form.userId != undefined">
+          <el-col :span="24">
+            <el-form-item label="当前城市">
+              <el-input :model-value="currentCityText" placeholder="暂无上报（打开 App 后自动更新）" disabled />
             </el-form-item>
           </el-col>
         </el-row>
@@ -264,7 +284,8 @@ const columns = ref([
   { key: 3, label: `部门`, visible: true },
   { key: 4, label: `手机号码`, visible: true },
   { key: 5, label: `状态`, visible: true },
-  { key: 6, label: `创建时间`, visible: true }
+  { key: 6, label: `当前城市`, visible: true },
+  { key: 7, label: `创建时间`, visible: true }
 ]);
 
 const data = reactive({
@@ -287,6 +308,18 @@ const data = reactive({
 });
 
 const { queryParams, form, rules } = toRefs(data);
+
+/** 当前城市展示文本（只读，App 定位自动上报）add by Qwen 2026-10-26 */
+const currentCityText = computed(() => {
+  const city = form.value.currentCity;
+  if (!city) {
+    return "";
+  }
+  const district = form.value.currentDistrict || "";
+  const time = form.value.locationTime ? `（${proxy.parseTime(form.value.locationTime, "{m}-{d} {h}:{i}")} 上报）` : "";
+  return city + district + time;
+});
+
 
 /** 通过条件过滤节点  */
 const filterNode = (value, data) => {

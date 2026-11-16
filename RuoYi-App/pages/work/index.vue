@@ -1,114 +1,84 @@
 <template>
-  <view class="work-container">
+  <view class="work-container" :class="themeClass">
     <!-- 轮播图 -->
     <uni-swiper-dot class="uni-swiper-dot-box" :info="data" :current="current" field="content">
       <swiper class="swiper-box" :current="swiperDotIndex" @change="changeSwiper">
         <swiper-item v-for="(item, index) in data" :key="index">
           <view class="swiper-item" @click="clickBannerItem(item)">
-            <image class="w-full" :src="item.image" mode="aspectFill" :draggable="false" />
+            <image style="width: 100%;" :src="item.image" mode="aspectFill" :draggable="false" />
           </view>
         </swiper-item>
       </swiper>
     </uni-swiper-dot>
 
-    <!-- 宫格组件 -->
-    <uni-section title="系统管理" type="line"></uni-section>
+    <!-- 宫格组件（根据权限动态显示） -->
+    <uni-section title="功能入口" type="line"></uni-section>
     <view class="grid-body">
       <uni-grid :column="4" :showBorder="false" @change="changeGrid">
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="person-filled" size="30"></uni-icons>
-            <text class="text">用户管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="staff-filled" size="30"></uni-icons>
-            <text class="text">角色管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="color" size="30"></uni-icons>
-            <text class="text">菜单管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="settings-filled" size="30"></uni-icons>
-            <text class="text">部门管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="heart-filled" size="30"></uni-icons>
-            <text class="text">岗位管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="bars" size="30"></uni-icons>
-            <text class="text">字典管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="gear-filled" size="30"></uni-icons>
-            <text class="text">参数设置</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="chat-filled" size="30"></uni-icons>
-            <text class="text">通知公告</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box" @click="showDocument">
-            <uni-icons type="wallet-filled" size="30"></uni-icons>
-            <text class="text">资料管理</text>
+        <uni-grid-item v-for="item in visibleMenus" :key="item.id">
+          <view class="grid-item-box" @click="handleMenuClick(item)">
+            <uni-icons :type="item.icon" size="30"></uni-icons>
+            <text class="text">{{ item.text }}</text>
           </view>
         </uni-grid-item>
       </uni-grid>
-    </view>
-
-    <!-- 资料管理弹窗 -->
-    <uni-popup ref="documentPopup" type="center" :mask-click="false">
-      <view class="popup-content">
-        <view class="popup-header">
-          <text class="popup-title">资料管理</text>
-          <uni-icons type="close" size="20" @click="closeDocument"></uni-icons>
-        </view>
-        <view class="popup-body">
-          <DocumentIndex ref="documentIndexRef" />
-        </view>
+      <view v-if="visibleMenus.length === 0" class="empty-tip">
+        暂无可用功能，请联系管理员分配权限
       </view>
-    </uni-popup>
+    </view>
   </view>
 </template>
 
 <script>
-import DocumentIndex from '../document/index.vue'
+import themeMixin from '@/mixins/theme'
 
 export default {
-  components: {
-    DocumentIndex
-  },
+  mixins: [themeMixin],
   data() {
     return {
       current: 0,
       swiperDotIndex: 0,
       data: [
-	  // {
-   //      image: '/static/images/banner/banner01.jpg'
-   //    },
+      {
+        image: '/static/images/banner/banner01.jpg'
+      },
       {
         image: '/static/images/banner/banner02.jpg'
       },
       {
         image: '/static/images/banner/banner03.jpg'
       }
+      ],
+      // 工作台宫格菜单配置（含权限标识）
+      // add by CYQ 2026-06-06 说明: 通过 perm 控制菜单可见性，权限在PC端角色管理中分配
+      allMenus: [
+        { id: 'document',    icon: 'wallet-filled',     text: '资料管理', perm: 'main:document:list',    url: '/pages/document/index' },
+        { id: 'reminder',    icon: 'email-filled',      text: '提醒管理', perm: 'main:reminder:list',    url: '/pages/reminder/index' },
+        // { id: 'scoreRecord', icon: 'paperplane-filled', text: '成绩分析', perm: 'main:scoreRecord:list', url: '/pages/scoreRecord/index' },
+        { id: 'jotdown',     icon: 'compose',           text: '随手记',   perm: 'main:jotdown:list',     url: '/pages/jotdown/index' },
+        { id: 'timeDiary',   icon: 'calendar',          text: '时间管理局', perm: 'main:timeDiary:list',    url: '/pages/timeDiary/index' },
+        { id: 'summary',     icon: 'wallet-filled',     text: '财务汇总', perm: 'main:summary:list',     url: '/pages/summary/index' },
+        { id: 'stock',          icon: 'wallet-filled',    text: '量化交易', perm: 'main:stock:list',        url: '/pages/stock/index' },
+        { id: 'tbk',            icon: 'gift-filled',      text: '优惠查询', perm: 'main:tbk:list',          url: '/pages/tbk/index' },
+        // add by CYQ 2026-11-04 优惠查询-AI 选品
+        { id: 'tbkPick',        icon: 'star-filled',      text: 'AI 选品', perm: 'main:tbk:list',          url: '/pages/tbk/ai-pick' },
+        { id: 'clockin',     icon: 'map-filled',        text: '打卡', perm: 'mobile:clockin:list',   url: '/pages/mine/clockin/index' }
       ]
+    }
+  },
+  computed: {
+    // 根据用户权限过滤可见菜单
+    visibleMenus() {
+      return this.allMenus.filter(item => {
+        try {
+          // 管理员拥有全部权限
+          if (this.$auth.hasRole('admin')) return true
+          return this.$auth.hasPermi(item.perm)
+        } catch (e) {
+          // 权限数据未就绪时隐藏菜单
+          return false
+        }
+      })
     }
   },
   methods: {
@@ -121,16 +91,10 @@ export default {
     changeGrid(e) {
       // this.$modal.showToast('模块建设中~')
     },
-    showDocument() {
-      this.$refs.documentPopup.open()
-      setTimeout(() => {
-        if (this.$refs.documentIndexRef && this.$refs.documentIndexRef.getList) {
-          this.$refs.documentIndexRef.getList()
-        }
-      }, 300)
-    },
-    closeDocument() {
-      this.$refs.documentPopup.close()
+    handleMenuClick(item) {
+      if (item.url) {
+        uni.navigateTo({ url: item.url })
+      }
     }
   }
 }
@@ -142,7 +106,7 @@ page {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: var(--bg-start, #fff);
   min-height: 100%;
   height: auto;
 }
@@ -154,10 +118,23 @@ view {
 
 /* #endif */
 
+.work-container {
+  min-height: 100vh;
+  background: var(--bg-gradient, var(--bg-start, #fff));
+}
+
 .text {
   text-align: center;
   font-size: 26rpx;
   margin-top: 10rpx;
+  color: var(--color-text, #333);
+}
+
+.grid-body {
+  background: var(--card-bg, #fff);
+  margin: 16rpx;
+  border-radius: var(--radius-card, 24rpx);
+  padding: 16rpx 0;
 }
 
 .grid-item-box {
@@ -169,6 +146,26 @@ view {
   align-items: center;
   justify-content: center;
   padding: 15px 0;
+}
+
+/* uni-icons 颜色跟随主题 */
+.grid-item-box .uni-icons {
+  color: var(--color-primary, #333) !important;
+}
+
+/* uni-section 标题颜色跟随主题 */
+.work-container .uni-section .uni-section-title-text,
+.work-container .uni-section .uni-section__title-text,
+.work-container .uni-section span,
+.work-container .uni-section text {
+  color: var(--color-text, #333) !important;
+}
+
+.empty-tip {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 28rpx;
+  color: var(--color-text-secondary, #999);
 }
 
 .uni-margin-wrap {
@@ -209,31 +206,5 @@ view {
   .image {
     width: 100%;
   }
-}
-
-.popup-content {
-  width: 90vw;
-  max-width: 600px;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #eee;
-}
-
-.popup-title {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.popup-body {
-  max-height: 70vh;
-  overflow-y: auto;
 }
 </style>

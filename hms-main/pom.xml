@@ -24,7 +24,7 @@
     <artifactId>hms-main</artifactId>
 
     <description>
-        T1大健康主模块
+        Caelum主模块
     </description>
 
     <dependencies>
@@ -75,6 +75,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.hms</groupId>
+            <artifactId>hms-mobile</artifactId>
         </dependency>
 
     </dependencies>

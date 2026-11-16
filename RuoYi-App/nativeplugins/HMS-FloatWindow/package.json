@@ -1,0 +1,35 @@
+{
+  "name": "HMS-FloatWindow",
+  "id": "HMS-FloatWindow",
+  "version": "1.0.0",
+  "description": "HMS 系统级悬浮窗截屏识图插件 — 双击截屏并调用 AI 识图",
+  "_dp_type": "nativeplugin",
+  "_dp_nativeplugin": {
+    "android": {
+      "integrateType": "jar",
+      "plugins": [
+        {
+          "type": "module",
+          "name": "FloatWindowModule",
+          "class": "com.hms.plugin.floatwindow.FloatWindowModule"
+        }
+      ],
+      "permissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION",
+        "android.permission.POST_NOTIFICATIONS"
+      ]
+    },
+    "harmony": {
+      "integrateType": "source",
+      "plugins": [
+        {
+          "type": "module",
+          "name": "HMS-FloatWindow-FloatWindowModule",
+          "class": "FloatWindowModule"
+        }
+      ]
+    }
+  }
+}

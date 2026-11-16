@@ -1,0 +1,173 @@
+/**
+ * 主题系统 - 所有主题变量定义
+ * 使用 CSS 变量实现多端主题切换
+ * WXSS 不支持 @import url(https)，字体由 index.html H5 端按需加载
+ */
+
+/* ===== 通用变量（不随主题变化） ===== */
+:root {
+  --radius-card: 24rpx;
+  --radius-btn: 60rpx;
+  --spacing-page: 28rpx;
+  --font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ===== 默认主题（商务蓝/原版风格） ===== */
+.theme-default {
+  --bg-start: #F3F5F9;
+  --bg-end: #F3F5F9;
+  --color-primary: #409EFF;
+  --color-primary-dim: rgba(64, 158, 255, 0.8);
+  --color-text: #1D2129;
+  --color-text-secondary: #909399;
+  --color-amount: #1D2129;
+  --color-date-dot: #409EFF;
+  --color-accent: #606266;
+  --card-bg: #FFFFFF;
+  --card-border: #F2F3F5;
+  --card-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.04);
+  --card-shadow-inset: none;
+  --summary-card-bg: #2D3748;
+  --summary-text-color: #FFFFFF;
+  --summary-text-muted: rgba(255,255,255,0.6);
+  --summary-accent: #409EFF;
+  --legend-text-color: rgba(255, 255, 255, 0.5);
+  --legend-text-secondary: rgba(255, 255, 255, 0.75);
+  --total-amount-color: #FFFFFF;
+  --summary-card-gradient: none;
+  --fab-bg-start: #409EFF;
+  --fab-bg-end: #3B82F6;
+  --fab-shadow: 0 8rpx 28rpx rgba(64, 158, 255, 0.4);
+  --search-bg: #F0F2F6;
+  --search-border: transparent;
+  --search-shadow: none;
+  --skeleton-1: #F0F2F6;
+  --skeleton-2: #E8EBF0;
+  --empty-circle-bg: #F0F2F6;
+  --empty-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.04);
+  --bg-gradient: none;
+  --deco-color: #A8D8EA;
+}
+
+/* ===== 粉白主题 ===== */
+.theme-pink {
+  --bg-start: #FFF5F7;
+  --bg-end: #FEE9F0;
+  --color-primary: #FF9ECD;
+  --color-primary-dim: rgba(255, 158, 205, 0.8);
+  --color-text: #5D5A6D;
+  --color-text-secondary: #9B99AF;
+  --color-amount: #FF7B9C;
+  --color-date-dot: #FF9ECD;
+  --color-accent: #FFB7B2;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(255, 158, 205, 0.12);
+  --card-shadow: 0 4rpx 20rpx rgba(255, 158, 205, 0.1);
+  --card-shadow-inset: inset -2rpx -2rpx 8rpx rgba(255, 255, 255, 0.8), inset 2rpx 2rpx 8rpx rgba(255, 158, 205, 0.03);
+  --summary-card-bg: linear-gradient(135deg, #FF9ECD 0%, #FFB7B2 40%, #FFDAC1 100%);
+  --summary-text-color: #FFFFFF;
+  --summary-text-muted: rgba(255,255,255,0.7);
+  --summary-accent: #FFFFFF;
+  --legend-text-color: rgba(255, 255, 255, 0.6);
+  --legend-text-secondary: rgba(255, 255, 255, 0.85);
+  --total-amount-color: #FFFFFF;
+  --fab-bg-start: #FF9ECD;
+  --fab-bg-end: #FF7B9C;
+  --fab-shadow: 0 8rpx 28rpx rgba(255, 123, 156, 0.4);
+  --search-bg: rgba(255, 255, 255, 0.85);
+  --search-border: rgba(255, 158, 205, 0.2);
+  --search-shadow: 0 4rpx 16rpx rgba(255, 158, 205, 0.12);
+  --skeleton-1: rgba(255, 158, 205, 0.15);
+  --skeleton-2: rgba(255, 158, 205, 0.25);
+  --empty-circle-bg: linear-gradient(135deg, #FFE4EC, #FFD6E0);
+  --empty-shadow: 0 8rpx 24rpx rgba(255, 158, 205, 0.15);
+  --bg-gradient: linear-gradient(180deg, #FFF5F7 0%, #FEE9F0 30%, #FFF0F5 70%, #F3E8FF 100%);
+  --deco-color: #A8D8EA;
+}
+
+/* ===== 库洛米主题 — 正版朋克高级：漆黑 + 荧光粉 8% 点缀 + 紫 =====
+   保留官方配色 #080810 / #E84393 / #5A2A83，高级感靠克制：大面积哑光黑+细白线+玻璃，小面积粉作点睛 */
+.theme-kuromi {
+  --bg-start: #07080D;
+  --bg-end: #1A1230;
+  --color-primary: #E84393;
+  --color-primary-dim: rgba(232, 67, 147, 0.72);
+  --color-text: #F2F0F3;
+  --color-text-secondary: #9A8CAE;
+  --color-amount: #E84393;
+  --color-date-dot: #E84393;
+  --color-accent: #7A3FA0;
+  --card-bg: rgba(18, 16, 26, 0.88);
+  --card-border: rgba(255, 255, 255, 0.07);
+  --card-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.42), inset 0 1rpx 0 rgba(255, 255, 255, 0.06);
+  --card-shadow-inset: inset 0 1rpx 0 rgba(255, 255, 255, 0.05), inset 0 -1rpx 0 rgba(0, 0, 0, 0.32);
+  --summary-card-bg: linear-gradient(135deg, #0A0A0F 0%, #1A1230 55%, #2A1A3A 100%);
+  --summary-text-color: #FFFFFF;
+  --summary-text-muted: rgba(245, 240, 243, 0.62);
+  --summary-accent: #E84393;
+  --legend-text-color: rgba(154, 140, 174, 0.78);
+  --legend-text-secondary: rgba(232, 67, 147, 0.92);
+  --total-amount-color: #FFFFFF;
+  --fab-bg-start: #E84393;
+  --fab-bg-end: #D63384;
+  --fab-shadow: 0 8rpx 28rpx rgba(232, 67, 147, 0.38);
+  --search-bg: rgba(18, 16, 26, 0.72);
+  --search-border: rgba(255, 255, 255, 0.08);
+  --search-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.28);
+  --skeleton-1: rgba(232, 67, 147, 0.08);
+  --skeleton-2: rgba(122, 63, 160, 0.14);
+  --empty-circle-bg: linear-gradient(135deg, rgba(232, 67, 147, 0.14), rgba(90, 42, 131, 0.16));
+  --empty-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.32);
+  --bg-gradient: radial-gradient(900rpx 600rpx at 50% -6%, rgba(232, 67, 147, 0.10) 0%, transparent 62%), linear-gradient(180deg, #07080D 0%, #0F0A1E 45%, #1A1230 100%);
+  --deco-color: #E84393;
+}
+
+/* ===== 像素主题 — 泰拉瑞亚 Terraria =====
+   风格：泰拉瑞亚地表：天空蓝→草绿→泥土棕，木质面板+石砖硬边，Press Start 2P 8-bit */
+.theme-pixel {
+  --bg-start: #6AB7E8;
+  --bg-end: #8B5A2B;
+  --color-primary: #8B5A2B;
+  --color-primary-dim: #A0693B;
+  --color-text: #3E2723;
+  --color-text-secondary: #6D4C41;
+  --color-amount: #3E2723;
+  --color-date-dot: #8B5A2B;
+  --color-accent: #4CAF50;
+  --card-bg: #E8DCC8;
+  --card-border: #3E2723;
+  --card-shadow: 6rpx 6rpx 0 #3E2723;
+  --card-shadow-inset: none;
+  --summary-card-bg: #3E2723;
+  --summary-text-color: #FFD54F;
+  --summary-text-muted: #BCAAA4;
+  --summary-accent: #4CAF50;
+  --legend-text-color: #FFD54F;
+  --legend-text-secondary: #E8DCC8;
+  --total-amount-color: #FFD54F;
+  --fab-bg-start: #8B5A2B;
+  --fab-bg-end: #6D4C41;
+  --fab-shadow: 4rpx 4rpx 0 #3E2723;
+  --search-bg: #E8DCC8;
+  --search-border: #3E2723;
+  --search-shadow: 4rpx 4rpx 0 #3E2723;
+  --skeleton-1: #BCAAA4;
+  --skeleton-2: #A1887F;
+  --empty-circle-bg: #E8DCC8;
+  --empty-shadow: 6rpx 6rpx 0 #3E2723;
+  --bg-gradient: linear-gradient(180deg, #6AB7E8 0% 38%, #5BAF4B 38% 42%, #8B5A2B 42% 100%), repeating-linear-gradient(90deg, rgba(0,0,0,0.04) 0 2rpx, transparent 2rpx 16rpx);
+  --deco-color: #8B5A2B;
+  --radius-card: 0;
+  --radius-btn: 0;
+  --font-family: 'Press Start 2P', 'Courier New', monospace;
+}
+/* 像素主题全局硬边强化 — 泰拉瑞亚木质/石砖感 */
+.theme-pixel .summary-card,
+.theme-pixel .card-bg,
+.theme-pixel .search-bar {
+  image-rendering: pixelated;
+}
+.theme-pixel .summary-card,
+.theme-pixel [class*="card"] {
+  border: 3rpx solid #3E2723 !important;
+}

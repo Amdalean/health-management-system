@@ -145,6 +145,20 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/mobile/clockin-statistics',
+    component: Layout,
+    hidden: true,
+    permissions: ['mobile:clockin:statistics'],
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/mobile/clockin/statistics'),
+        name: 'ClockinStatistics',
+        meta: { title: '打卡统计', activeMenu: '/mobile/clockin' }
+      }
+    ]
+  },
+  {
     path: '/tool/gen-edit',
     component: Layout,
     hidden: true,

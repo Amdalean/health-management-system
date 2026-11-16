@@ -31,6 +31,21 @@ export function updateUserProfile(data) {
   })
 }
 
+// 订阅量化通知（维护邮箱 + 授予 quant 角色）add by CYQ 2026-09-02
+export function subscribeQuant(email) {
+  return request({
+    url: '/system/user/profile/subscribeQuant',
+    method: 'post',
+    data: { email }
+  })
+}
+export function getSubscribeQuantStatus() {
+  return request({
+    url: '/system/user/profile/subscribeQuant/status',
+    method: 'get'
+  })
+}
+
 // 用户头像上传
 export function uploadAvatar(data) {
   return upload({

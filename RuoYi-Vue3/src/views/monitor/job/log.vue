@@ -38,7 +38,17 @@
                   :label="dict.label"
                   :value="dict.value"
                />
+               <el-option label="执行中" value="2" />
             </el-select>
+         </el-form-item>
+         <el-form-item label="服务名" prop="serverName">
+            <el-input
+               v-model="queryParams.serverName"
+               placeholder="请输入执行服务器"
+               clearable
+               style="width: 240px"
+               @keyup.enter="handleQuery"
+            />
          </el-form-item>
          <el-form-item label="执行时间" style="width: 308px">
             <el-date-picker
@@ -106,15 +116,36 @@
             </template>
          </el-table-column>
          <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
+         <el-table-column label="服务名" align="center" prop="serverName" :show-overflow-tooltip="true" width="180" />
          <el-table-column label="日志信息" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
          <el-table-column label="执行状态" align="center" prop="status">
             <template #default="scope">
-               <dict-tag :options="sys_common_status" :value="scope.row.status" />
+               <template v-if="scope.row.status === '2' || scope.row.status === 2">
+                  <el-tag type="warning" effect="dark" size="small">
+                     <el-icon class="is-loading" style="margin-right:2px"><Loading /></el-icon>执行中
+                  </el-tag>
+               </template>
+               <dict-tag v-else :options="sys_common_status" :value="scope.row.status" />
             </template>
          </el-table-column>
-         <el-table-column label="执行时间" align="center" prop="createTime" width="180">
+         <el-table-column label="执行时间" align="center" prop="createTime" width="180" v-if="false">
             <template #default="scope">
                <span>{{ parseTime(scope.row.createTime) }}</span>
+            </template>
+         </el-table-column>
+         <el-table-column label="开始时间" align="center" prop="startTime" width="180">
+            <template #default="scope">
+               <span>{{ parseTime(scope.row.startTime) }}</span>
+            </template>
+         </el-table-column>
+         <el-table-column label="结束时间" align="center" prop="stopTime" width="180">
+            <template #default="scope">
+               <span>{{ parseTime(scope.row.stopTime) }}</span>
+            </template>
+         </el-table-column>
+         <el-table-column label="耗时" align="center" prop="runMs" width="120">
+            <template #default="scope">
+               <span>{{ formatDuration(scope.row) }}</span>
             </template>
          </el-table-column>
          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -142,10 +173,20 @@
                </el-col>
                <el-col :span="12">
                   <el-form-item label="任务分组：">{{ form.jobGroup }}</el-form-item>
-                  <el-form-item label="执行时间：">{{ form.createTime }}</el-form-item>
+                  <el-form-item label="执行时间：" v-if="false">{{ form.createTime }}</el-form-item>
+               </el-col>
+               <el-col :span="12">
+                  <el-form-item label="开始时间：">{{ form.startTime }}</el-form-item>
+                  <el-form-item label="结束时间：">{{ form.stopTime }}</el-form-item>
+               </el-col>
+               <el-col :span="12">
+                  <el-form-item label="耗时：">{{ formatDuration(form) }}</el-form-item>
                </el-col>
                <el-col :span="24">
                   <el-form-item label="调用方法：">{{ form.invokeTarget }}</el-form-item>
+               </el-col>
+               <el-col :span="24">
+                  <el-form-item label="服务名：">{{ form.serverName }}</el-form-item>
                </el-col>
                <el-col :span="24">
                   <el-form-item label="日志信息：">{{ form.jobMessage }}</el-form-item>
@@ -154,6 +195,9 @@
                   <el-form-item label="执行状态：">
                      <div v-if="form.status == 0">正常</div>
                      <div v-else-if="form.status == 1">失败</div>
+                     <div v-else-if="form.status == 2" style="color:#e6a23c">
+                        <el-icon class="is-loading" style="margin-right:4px"><Loading /></el-icon>执行中
+                     </div>
                   </el-form-item>
                </el-col>
                <el-col :span="24">
@@ -194,6 +238,7 @@ const data = reactive({
     pageSize: 10,
     dictName: undefined,
     dictType: undefined,
+    serverName: undefined,
     status: undefined
   }
 });
@@ -239,6 +284,22 @@ function handleSelectionChange(selection) {
 function handleView(row) {
   open.value = true;
   form.value = row;
+}
+
+/** 格式化耗时：毫秒 -> 毫秒/秒展示，执行中显示执行中 */
+function formatDuration(row) {
+  if (!row) return "-";
+  if (row.status === "2" || row.status === 2) return "执行中";
+  let ms = row.runMs;
+  if ((ms === undefined || ms === null) && row.startTime && row.stopTime) {
+    const diff = new Date(row.stopTime).getTime() - new Date(row.startTime).getTime();
+    if (!isNaN(diff)) ms = diff;
+  }
+  if (ms === undefined || ms === null || isNaN(ms)) return "-";
+  if (ms < 0) ms = 0;
+  if (ms < 1000) return `${ms}毫秒`;
+  const sec = ms / 1000;
+  return `${Number.isInteger(sec) ? sec : sec.toFixed(2)}秒`;
 }
 
 /** 删除按钮操作 */
