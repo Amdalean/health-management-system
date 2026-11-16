@@ -1,9 +1,9 @@
 {
-    "name" : "T1大健康",
+    "name" : "Caelum",
     "appid" : "__UNI__73E64E4",
     "description" : "",
-    "versionName" : "1.1.3",
-    "versionCode" : "100",
+    "versionName" : "1.3.2",
+    "versionCode" : 103,
     "transformPx" : false,
     "app-plus" : {
         "usingComponents" : true,
@@ -14,7 +14,13 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "modules" : {},
+        "modules" : {
+            "push" : {},
+            "Push" : {},
+            "Geolocation" : {},
+            "Maps" : {},
+            "Camera" : {}
+        },
         "distribute" : {
             "android" : {
                 "permissions" : [
@@ -32,14 +38,60 @@
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_TASKS\"/>",
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH\"/>",
+                    "<uses-permission android:name=\"android.permission.BLUETOOTH_ADMIN\"/>"
                 ],
                 "minSdkVersion" : 21
             },
             "ios" : {
                 "dSYMs" : false
             },
-            "sdkConfigs" : {},
+            "sdkConfigs" : {
+                "unipush" : {
+                    "variants" : [
+                        {
+                            "name" : "default",
+                            "appid" : "__UNI__73E64E4",
+                            "appkey" : "your-unipush-appkey",
+                            "appsecret" : "your-app-secret"
+                        }
+                    ]
+                },
+                "push" : {
+                    "unipush" : {
+                        "offline" : false,
+                        "version" : "2",
+                        "hms" : {},
+                        "oppo" : {},
+                        "vivo" : {},
+                        "mi" : {},
+                        "meizu" : {},
+                        "honor" : {},
+                        "fcm" : {}
+                    }
+                },
+                "geolocation" : {
+                    "amap" : {
+                        "name" : "your-amap-key-name",
+                        "__platform__" : [ "android" ],
+                        "appkey_ios" : "your-amap-key-ios",
+                        "appkey_android" : "your-amap-key-android"
+                    },
+                    "system" : {
+                        "__platform__" : [ "android", "harmony" ]
+                    }
+                },
+                "maps" : {
+                    "amap" : {
+                        "name" : "your-amap-key-name",
+                        "appkey_ios" : "your-amap-key-ios",
+                        "appkey_android" : "your-amap-key-android"
+                    }
+                }
+            },
             "icons" : {
                 "android" : {
                     "hdpi" : "unpackage/res/icons/72x72.png",
@@ -72,11 +124,31 @@
                     }
                 }
             }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        },
+        "nativePlugins" : {
+            "HMS-FloatWindow" : {
+                "__plugin_info__" : {
+                    "name" : "HMS-FloatWindow",
+                    "description" : "HMS 系统级悬浮窗截屏识图插件 — 双击截屏并调用 AI 识图",
+                    "platforms" : "Android",
+                    "url" : "",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : false,
+                    "bought" : -1,
+                    "pid" : "",
+                    "parameters" : {}
+                }
+            }
         }
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wxccd7e2a0911b3397",
+        "__usePrivacyCheck__" : true,
+        "appid" : "your-wx-miniapp-appid",
         "setting" : {
             "urlCheck" : false,
             "es6" : false,
@@ -86,10 +158,26 @@
         "optimization" : {
             "subPackages" : true
         },
-        "usingComponents" : true
+        "usingComponents" : true,
+        "requiredPrivateInfos" : [ "getLocation" ],
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "小程序有打卡功能"
+            }
+        },
+        "unipush" : {
+            "enable" : true
+        }
     },
     "vueVersion" : "3",
     "h5" : {
+        "sdkConfigs" : {
+            "maps" : {
+                "amap" : {
+                    "key" : "REDACTED"
+                }
+            }
+        },
         "template" : "static/index.html",
         "devServer" : {
             "port" : 9090,
@@ -99,8 +187,47 @@
         "router" : {
             "mode" : "hash",
             "base" : "./"
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     "fallbackLocale" : "zh-Hans",
-    "locale" : "zh-Hans"
+    "locale" : "zh-Hans",
+    "app-harmony" : {
+        "distribute" : {
+            "bundleName" : "com.t1.hmsMobile",
+            "icons" : {
+                "foreground" : "/Users/sillage/yonyou/space/idea/health-management-system/doc/img/logos/logo_1024x1024.png",
+                "background" : "/Users/sillage/yonyou/space/idea/health-management-system/doc/img/logos/logo_1024x1024.png"
+            },
+            "modules" : {
+                "uni-push" : {},
+                "uni-map" : {},
+                "Geolocation" : {}
+            },
+            "domain" : {
+                "cleartext" : [ "localhost", "localhost:8080" ]
+            },
+            "signingConfigs" : {
+                "default" : {
+                    "certpath" : "c:\\Users\\Administrator\\AppData\\Roaming\\HBuilder X\\extensions\\launcher\\agc-certs\\1779512808747.cer",
+                    "keyAlias" : "debugKey",
+                    "keyPassword" : "your-key-password",
+                    "profile" : "c:\\Users\\Administrator\\AppData\\Roaming\\HBuilder X\\extensions\\launcher\\agc-certs\\1779512808747.p7b",
+                    "signAlg" : "SHA256withECDSA",
+                    "storeFile" : "c:\\Users\\Administrator\\AppData\\Roaming\\HBuilder X\\extensions\\launcher\\agc-certs\\1779512808747.p12",
+                    "storePassword" : "your-store-password"
+                }
+            },
+            "compatibleSdkVersion" : "6.1.0(23)",
+            "targetSdkVersion" : "6.1.0(23)"
+        },
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "uniStatistics" : {
+        "version" : "2"
+    }
 }

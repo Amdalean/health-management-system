@@ -5,7 +5,7 @@ ruoyi:
   # 版本
   version: 3.8.8
   # 版权年份
-  copyrightYear: 2024
+  copyrightYear: 2026
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: ./uploadPath
   # 获取ip地址开关
@@ -68,13 +68,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 127.0.0.1
+    host: ${REDIS_HOST:localhost}
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password: Redacted@123
+    password: ${REDIS_PASSWORD:}
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -90,8 +90,8 @@ spring:
   mail:
     host: smtp.163.com
     port: 465
-    username: ****@163.com
-    password: ****
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
@@ -107,9 +107,11 @@ token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
-  # 令牌有效期（默认30分钟）
-  expireTime: 60
+  secret: ${TOKEN_SECRET:abcdefghijklmnopqrstuvwxyz}
+  # 令牌有效期（PC端，默认30分钟）
+  expireTime: 30
+  # 令牌有效期（移动端，7天）
+  expireTimeMobile: 10080
 
 # MyBatis配置
 mybatis:
@@ -142,23 +144,209 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
-# 通意千问大模型参数
-qwen:
-  apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
-  # 深度思考模型：qwq-plus;更便宜的模型：qwen-flash;角色扮演模型：qwen-plus-character
-  model: qwen3.5-flash
-  apiKey: ***
+# AI 服务商配置
+ai:
+  # 通义千问（DashScope）
+  qwen:
+    apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+    # 深度思考模型：qwq-plus;更便宜的模型：qwen-flash;角色扮演模型：qwen-plus-character
+    model: qwen3.7-max-preview
+    apiKey: ${QWEN_API_KEY:}
+  # OpenCode Go 代理（需携带 x-opencode-session，代码已自动处理）
+  opencode-go:
+    apiUrl: https://opencode.ai/zen/go/v1/chat/completions
+    # 多模态/文本模型统一走这里；qwen3.8-flash 图文/视频均可，单价低（$0.15/$0.47），
+    # 实测 22MB 八段锦视频单次约 40~45s 稳定识别；注意并发调用会触发上游多媒体下载超时
+    # update by CYQ 2026-10-19 由 deepseek-v4.1-flash（大视频会静默忽略视频内容）更换
+    model: qwen3.8-flash
+    # update by CYQ 2026-10-19 旧 key 过期，更换为新版 oc_sk_ key
+    apiKey: ${OPENCODE_GO_API_KEY:}
+  # 本地 Ollama 服务
+  ollama:
+    host: http://localhost:11434
+    model: qwen3.5:9b
+  # Agnes Image 2.5 Flash 图像生成（update by CYQ 2026-11-09 由 2.1 升级到 2.5，接口/尺寸/价格不变）
+  agnes:
+    image:
+      api-key: ${AGNES_API_KEY:}
+      base-url: https://apihub.agnes-ai.com/v1/images/generations
+      model: agnes-image-2.5-flash
+
+# 淘宝客转链配置（用户自助 H5：http://your-host/tbk/index.html）
+# add by CYQ 2026-11-02 淘宝客转链模块
+tbk:
+  # 转链通道：mock-演示模式；ztk-折淘客；dataoke-大淘客；taobao-淘宝联盟官方
+  # add by CYQ 2026-11-03 切换为官方通道（物料搜索升级版 + 短链 + 淘口令）
+  provider: taobao
+  # 推广位 pid，格式 mm_xxx_xxx_xxx
+  pid: mm_7743884050_3443100481_116339950386
+  # 渠道关系ID，仅用于订单归因，普通转链可不填
+  relation-id:
+  # 淘宝客外部用户标记（可选）
+  external-id:
+  # 单 IP 每分钟最大转换次数
+  rate-limit-per-minute: 20
+  # 转链结果缓存秒数（券随时失效，不建议超过 1 小时）
+  cache-seconds: 1800
+  # 输入内容最大长度（拼多多分享链接本身就比较长）
+  max-content-length: 1000
+  # AI 选品（输入需求 → 跨平台搜索 → AI 性价比打分）
+  # add by CYQ 2026-11-04 优惠查询-AI 选品
+  # 一次选品会调用两次大模型（需求解析 + 打分），限流比转链更严
+  pick-rate-limit-per-minute: 3
+  # 每个平台搜索的商品条数
+  pick-search-size: 20
+  # 单次参与 AI 打分的最大候选数（越多越慢、越贵）
+  pick-max-candidates: 12
+  # 选品结果缓存秒数
+  pick-cache-seconds: 600
+  # 联盟订单同步（PC 收益看板）
+  # add by CYQ 2026-11-09 联盟收益 PC 看板
+  # 淘宝订单数据源：dataoke-大淘客订单查询（默认，已实测可用，官方转链订单也能查到）；
+  # taobao-淘宝联盟官方接口（邀请制，未开通时返回 code=11）
+  # add by CYQ 2026-11-10 淘宝订单数据源改为大淘客
+  order-sync-taobao-provider: dataoke
+  # 大淘客订单查询单次时间跨度不能超过 3 小时
+  order-sync-dataoke-chunk-minutes: 180
+  # 淘宝客官方接口要求时间段不超过 3 小时，这里按 2 小时切片
+  order-sync-page-size: 100
+  order-sync-chunk-minutes: 120
+  # 拼多多单次时间跨度不能超过 24 小时
+  order-sync-pdd-chunk-minutes: 1380
+  # 定时任务每次回看分钟数（覆盖订单状态变化）
+  order-sync-lookback-minutes: 170
+  order-sync-max-days: 7
+  order-sync-max-pages: 50
+  # 返现估算：占佣金百分比（平台抽 10% 服务费，返给用户 90%；现阶段只记录，不实际打款）
+  # modify by CYQ 2026-11-14 平台有服务费，返现比例 100 → 90
+  cashback-rate: 90
+  # 链接归因时间窗（天）：订单付款前 N 天内生成过同商品链接才参与匹配
+  attribution-window-days: 7
+  # 折淘客通道（provider=ztk 时生效）
+  ztk:
+    base-url: https://api.zhetaoke.com:10001/api/open_gaoyongzhuanlian_tkl.ashx
+    appkey: ${ZTK_APPKEY:}
+    sid:
+    pid:
+  # 大淘客通道（provider=dataoke 时生效）
+  # 签名：MD5(appKey={appKey}&timer={timer}&nonce={nonce}&key={appSecret}) 转大写
+  # add by CYQ 2026-11-03 淘宝客转链模块
+  dataoke:
+    app-key: ${DATAOKE_APP_KEY:}
+    app-secret: ${DATAOKE_APP_SECRET:}
+    base-url: https://openapi.dataoke.com/api
+    detail-version: v1.2.3
+    convert-version: v1.3.1
+    search-version: v1.2.4
+    # 不填则使用 tbk.pid
+    pid:
+  # 淘宝联盟官方通道（provider=taobao 时生效）
+  # add by CYQ 2026-11-02 淘宝客转链模块
+  taobao:
+    app-key: ${TAOBAO_APP_KEY:}
+    app-secret: ${TAOBAO_APP_SECRET:}
+    # 不填则自动从 tbk.pid 拆解（倒数第二段 site_id、最后一段 adzone_id）
+    adzone-id:
+    site-id:
+    gateway: https://eco.taobao.com/router/rest
+    oauth-authorize-url: https://oauth.taobao.com/authorize
+    oauth-token-url: https://oauth.taobao.com/token
+    # 必须与开放平台「安全中心-回调地址」完全一致
+    # 注意：生产 nginx 将后端挂在 /prod-api 前缀下（RuoYi-App/config.js 的 baseUrl 可证）
+    redirect-uri: https://your-domain.com/prod-api/tbk/auth/callback
+    # 手工配置的 session（可选），一般留空走 OAuth 授权
+    session:
+  # 拼多多通道（多多进宝，链接自动识别，不占用 provider）
+  # 注意：开放平台应用必须先用同一个拼多多账号登录 jinbao.pinduoduo.com 绑定 duoId，否则 ddk 接口返回 20001
+  # add by CYQ 2026-11-03 转链模块支持拼多多
+  pdd:
+    client-id: ${PDD_CLIENT_ID:}
+    client-secret: ${PDD_CLIENT_SECRET:}
+    # 多多进宝-推广管理-推广位ID，形如 123456_789012
+    # 注意：必须加引号，否则 YAML 会把下划线当数字分隔符，REDACTED 会变成 44947695319016706
+    pid: ""
+    gateway: https://gw-api.pinduoduo.com/api/router
+    custom-parameters:
+    # 按用户 custom_parameters 归因：拼多多要求 pid + custom_parameters 每组都备案，未备案返回 60001
+    # 返现功能上线前保持 false；开启前需先实现每个用户的授权备案流程
+    user-attribution-enabled: false
+  # 美团联盟（自助取链接口）
+  # 签名：sign = MD5(secret + 参数名升序拼接的 key1value1key2value2... + secret)
+  # add by CYQ 2026-11-05 接入美团联盟
+  meituan:
+    # 媒体管理里的 Appkey
+    appkey: ${MEITUAN_APPKEY:}
+    # 签名密钥
+    secret: ${MEITUAN_SECRET:}
+    # 推广位 SID
+    sid: "001"
+    # 活动ID：我要推广-活动总览第一列；33（外卖）/4（闪购）等旧活动已下线
+    act-id:
+    # 1-H5 2-美团App deeplink 3-中间页唤起 4-美团小程序 8-优选小程序
+    link-type: 1
+    gateway: https://openapi.meituan.com/api/generateLink
+  # 淘宝闪购联盟（本地生活 alsc）
+  # 注意：独立接口族 + 独立推广位，和淘宝客的 mm_ pid 不通用
+  # add by CYQ 2026-11-05 接入淘宝闪购
+  alsc:
+    # 闪购推广位 pid，格式 alsc_xxx_xxx_xxx
+    pid:
+    # 默认活动ID：12628 淘宝闪购领红包
+    activity-id: "12628"
+    # 三方会员ID（可选）
+    sid:
+
+# UniPush 2.0 推送配置（直调 DCloud OpenAPI）
+# OpenAPI密钥获取: dev.dcloud.net.cn → 应用详情 → OpenAPI密钥
+unipush:
+  app-id: __UNI__73E64E4
+  space-id: ${UNIPUSH_SPACE_ID:}
+  function-url: ${UNIPUSH_FUNCTION_URL:}
+
+# veighNa 量化交易模块路径（生产环境下 user.dir 可能不是项目目录，需显式配置）
+veighNa:
+  # 留空则自动探测（先 user.dir+/veighNa，再 user.dir+/../veighNa）
+  path:
 
 # 邮箱参数
 mail:
-  we: ****@163.com,****@163.com
-#  we: ****@163.com
-  me: ****@163.com
-  mailkey: ****
+  we: ${MAIL_TO:user@example.com}
+  me: ${MAIL_FROM:user@example.com}
+  mailkey: ${MAIL_KEY:}
 
 wx:
-  appid: ****
-  secret: ****
+  appid: ${WX_APPID:}
+  secret: ${WX_SECRET:}
   url: https://api.weixin.qq.com/
-  toUser: ****
-  templateId: ****
+  toUser: ${WX_TO_USER:}
+  templateId: ${WX_TEMPLATE_ID:}
+
+  # 微信小程序订阅消息
+  miniapp:
+    appid: ${WX_MINIAPP_APPID:}
+    secret: ${WX_MINIAPP_SECRET:}
+    template-id: ${WX_MINIAPP_TEMPLATE_ID:}
+
+# 新用户自动分配生活管家全权角色（移动端/PC 共用 /register 接口）
+hms:
+  register:
+    life-butler-auto-assign: true
+    life-butler-role-keys: shgjqq
+
+# Arthas 诊断工具配置
+arthas:
+  # 是否启用（生产环境建议通过启动参数动态开启）
+  enabled: true
+  # agent id，集群中需要唯一
+  agent-id: hms-${server.port}
+  # telnet 端口，默认 3658
+  #  telnet-port: 3658
+  # HTTP 端口，默认 8563
+  #  http-port: 8563
+  # IP 绑定
+  ip: 0.0.0.0
+  #  ip: 36.112.200.0
+  username: hms
+  password: hms
+  # MCP 地址
+  mcpEndpoint: /mcp

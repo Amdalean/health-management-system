@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "playwright": "^1.60.0"
+  },
+  "name": "playwright",
+  "version": "1.0.0",
+  "description": "通过 Playwright 浏览器自动化实现 community.yonyou.com 社区登录，获取 TGC cookie。",
+  "main": "login-community.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

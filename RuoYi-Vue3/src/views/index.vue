@@ -2,7 +2,7 @@
   <div class="app-container home">
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2>T1大健康</h2>
+        <h2>Caelum</h2>
         <p>
           随着现代生活节奏的加快和人们对健康的日益重视，一个全面、高效且个性化的健康管理系统变得尤为重要。我们的健康管理系统旨在为用户提供一站式的健康管理解决方案，帮助用户更好地了解自己的健康状况，促进健康生活方式的养成，并在必要时提供专业的医疗建议。
         </p>
@@ -11,7 +11,7 @@
         </p>
 
         <p><a href='/index'>PC端服务</a></p>
-        <P><a href='/mobile'>移动端服务</a></p>
+        <P><a href='#/mobile'>移动端服务</a></p>
         <P><a href='/gpt'>大模型服务</a></p>
       </el-col>
 
@@ -83,7 +83,7 @@
             </el-collapse-item>
             <el-collapse-item title="v0.1.0 - 2024-10-17">
               <ol>
-                <li>T1大健康系统发布</li>
+                <li>Caelum 系统发布</li>
               </ol>
             </el-collapse-item>
           </el-collapse>

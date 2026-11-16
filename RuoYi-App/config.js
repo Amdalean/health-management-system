@@ -2,18 +2,20 @@
 export default {
   // baseUrl: 'https://vue.ruoyi.vip/prod-api',
   // baseUrl: 'http://localhost:8080',
-  baseUrl: 'http://127.0.0.1/prod-api',
-  // baseUrl: 'http://localhost:8080/dev-api',
+  // baseUrl: '/prod-api',
+	// 生产地址请通过打包环境变量注入，勿提交真实域名
+	baseUrl: '/prod-api',
+
   // 应用信息
   appInfo: {
     // 应用名称
-    name: "ruoyi-app",
+    name: "hms-app",
     // 应用版本
-    version: "1.1.0",
+    version: "1.3.2",
     // 应用logo
     logo: "/static/logo.png",
     // 官方网站
-    site_url: "http://ruoyi.vip",
+    site_url: "https://your-domain.com",
     // 政策协议
     agreements: [{
         title: "隐私政策",
