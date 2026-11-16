@@ -30,7 +30,7 @@ import java.util.UUID;
  * <pre>
  * 1) 复用服务器已有视频（最省事，不传文件）：
  *    mvn -pl hms-admin test -Dtest=BaduanjinApiE2ETest -De2e=true \
- *        -De2e.baseUrl=http://127.0.0.1:8080
+ *        -De2e.baseUrl=http://localhost:8080
  *
  * 2) 指定服务器上某个视频路径：
  *    ... -De2e.filePath=/profile/upload/2026/03/01/xxx.mp4
@@ -52,7 +52,7 @@ import java.util.UUID;
 @DisplayName("八段锦真实接口端到端测试")
 public class BaduanjinApiE2ETest {
 
-    private static final String BASE = System.getProperty("e2e.baseUrl", "http://127.0.0.1:8080")
+    private static final String BASE = System.getProperty("e2e.baseUrl", "http://localhost:8080")
             .replaceAll("/+$", "");
     private static final String USERNAME = System.getProperty("e2e.username", "user01");
     private static final String PASSWORD = System.getProperty("e2e.password", "user01");

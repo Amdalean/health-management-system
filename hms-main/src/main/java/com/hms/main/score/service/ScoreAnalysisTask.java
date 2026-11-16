@@ -139,12 +139,12 @@ public class ScoreAnalysisTask
     /**
      * 获取服务器地址（从配置文件读取）
      *
-     * @return 服务器地址，例如：http://127.0.0.1:8080
+     * @return 服务器地址，例如：http://localhost:8080
      */
     private String getServerUrl()
     {
         String ip = System.getProperty("java.rmi.server.hostname");
-        ip = ip == null ? "127.0.0.1" : ip;
+        ip = ip == null ? "localhost" : ip;
         return "http://" + ip + ":" + serverPort;
     }
 
