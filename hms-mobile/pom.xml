@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>hms</artifactId>
+        <groupId>com.hms</groupId>
+        <version>3.8.8</version>
+    </parent>
+
+    <artifactId>hms-mobile</artifactId>
+    <packaging>jar</packaging>
+
+    <name>hms-mobile</name>
+    <description>移动端服务模块</description>
+
+    <dependencies>
+        <!-- 通用工具-->
+        <dependency>
+            <groupId>com.hms</groupId>
+            <artifactId>hms-common</artifactId>
+        </dependency>
+        <!-- 核心模块-->
+        <dependency>
+            <groupId>com.hms</groupId>
+            <artifactId>hms-framework</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.5.15</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

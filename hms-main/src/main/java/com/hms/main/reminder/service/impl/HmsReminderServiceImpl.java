@@ -1,11 +1,13 @@
 package com.hms.main.reminder.service.impl;
 
+import java.util.Comparator;
 import java.util.List;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.pagehelper.Page;
 import com.hms.common.annotation.DataScope;
+import com.hms.common.constant.CacheConstants;
 import com.hms.common.core.redis.RedisCache;
 import com.hms.common.utils.DateUtils;
 import com.hms.common.utils.LunarDateDistanceCalculator;
@@ -91,6 +93,9 @@ public class HmsReminderServiceImpl implements IHmsReminderService
             list.add(vo);
         }
 
+        // 按倒计时排序（从小到大，已过期和临近的排在前面）
+        list.sort(Comparator.comparingLong(HmsReminderVO::getCountdown));
+
         // 如果原始列表是分页结果，则需要保持分页信息
 //        if (hmsReminders instanceof Page) {
 //            Page<HmsReminder> page = (Page<HmsReminder>) hmsReminders;
@@ -115,10 +120,10 @@ public class HmsReminderServiceImpl implements IHmsReminderService
         if(ObjectUtil.isEmpty(id)){
             return null;
         }
-        String userName = redisCache.getCacheObject("user:id:"+id);
+        String userName = redisCache.getCacheObject(CacheConstants.USER_NAME_KEY + id);
         if(ObjectUtil.isEmpty(userName)){
-            redisCache.setCacheObject("user:id:"+id,hmsReminderMapper.selectUserNameById(id));
-            userName = redisCache.getCacheObject("user:id:"+id);
+            redisCache.setCacheObject(CacheConstants.USER_NAME_KEY + id,hmsReminderMapper.selectUserNameById(id));
+            userName = redisCache.getCacheObject(CacheConstants.USER_NAME_KEY + id);
         }
         return userName;
     }

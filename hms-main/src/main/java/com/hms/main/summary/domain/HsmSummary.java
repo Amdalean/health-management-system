@@ -51,6 +51,9 @@ public class HsmSummary extends BaseEntity
     /** 财务明细子表信息 */
     private List<HsmDetail> hsmDetailList;
 
+    /** 收入构成子表信息 add by CYQ 2026-09-21 */
+    private List<HsmSummaryIncome> incomeList;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -134,6 +137,16 @@ public class HsmSummary extends BaseEntity
         this.hsmDetailList = hsmDetailList;
     }
 
+    public List<HsmSummaryIncome> getIncomeList()
+    {
+        return incomeList;
+    }
+
+    public void setIncomeList(List<HsmSummaryIncome> incomeList)
+    {
+        this.incomeList = incomeList;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -149,6 +162,7 @@ public class HsmSummary extends BaseEntity
             .append("startDeposit", getStartDeposit())
             .append("endDeposit", getEndDeposit())
             .append("hsmDetailList", getHsmDetailList())
+            .append("incomeList", getIncomeList())
             .toString();
     }
 }

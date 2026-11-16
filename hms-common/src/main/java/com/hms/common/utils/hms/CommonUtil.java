@@ -48,7 +48,7 @@ public class CommonUtil {
 		if("".equals(dataStr)) {
 			return null;
 		}
-		return new Integer(dataStr);
+		return Integer.valueOf(dataStr);
 	}
 	/**
 	 * checkJson：	传入需要必填校验的字符

@@ -1,8 +1,10 @@
 package com.hms.main.summary.mapper;
 
 import java.util.List;
+import java.util.Map;
 import com.hms.main.summary.domain.HsmSummary;
 import com.hms.main.summary.domain.HsmDetail;
+import com.hms.main.summary.domain.HsmSummaryIncome;
 import com.hms.main.summary.domain.HsmSummaryVO;
 import com.hms.main.summary.domain.SummaryDetailVo;
 import org.apache.ibatis.annotations.Param;
@@ -105,4 +107,33 @@ public interface HsmSummaryMapper
      * @return 按类型分组的汇总明细列表
      */
     public List<SummaryDetailVo> selectLastSummaryDetailByType(Long createBy);
+
+    /**
+     * 查询财务汇总统计（聚合）add by CYQ 2026-09-01 修复全部统计口径
+     */
+    public Map<String, Object> selectSummaryStat(HsmSummary hsmSummary);
+
+    /**
+     * 查询某月收入构成
+     * add by CYQ 2026-09-21
+     */
+    public List<HsmSummaryIncome> selectIncomeBySummaryId(Long summaryId);
+
+    /**
+     * 批量新增收入构成
+     * add by CYQ 2026-09-21
+     */
+    public int batchHsmSummaryIncome(List<HsmSummaryIncome> incomeList);
+
+    /**
+     * 按主表ID删除收入构成
+     * add by CYQ 2026-09-21
+     */
+    public int deleteIncomeBySummaryId(Long summaryId);
+
+    /**
+     * 按主表ID批量删除收入构成
+     * add by CYQ 2026-09-21
+     */
+    public int deleteIncomeBySummaryIds(Long[] ids);
 }

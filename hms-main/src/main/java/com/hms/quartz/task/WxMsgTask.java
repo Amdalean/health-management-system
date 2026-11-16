@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Log4j2
 @Component("WxMsgTask")
-public class WxMsgTask extends FragonRajaBaseTask{
+public class WxMsgTask extends WeatherBaseTask{
     @Autowired
     private WxConfig config;
     public String excute() throws IOException {
@@ -23,9 +23,11 @@ public class WxMsgTask extends FragonRajaBaseTask{
         return "执行微信消息任务成功";
     }
     private String getMsg(){
-        String gd = getGDAPI();//获取明天天气
-        String gptbody = getgptMsg(gd);//通过qwen获取信息
-        return removeTags(gptbody);
+        resetTaskContext();
+        String tomorrowWeather = getTomorrowWeather();//获取明天天气
+        String mailContent = buildMailContent(tomorrowWeather);//通过 AI 策略生成正文
+        // update by CYQ 2026-11-09 微信推送只需正文，去掉仅供邮件配图使用的 [IMAGE_PROMPT] 段
+        return removeTags(removeImagePromptTags(mailContent));
     }
     private JSONObject covMsg(String msg) {
         JSONObject json = new JSONObject();

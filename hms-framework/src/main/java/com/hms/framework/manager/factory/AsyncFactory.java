@@ -12,8 +12,10 @@ import com.hms.common.utils.ip.IpUtils;
 import com.hms.common.utils.spring.SpringUtils;
 import com.hms.system.domain.SysLogininfor;
 import com.hms.system.domain.SysOperLog;
+import com.hms.system.domain.HmsIntegrationLog;
 import com.hms.system.service.ISysLogininforService;
 import com.hms.system.service.ISysOperLogService;
+import com.hms.system.service.IHmsIntegrationLogService;
 import eu.bitwalker.useragentutils.UserAgent;
 
 /**
@@ -96,6 +98,26 @@ public class AsyncFactory
                 // 远程查询操作地点
                 operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
                 SpringUtils.getBean(ISysOperLogService.class).insertOperlog(operLog);
+            }
+        };
+    }
+
+    /**
+     * 系统集成日志记录
+     *
+     * add by CYQ 2026-09-14 系统集成日志框架
+     *
+     * @param integrationLog 集成日志信息
+     * @return 任务task
+     */
+    public static TimerTask recordIntegrationLog(final HmsIntegrationLog integrationLog)
+    {
+        return new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                SpringUtils.getBean(IHmsIntegrationLogService.class).insertHmsIntegrationLog(integrationLog);
             }
         };
     }

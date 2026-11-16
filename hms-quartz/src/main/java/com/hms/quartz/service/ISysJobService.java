@@ -93,8 +93,16 @@ public interface ISysJobService
     public int updateJob(SysJob job) throws SchedulerException, TaskException;
 
     /**
+     * 获取当前正在执行的任务ID列表
+     * add by CYQ 2026-08-19
+     *
+     * @return 正在执行的任务ID集合
+     */
+    public List<Long> getRunningJobIds() throws SchedulerException;
+
+    /**
      * 校验cron表达式是否有效
-     * 
+     *
      * @param cronExpression 表达式
      * @return 结果
      */

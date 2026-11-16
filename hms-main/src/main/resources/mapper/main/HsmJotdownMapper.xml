@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="HsmJotdown" id="HsmJotdownResult">
         <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
         <result property="personnel"    column="personnel"    />
         <result property="auxiliaryAccounting"    column="auxiliary_accounting"    />
         <result property="description"    column="description"    />
@@ -19,30 +20,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectHsmJotdownVo">
-        select id, personnel, auxiliary_accounting, description, amount, date, accounting_period, expense_type, remarks, created_at, updated_at from hsm_jotdown
+        select t.id, t.create_by, t.personnel, t.auxiliary_accounting, t.description, t.amount, t.date, t.accounting_period, t.expense_type, t.remarks, t.created_at, t.updated_at from hsm_jotdown t
+        left join sys_user u on u.user_name = t.create_by
     </sql>
 
     <select id="selectHsmJotdownList" parameterType="HsmJotdown" resultMap="HsmJotdownResult">
         <include refid="selectHsmJotdownVo"/>
-        <where>  
-            <if test="personnel != null  and personnel != ''"> and personnel = #{personnel}</if>
-            <if test="auxiliaryAccounting != null  and auxiliaryAccounting != ''"> and auxiliary_accounting = #{auxiliaryAccounting}</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="date != null "> and date = #{date}</if>
-            <if test="accountingPeriod != null  and accountingPeriod != ''"> and accounting_period = #{accountingPeriod}</if>
-            <if test="expenseType != null  and expenseType != ''"> and expense_type = #{expenseType}</if>
+        <where>
+            <if test="personnel != null  and personnel != ''"> and t.personnel = #{personnel}</if>
+            <if test="auxiliaryAccounting != null  and auxiliaryAccounting != ''"> and t.auxiliary_accounting = #{auxiliaryAccounting}</if>
+            <if test="description != null  and description != ''"> and t.description like concat('%', #{description}, '%')</if>
+            <if test="amount != null "> and t.amount = #{amount}</if>
+            <if test="date != null "> and t.date = #{date}</if>
+            <if test="accountingPeriod != null  and accountingPeriod != ''"> and t.accounting_period = #{accountingPeriod}</if>
+            <if test="expenseType != null  and expenseType != ''"> and t.expense_type = #{expenseType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
         </where>
+        order by t.date desc, t.created_at desc
     </select>
     
     <select id="selectHsmJotdownById" parameterType="Long" resultMap="HsmJotdownResult">
         <include refid="selectHsmJotdownVo"/>
-        where id = #{id}
+        where t.id = #{id}
     </select>
 
     <insert id="insertHsmJotdown" parameterType="HsmJotdown" useGeneratedKeys="true" keyProperty="id">
         insert into hsm_jotdown
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null and createBy != ''">create_by,</if>
             <if test="personnel != null and personnel != ''">personnel,</if>
             <if test="auxiliaryAccounting != null and auxiliaryAccounting != ''">auxiliary_accounting,</if>
             <if test="description != null and description != ''">description,</if>
@@ -55,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatedAt != null">updated_at,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
             <if test="personnel != null and personnel != ''">#{personnel},</if>
             <if test="auxiliaryAccounting != null and auxiliaryAccounting != ''">#{auxiliaryAccounting},</if>
             <if test="description != null and description != ''">#{description},</if>
@@ -90,9 +98,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteHsmJotdownByIds" parameterType="String">
-        delete from hsm_jotdown where id in 
+        delete from hsm_jotdown where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <!-- 统一统计：查询总金额和总条数 -->
+    <select id="selectJotdownTotalStats" parameterType="HsmJotdown" resultType="java.util.Map">
+        select COALESCE(SUM(t.amount), 0) as totalAmount, COUNT(*) as totalCount
+        from hsm_jotdown t
+        left join sys_user u on u.user_name = t.create_by
+        <where>
+            <if test="personnel != null  and personnel != ''"> and t.personnel = #{personnel}</if>
+            <if test="auxiliaryAccounting != null  and auxiliaryAccounting != ''"> and t.auxiliary_accounting = #{auxiliaryAccounting}</if>
+            <if test="description != null  and description != ''"> and t.description like concat('%', #{description}, '%')</if>
+            <if test="amount != null "> and t.amount = #{amount}</if>
+            <if test="date != null "> and t.date = #{date}</if>
+            <if test="accountingPeriod != null  and accountingPeriod != ''"> and t.accounting_period = #{accountingPeriod}</if>
+            <if test="expenseType != null  and expenseType != ''"> and t.expense_type = #{expenseType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <!-- 按费用类型分组统计 -->
+    <select id="selectJotdownTypeStats" parameterType="HsmJotdown" resultType="java.util.Map">
+        select t.expense_type as expenseType, COALESCE(SUM(t.amount), 0) as total
+        from hsm_jotdown t
+        left join sys_user u on u.user_name = t.create_by
+        <where>
+            <if test="personnel != null  and personnel != ''"> and t.personnel = #{personnel}</if>
+            <if test="auxiliaryAccounting != null  and auxiliaryAccounting != ''"> and t.auxiliary_accounting = #{auxiliaryAccounting}</if>
+            <if test="description != null  and description != ''"> and t.description like concat('%', #{description}, '%')</if>
+            <if test="amount != null "> and t.amount = #{amount}</if>
+            <if test="date != null "> and t.date = #{date}</if>
+            <if test="accountingPeriod != null  and accountingPeriod != ''"> and t.accounting_period = #{accountingPeriod}</if>
+            <if test="expenseType != null  and expenseType != ''"> and t.expense_type = #{expenseType}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
+        </where>
+        group by t.expense_type
+    </select>
 </mapper>

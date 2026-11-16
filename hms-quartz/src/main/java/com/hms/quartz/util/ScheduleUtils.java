@@ -10,6 +10,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.hms.common.constant.Constants;
 import com.hms.common.constant.ScheduleConstants;
 import com.hms.common.exception.job.TaskException;
@@ -20,12 +22,14 @@ import com.hms.quartz.domain.SysJob;
 
 /**
  * 定时任务工具类
- * 
+ *
  * @author ruoyi
  *
  */
 public class ScheduleUtils
 {
+    private static final Logger log = LoggerFactory.getLogger(ScheduleUtils.class);
+
     /**
      * 得到quartz任务类
      *
@@ -59,6 +63,13 @@ public class ScheduleUtils
      */
     public static void createScheduleJob(Scheduler scheduler, SysJob job) throws SchedulerException, TaskException
     {
+        // 手工 INSERT 的记录可能没有 cron，此处跳过而不是让 @PostConstruct 全表加载时炸掉整个应用
+        // add by CYQ 2026-09-06
+        if (StringUtils.isBlank(job.getCronExpression()))
+        {
+            log.warn("定时任务[{}]未配置 cron_expression，跳过调度注册（该任务无法在页面【执行一次】触发）", job.getJobName());
+            return;
+        }
         Class<? extends Job> jobClass = getQuartzJobClass(job);
         // 构建job信息
         Long jobId = job.getJobId();

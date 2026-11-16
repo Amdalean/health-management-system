@@ -22,7 +22,7 @@ import com.hms.common.utils.poi.ExcelUtil;
 import com.hms.common.core.page.TableDataInfo;
 
 /**
- * 成绩分析记录 Controller
+ * 成绩智能分析 Controller
  *
  * @author CYQ
  * @date 2026-03-01
@@ -35,7 +35,7 @@ public class HmsScoreRecordController extends BaseController
     private IHmsScoreRecordService hmsScoreRecordService;
 
     /**
-     * 查询成绩分析记录列表
+     * 查询成绩智能分析列表
      */
     @PreAuthorize("@ss.hasPermi('main:scoreRecord:list')")
     @GetMapping("/list")
@@ -47,20 +47,55 @@ public class HmsScoreRecordController extends BaseController
     }
 
     /**
-     * 导出成绩分析记录列表
+     * 联动下拉数据：学生列表 + 全部课程
+     * add by CYQ 2026-10-18 说明: 供成绩智能分析的新增/修改表单使用
+     */
+    @PreAuthorize("@ss.hasPermi('main:scoreRecord:list')")
+    @GetMapping("/options")
+    public AjaxResult options()
+    {
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("students", hmsScoreRecordService.selectStudentOptions());
+        ajax.put("courses", hmsScoreRecordService.selectCourseOptions(null));
+        return ajax;
+    }
+
+    /**
+     * 查询某学生已选课程（选学生 → 联动过滤课程）
+     */
+    @PreAuthorize("@ss.hasPermi('main:scoreRecord:list')")
+    @GetMapping("/coursesByStudent/{studentId}")
+    public AjaxResult coursesByStudent(@PathVariable("studentId") Long studentId)
+    {
+        return success(hmsScoreRecordService.selectCourseOptions(studentId));
+    }
+
+    /**
+     * 查询当前登录用户可选的课程（移动端使用）
+     * add by CYQ 2026-10-18 说明: 学生账号返回其已选课程，教师/管理员账号返回全部课程
+     */
+    @PreAuthorize("@ss.hasPermi('main:scoreRecord:list')")
+    @GetMapping("/myCourses")
+    public AjaxResult myCourses()
+    {
+        return success(hmsScoreRecordService.selectMyCourses());
+    }
+
+    /**
+     * 导出成绩智能分析列表
      */
     @PreAuthorize("@ss.hasPermi('main:scoreRecord:export')")
-    @Log(title = "成绩分析记录", businessType = BusinessType.EXPORT)
+    @Log(title = "成绩智能分析", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, HmsScoreRecord hmsScoreRecord)
     {
         List<HmsScoreRecord> list = hmsScoreRecordService.selectHmsScoreRecordList(hmsScoreRecord);
         ExcelUtil<HmsScoreRecord> util = new ExcelUtil<HmsScoreRecord>(HmsScoreRecord.class);
-        util.exportExcel(response, list, "成绩分析记录数据");
+        util.exportExcel(response, list, "成绩智能分析数据");
     }
 
     /**
-     * 获取成绩分析记录详细信息
+     * 获取成绩智能分析详细信息
      */
     @PreAuthorize("@ss.hasPermi('main:scoreRecord:query')")
     @GetMapping(value = "/{id}")
@@ -70,10 +105,10 @@ public class HmsScoreRecordController extends BaseController
     }
 
     /**
-     * 新增成绩分析记录
+     * 新增成绩智能分析
      */
     @PreAuthorize("@ss.hasPermi('main:scoreRecord:add')")
-    @Log(title = "成绩分析记录", businessType = BusinessType.INSERT)
+    @Log(title = "成绩智能分析", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HmsScoreRecord hmsScoreRecord)
     {
@@ -81,10 +116,10 @@ public class HmsScoreRecordController extends BaseController
     }
 
     /**
-     * 修改成绩分析记录
+     * 修改成绩智能分析
      */
     @PreAuthorize("@ss.hasPermi('main:scoreRecord:edit')")
-    @Log(title = "成绩分析记录", businessType = BusinessType.UPDATE)
+    @Log(title = "成绩智能分析", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HmsScoreRecord hmsScoreRecord)
     {
@@ -92,10 +127,10 @@ public class HmsScoreRecordController extends BaseController
     }
 
     /**
-     * 删除成绩分析记录
+     * 删除成绩智能分析
      */
     @PreAuthorize("@ss.hasPermi('main:scoreRecord:remove')")
-    @Log(title = "成绩分析记录", businessType = BusinessType.DELETE)
+    @Log(title = "成绩智能分析", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

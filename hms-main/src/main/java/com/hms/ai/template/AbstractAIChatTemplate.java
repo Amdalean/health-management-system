@@ -6,6 +6,9 @@ import com.hms.common.config.QwenConfig;
 import com.hms.common.enums.BusinessType;
 import com.hms.common.exception.base.BaseException;
 import com.hms.common.utils.http.HttpUtils;
+import com.hms.common.utils.spring.SpringUtils;
+import com.hms.main.integration.ai.AiChatIntegrationStrategy;
+import com.hms.main.integration.ai.AiChatRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import org.slf4j.Logger;
@@ -28,7 +31,7 @@ public abstract class AbstractAIChatTemplate {
     public AbstractAIChatTemplate(AIResponseStrategy strategy) {
         this.strategy = strategy;
     }
-    Map<String, Object> context;
+    protected Map<String, Object> context;
     /**
      * 模板方法：定义AI对话的通用流程
      */
@@ -49,6 +52,51 @@ public abstract class AbstractAIChatTemplate {
         String finalResponse = postprocessResponse(aiResponse);
         
         return finalResponse;
+    }
+
+    /**
+     * 统一走 AI 集成策略发送 HTTP 请求（自动记录系统集成日志）
+     * <p>
+     * 策略为 Spring Bean，非 Spring 上下文（如直接运行 main 方法）降级为直连，
+     * 保证调用可用性不受影响，此时不记录集成日志。
+     *
+     * add by CYQ 2026-10-19 AI 调用接入系统集成日志
+     *
+     * @param request AI 请求参数
+     * @return 原始响应报文
+     */
+    protected String sendByIntegration(AiChatRequest request) throws Exception {
+        AiChatIntegrationStrategy strategy = resolveIntegrationStrategy();
+        if (strategy == null) {
+            log.warn("未获取到 AI 集成策略（当前非 Spring 上下文），本次调用不记录集成日志");
+            return HttpUtils.dopost_OKHttp(request.getUrl(), request.getBody(), request.getHeaders());
+        }
+        return strategy.execute(request).getRaw();
+    }
+
+    /**
+     * 获取 AI 集成策略 Bean，容器未就绪时返回 null
+     */
+    private AiChatIntegrationStrategy resolveIntegrationStrategy() {
+        try {
+            return SpringUtils.getBean(AiChatIntegrationStrategy.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 从上下文解析单据标识，便于按业务单据检索集成日志（取上下文 billId / sessionId）
+     */
+    protected String resolveBillId() {
+        if (context == null) {
+            return null;
+        }
+        Object billId = context.get("billId");
+        if (billId == null) {
+            billId = context.get("sessionId");
+        }
+        return billId == null ? null : String.valueOf(billId);
     }
 
     /**

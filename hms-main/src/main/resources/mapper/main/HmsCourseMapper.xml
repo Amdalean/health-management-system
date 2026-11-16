@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.course.mapper.HmsCourseMapper">
+
+    <resultMap type="HmsCourse" id="HmsCourseResult">
+        <id     property="courseId"     column="course_id"     />
+        <result property="courseName"   column="course_name"   />
+        <result property="teacherId"    column="teacher_id"    />
+        <result property="teacherName"  column="teacher_name"  />
+        <result property="credit"       column="credit"        />
+        <result property="hours"        column="hours"         />
+        <result property="semester"     column="semester"      />
+        <result property="studentCount" column="student_count" />
+        <result property="createBy"     column="create_by"     />
+        <result property="createTime"   column="create_time"   />
+        <result property="updateBy"     column="update_by"     />
+        <result property="updateTime"   column="update_time"   />
+        <result property="remark"       column="remark"        />
+    </resultMap>
+
+    <resultMap type="HmsStudentCourse" id="HmsStudentCourseResult">
+        <id     property="assignmentId" column="assignment_id" />
+        <result property="studentId"    column="student_id"    />
+        <result property="courseId"     column="course_id"     />
+        <result property="assignTime"   column="assign_time"   />
+        <result property="studentNo"    column="student_no"    />
+        <result property="studentName"  column="name"          />
+        <result property="grade"        column="grade"         />
+        <result property="major"        column="major"         />
+    </resultMap>
+
+    <resultMap type="HmsStudent" id="HmsStudentBriefResult">
+        <id     property="studentId" column="student_id" />
+        <result property="studentNo" column="student_no" />
+        <result property="name"      column="name"       />
+        <result property="grade"     column="grade"      />
+        <result property="major"     column="major"      />
+    </resultMap>
+
+    <sql id="selectHmsCourseVo">
+        select c.course_id, c.course_name, c.teacher_id, t.name as teacher_name,
+               c.credit, c.hours, c.semester,
+               c.create_by, c.create_time, c.update_by, c.update_time, c.remark,
+               (select count(*) from hms_student_course sc where sc.course_id = c.course_id) as student_count
+        from hms_course c
+        left join hms_teacher t on t.teacher_id = c.teacher_id
+    </sql>
+
+    <select id="selectHmsCourseList" parameterType="HmsCourse" resultMap="HmsCourseResult">
+        <include refid="selectHmsCourseVo"/>
+        <where>
+            <if test="courseName != null and courseName != ''"> and c.course_name like concat('%', #{courseName}, '%')</if>
+            <if test="teacherId != null"> and c.teacher_id = #{teacherId}</if>
+            <if test="semester != null and semester != ''"> and c.semester = #{semester}</if>
+        </where>
+        order by c.course_id desc
+    </select>
+
+    <select id="selectHmsCourseById" parameterType="Long" resultMap="HmsCourseResult">
+        <include refid="selectHmsCourseVo"/>
+        where c.course_id = #{courseId}
+    </select>
+
+    <select id="selectCourseByNameAndSemester" resultMap="HmsCourseResult">
+        <include refid="selectHmsCourseVo"/>
+        where c.course_name = #{courseName}
+          and ifnull(c.semester, '') = ifnull(#{semester,jdbcType=VARCHAR}, '')
+        limit 1
+    </select>
+
+    <insert id="insertHmsCourse" parameterType="HmsCourse" useGeneratedKeys="true" keyProperty="courseId">
+        insert into hms_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseName != null and courseName != ''">course_name,</if>
+            <if test="teacherId != null">teacher_id,</if>
+            <if test="credit != null">credit,</if>
+            <if test="hours != null">hours,</if>
+            <if test="semester != null">semester,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseName != null and courseName != ''">#{courseName},</if>
+            <if test="teacherId != null">#{teacherId},</if>
+            <if test="credit != null">#{credit},</if>
+            <if test="hours != null">#{hours},</if>
+            <if test="semester != null">#{semester},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateHmsCourse" parameterType="HmsCourse">
+        update hms_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseName != null and courseName != ''">course_name = #{courseName},</if>
+            <if test="teacherId != null">teacher_id = #{teacherId},</if>
+            <if test="credit != null">credit = #{credit},</if>
+            <if test="hours != null">hours = #{hours},</if>
+            <if test="semester != null">semester = #{semester},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where course_id = #{courseId}
+    </update>
+
+    <delete id="deleteHmsCourseById" parameterType="Long">
+        delete from hms_course where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteHmsCourseByIds" parameterType="String">
+        delete from hms_course where course_id in
+        <foreach item="courseId" collection="array" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+
+    <select id="selectCourseStudents" parameterType="Long" resultMap="HmsStudentCourseResult">
+        select sc.assignment_id, sc.student_id, sc.course_id, sc.assign_time,
+               s.student_no, s.name, s.grade, s.major
+        from hms_student_course sc
+        inner join hms_student s on s.student_id = sc.student_id
+        where sc.course_id = #{courseId}
+        order by sc.assignment_id
+    </select>
+
+    <select id="selectUnselectedStudents" parameterType="Long" resultMap="HmsStudentBriefResult">
+        select s.student_id, s.student_no, s.name, s.grade, s.major
+        from hms_student s
+        where not exists (
+            select 1 from hms_student_course sc
+            where sc.course_id = #{courseId} and sc.student_id = s.student_id
+        )
+        order by s.student_no
+    </select>
+
+    <insert id="insertStudentCourse">
+        insert ignore into hms_student_course (student_id, course_id, assign_time) values
+        <foreach item="studentId" collection="studentIds" separator=",">
+            (#{studentId}, #{courseId}, sysdate())
+        </foreach>
+    </insert>
+
+    <delete id="deleteStudentCourse">
+        delete from hms_student_course where course_id = #{courseId} and student_id in
+        <foreach item="studentId" collection="studentIds" open="(" separator="," close=")">
+            #{studentId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteStudentCourseByCourseIds" parameterType="String">
+        delete from hms_student_course where course_id in
+        <foreach item="courseId" collection="array" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+</mapper>

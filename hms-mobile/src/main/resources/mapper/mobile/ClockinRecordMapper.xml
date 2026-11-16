@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.mobile.clockin.mapper.ClockinRecordMapper">
+
+    <resultMap type="com.hms.mobile.clockin.domain.ClockinRecord" id="ClockinRecordResult">
+        <id     property="id"         column="id"           />
+        <result property="userId"     column="user_id"      />
+        <result property="userName"   column="user_name"    />
+        <result property="nickName"   column="nick_name"    />
+        <result property="deptId"     column="dept_id"      />
+        <result property="deptName"   column="dept_name"    />
+        <result property="latitude"   column="latitude"     />
+        <result property="longitude"  column="longitude"    />
+        <result property="address"    column="address"      />
+        <result property="clockinType" column="clockin_type" />
+        <result property="remark"     column="remark"       />
+        <result property="createBy"   column="create_by"    />
+        <result property="createTime" column="create_time"  />
+        <result property="updateBy"   column="update_by"    />
+        <result property="updateTime" column="update_time"  />
+    </resultMap>
+
+    <sql id="selectClockinRecordVo">
+        select id, user_id, user_name, nick_name, dept_id, dept_name,
+               latitude, longitude, address, clockin_type, remark,
+               create_by, create_time, update_by, update_time
+        from hms_clockin_record
+    </sql>
+
+    <select id="selectClockinRecordById" parameterType="Long" resultMap="ClockinRecordResult">
+        <include refid="selectClockinRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectClockinRecordList" parameterType="com.hms.mobile.clockin.domain.ClockinRecord" resultMap="ClockinRecordResult">
+        <include refid="selectClockinRecordVo"/>
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="deptId != null">
+                AND dept_id = #{deptId}
+            </if>
+            <if test="deptName != null and deptName != ''">
+                AND dept_name like concat('%', #{deptName}, '%')
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND create_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND create_time &lt;= #{params.endTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertClockinRecord" parameterType="com.hms.mobile.clockin.domain.ClockinRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into hms_clockin_record (
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null and userName != ''">user_name,</if>
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null and deptName != ''">dept_name,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="clockinType != null and clockinType != ''">clockin_type,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null and userName != ''">#{userName},</if>
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null and deptName != ''">#{deptName},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="clockinType != null and clockinType != ''">#{clockinType},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateClockinRecord" parameterType="com.hms.mobile.clockin.domain.ClockinRecord">
+        update hms_clockin_record
+        <set>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClockinRecordById" parameterType="Long">
+        delete from hms_clockin_record where id = #{id}
+    </delete>
+
+    <!-- 打卡统计：按日期汇总考勤用户的打卡人数 -->
+    <select id="selectClockinStatistics" resultType="java.util.Map">
+        SELECT 
+            DATE(cr.create_time) AS clockinDate,
+            COUNT(DISTINCT cr.user_id) AS clockinCount
+        FROM hms_clockin_record cr
+        WHERE cr.user_id IN (
+            SELECT user_id FROM sys_user_role WHERE role_id = 105
+        )
+        <if test="beginDate != null and beginDate != ''">
+            AND cr.create_time &gt;= #{beginDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND cr.create_time &lt; DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+        </if>
+        GROUP BY DATE(cr.create_time)
+        ORDER BY clockinDate DESC
+    </select>
+
+    <!-- 查询考勤用户总数 -->
+    <select id="selectAttendanceUserCount" resultType="int">
+        SELECT COUNT(1) FROM sys_user_role WHERE role_id = 105
+    </select>
+
+    <!-- 查询指定日期已打卡的考勤用户明细（按用户分组，每人一条） -->
+    <select id="selectClockedInUsersByDate" resultType="java.util.Map">
+        SELECT 
+            cr.user_id AS userId,
+            cr.user_name AS userName,
+            cr.nick_name AS nickName,
+            cr.dept_name AS deptName,
+            MIN(cr.create_time) AS firstClockinTime,
+            MAX(cr.create_time) AS lastClockinTime,
+            COUNT(1) AS clockinCount
+        FROM hms_clockin_record cr
+        WHERE cr.user_id IN (
+            SELECT user_id FROM sys_user_role WHERE role_id = 105
+        )
+        AND DATE(cr.create_time) = #{date}
+        GROUP BY cr.user_id, cr.user_name, cr.nick_name, cr.dept_name
+        ORDER BY firstClockinTime
+    </select>
+
+    <!-- 查询指定日期未打卡的考勤用户 -->
+    <select id="selectNotClockedInUsersByDate" resultType="java.util.Map">
+        SELECT 
+            u.user_id AS userId,
+            u.user_name AS userName,
+            u.nick_name AS nickName,
+            d.dept_name AS deptName
+        FROM sys_user u
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+        WHERE u.del_flag = '0'
+          AND u.status = '0'
+          AND u.user_id IN (
+              SELECT user_id FROM sys_user_role WHERE role_id = 105
+          )
+          AND u.user_id NOT IN (
+              SELECT DISTINCT cr.user_id FROM hms_clockin_record cr 
+              WHERE DATE(cr.create_time) = #{date}
+          )
+        ORDER BY u.user_name
+    </select>
+
+    <!-- 查询指定用户指定日期的全部打卡记录（用于展开明细） -->
+    <select id="selectUserClockinRecordsByDate" resultType="java.util.Map">
+        SELECT 
+            cr.id,
+            cr.user_id AS userId,
+            cr.user_name AS userName,
+            cr.nick_name AS nickName,
+            cr.dept_name AS deptName,
+            cr.clockin_type AS clockinType,
+            cr.create_time AS clockinTime,
+            cr.address,
+            cr.latitude,
+            cr.longitude
+        FROM hms_clockin_record cr
+        WHERE cr.user_id = #{userId}
+        AND DATE(cr.create_time) = #{date}
+        ORDER BY cr.create_time
+    </select>
+
+</mapper>

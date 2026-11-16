@@ -16,16 +16,21 @@ import com.hms.common.annotation.Log;
 import com.hms.common.core.controller.BaseController;
 import com.hms.common.core.domain.AjaxResult;
 import com.hms.common.enums.BusinessType;
+import com.hms.main.account.domain.UserGenerateResult;
+import com.hms.main.account.service.IAccountGenerateService;
 import com.hms.main.student.domain.HmsStudent;
 import com.hms.main.student.service.IHmsStudentService;
 import com.hms.common.utils.poi.ExcelUtil;
 import com.hms.common.core.page.TableDataInfo;
 
 /**
- * 学生信息Controller
- * 
+ * 学生建档Controller
+ *
  * @author CYQ
  * @date 2024-09-13
+ * add by CYQ 2026-10-18 说明: 按论文表1对齐学生建档模块，新增「生成账号」接口
+ *   （单条 generateUser/{studentId}、批量 generateUser/batch），
+ *   用于依据学号为学生开通系统账号并回写 user_id。
  */
 @RestController
 @RequestMapping("/main/student")
@@ -33,6 +38,9 @@ public class HmsStudentController extends BaseController
 {
     @Autowired
     private IHmsStudentService hmsStudentService;
+
+    @Autowired
+    private IAccountGenerateService accountGenerateService;
 
     /**
      * 查询学生信息列表
@@ -77,6 +85,10 @@ public class HmsStudentController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody HmsStudent hmsStudent)
     {
+        if (hmsStudentService.selectHmsStudentByNo(hmsStudent.getStudentNo()) != null)
+        {
+            return error("新增学生失败，学号【" + hmsStudent.getStudentNo() + "】已存在");
+        }
         return toAjax(hmsStudentService.insertHmsStudent(hmsStudent));
     }
 
@@ -100,5 +112,31 @@ public class HmsStudentController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(hmsStudentService.deleteHmsStudentByIds(ids));
+    }
+
+    /**
+     * 为学生生成系统账号（单条）
+     * add by CYQ 2026-10-18 说明: 用户名 = 学号，初始密码取系统配置 sys.user.initPassword
+     */
+    @PreAuthorize("@ss.hasPermi('main:student:generateUser')")
+    @Log(title = "学生信息", businessType = BusinessType.INSERT)
+    @PostMapping("/generateUser/{studentId}")
+    public AjaxResult generateUser(@PathVariable("studentId") Long studentId)
+    {
+        Long userId = accountGenerateService.generateStudentAccount(studentId);
+        return success("账号生成成功，系统用户ID：" + userId);
+    }
+
+    /**
+     * 批量为学生生成系统账号
+     * add by CYQ 2026-10-18 说明: 逐条独立事务，允许部分成功，返回成功/失败统计
+     */
+    @PreAuthorize("@ss.hasPermi('main:student:generateUser')")
+    @Log(title = "学生信息", businessType = BusinessType.INSERT)
+    @PostMapping("/generateUser/batch")
+    public AjaxResult generateUserBatch(@RequestBody Long[] studentIds)
+    {
+        UserGenerateResult result = accountGenerateService.generateStudentAccounts(studentIds);
+        return success(result);
     }
 }

@@ -41,9 +41,13 @@ public class TokenService
     @Value("${token.secret}")
     private String secret;
 
-    // 令牌有效期（默认30分钟）
+    // 令牌有效期（PC端，默认30分钟）
     @Value("${token.expireTime}")
     private int expireTime;
+
+    // 令牌有效期（移动端，默认7天）
+    @Value("${token.expireTimeMobile}")
+    private int expireTimeMobile;
 
     protected static final long MILLIS_SECOND = 1000;
 
@@ -140,17 +144,18 @@ public class TokenService
     }
 
     /**
-     * 刷新令牌有效期
+     * 刷新令牌有效期（PC端30分钟，移动端7天，根据当前请求User-Agent判断）
      *
      * @param loginUser 登录信息
      */
     public void refreshToken(LoginUser loginUser)
     {
         loginUser.setLoginTime(System.currentTimeMillis());
-        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        int effectiveExpireTime = isMobileRequest() ? expireTimeMobile : expireTime;
+        loginUser.setExpireTime(loginUser.getLoginTime() + effectiveExpireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(loginUser.getToken());
-        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        redisCache.setCacheObject(userKey, loginUser, effectiveExpireTime, TimeUnit.MINUTES);
     }
 
     /**
@@ -166,6 +171,15 @@ public class TokenService
         loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
         loginUser.setBrowser(userAgent.getBrowser().getName());
         loginUser.setOs(userAgent.getOperatingSystem().getName());
+    }
+
+    /**
+     * 判断当前请求是否来自移动端
+     */
+    private boolean isMobileRequest()
+    {
+        UserAgent userAgent = UserAgent.parseUserAgentString(ServletUtils.getRequest().getHeader("User-Agent"));
+        return userAgent.getOperatingSystem().isMobileDevice();
     }
 
     /**

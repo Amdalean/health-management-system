@@ -18,21 +18,21 @@ public class AIChatTest {
         
         // 测试健康建议策略
         System.out.println("=== 测试健康建议策略 ===");
-        AbstractAIChatTemplate healthChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.HEALTH_ADVICE);
+        AbstractAIChatTemplate healthChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.HEALTH_ADVICE);
         String healthResponse = healthChat.chat("如何保持健康饮食？", context);
         System.out.println("健康建议回复: " + healthResponse);
         System.out.println();
         
         // 测试报表输出策略
         System.out.println("=== 测试报表输出策略 ===");
-        AbstractAIChatTemplate reportChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.REPORT_OUTPUT);
+        AbstractAIChatTemplate reportChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.REPORT_OUTPUT);
         String reportResponse = reportChat.chat("生成本月健康数据报告", context);
         System.out.println("报表输出回复: " + reportResponse);
         System.out.println();
         
         // 测试财务分析策略
         System.out.println("=== 测试财务分析策略 ===");
-        AbstractAIChatTemplate financeChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
+        AbstractAIChatTemplate financeChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
         String financeResponse = financeChat.chat("分析健康管理系统本月收入情况", context);
         System.out.println("财务分析回复: " + financeResponse);
     }

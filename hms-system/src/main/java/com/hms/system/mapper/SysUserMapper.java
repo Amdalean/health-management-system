@@ -52,6 +52,33 @@ public interface SysUserMapper
     public SysUser selectUserById(Long userId);
 
     /**
+     * 通过微信小程序openid查询用户（微信一键登录用）
+     * add by CYQ 2026-09-06 微信小程序一键登录
+     *
+     * @param wxOpenid 微信小程序openid
+     * @return 用户对象信息
+     */
+    public SysUser selectUserByWxOpenid(String wxOpenid);
+
+    /**
+     * 清除指定 openid 在其他用户下的绑定（账号换绑微信时用）
+     * add by CYQ 2026-09-06 微信小程序一键登录
+     *
+     * @param user 用户信息（userId 保留归属用户，wxOpenid 待解绑的openid）
+     * @return 结果
+     */
+    public int clearUserWxOpenid(SysUser user);
+
+    /**
+     * 按用户ID解绑微信小程序openid（设置页手动解绑用）
+     * add by CYQ 2026-09-09 设置页手动关联微信，登录页仅已绑定显示一键登录
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    public int clearWxOpenidByUserId(Long userId);
+
+    /**
      * 新增用户信息
      * 
      * @param user 用户信息
@@ -75,6 +102,15 @@ public interface SysUserMapper
      * @return 结果
      */
     public int updateUserAvatar(@Param("userName") String userName, @Param("avatar") String avatar);
+
+    /**
+     * 更新用户当前所在城市（移动端定位上报）
+     * add by Qwen 2026-10-26
+     *
+     * @param user 用户（userId + 城市字段）
+     * @return 结果
+     */
+    public int updateUserLocation(SysUser user);
 
     /**
      * 重置用户密码

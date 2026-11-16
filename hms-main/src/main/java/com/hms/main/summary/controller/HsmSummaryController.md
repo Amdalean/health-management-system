@@ -17,24 +17,25 @@
 - **Method**: `GET`
 - **权限**: `main:summary:query`
 - **描述**: 根据ID获取财务汇总主详细信息
+- **返回**: `HsmSummary`，包含 `hsmDetailList`（财务明细）与 `incomeList`（收入构成）
 
 ## 4. 获取财务汇总主初始化信息
 - **URL**: `/main/summary/init`
 - **Method**: `GET`
 - **权限**: 无
-- **描述**: 获取财务汇总主初始化信息
+- **描述**: 获取上月数据，用于新增时预填；返回 `head`、`items`（上月明细）与 `incomeItems`（上月收入构成，金额已置零）
 
 ## 5. 新增财务汇总主
 - **URL**: `/main/summary`
 - **Method**: `POST`
 - **权限**: `main:summary:add`
-- **描述**: 新增财务汇总主
+- **描述**: 新增财务汇总主；`incomeList` 为收入构成明细，保存时自动求和回写到表头 `income`
 
 ## 6. 修改财务汇总主
 - **URL**: `/main/summary`
 - **Method**: `PUT`
 - **权限**: `main:summary:edit`
-- **描述**: 修改财务汇总主
+- **描述**: 修改财务汇总主；收入构成整体覆盖保存，并重新汇总回写 `income`
 
 ## 7. 删除财务汇总主
 - **URL**: `/main/summary/{ids}`

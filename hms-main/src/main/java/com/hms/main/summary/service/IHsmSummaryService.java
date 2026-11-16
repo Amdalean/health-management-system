@@ -110,4 +110,9 @@ public interface IHsmSummaryService
      * @return 个人财务数据
      */
     Map<String, Object> getPersonalFinancialData(Long userId);
+
+    /**
+     * 查询财务汇总统计（聚合） add by CYQ 2026-09-01
+     */
+    Map<String, Object> selectSummaryStat(HsmSummary hsmSummary);
 }

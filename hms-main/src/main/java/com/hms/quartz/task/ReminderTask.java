@@ -3,21 +3,21 @@ package com.hms.quartz.task;
 import cn.hutool.core.date.ChineseDate;
 import cn.hutool.core.util.ObjectUtil;
 import com.hms.ai.factory.AIChatFactory;
-import com.hms.common.config.MailConfig;
 import com.hms.common.utils.DateUtils;
 import com.hms.common.utils.hms.MDUtil;
+import com.hms.main.integration.email.EmailIntegrationStrategy;
+import com.hms.main.integration.email.EmailSendRequest;
 import com.hms.main.reminder.domain.HmsReminder;
 import com.hms.main.reminder.service.IHmsReminderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import javax.mail.internet.MimeMessage;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component("ReminderTask")
 public class ReminderTask {
@@ -28,7 +28,7 @@ public class ReminderTask {
     private IHmsReminderService hmsReminderService;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private EmailIntegrationStrategy emailIntegrationStrategy;
 //    public static void main(String[] args){
 ////        廿五
 //        Date checkDate = DateUtils.addDays(new Date(), 15); // 获取明天的日期
@@ -91,7 +91,12 @@ public class ReminderTask {
                         if(!ObjectUtil.isEmpty(aiPrompt)){
                             req += "\n" + aiPrompt;
                         }
-                        String aiResponse = AIChatFactory.createAIChat(AIChatFactory.StrategyType.Reminder).chat(req, null);
+                        // AI 与邮件共用同一单据标识，便于串联同一提醒的两条集成日志
+                        Map<String, Object> aiContext = new HashMap<>();
+                        aiContext.put("billId", "reminder-" + reminder.getTitle());
+                        String aiResponse = AIChatFactory.createAIChat(
+                                AIChatFactory.ServiceType.OPENCODE_GO,
+                                AIChatFactory.StrategyType.Reminder).chat(req, aiContext);
                         String html = MDUtil.mdtohtml(aiResponse);
                         // 发送邮件
                         sendEmail(reminder.getRemindEmail(), reminder.getTitle(), html);
@@ -117,21 +122,10 @@ public class ReminderTask {
     }
 
     /**
-     * 发送邮件
+     * 发送邮件（统一走邮件集成策略，自动记录集成日志）
      */
     private void sendEmail(String toEmail, String subject, String content) throws Exception {
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(MailConfig.getMe());
-            helper.setTo(toEmail);
-            helper.setSubject(subject);
-            helper.setText(content, true); // true 表示内容为HTML格式
-
-            mailSender.send(message);
-        } catch (Exception e) {
-            log.error("发送邮件失败，收件人: {}, 主题: {}", toEmail, subject, e);
-            throw e;
-        }
+        emailIntegrationStrategy.execute(new EmailSendRequest(
+            toEmail.split(","), subject, content, "reminder-" + subject));
     }
 }

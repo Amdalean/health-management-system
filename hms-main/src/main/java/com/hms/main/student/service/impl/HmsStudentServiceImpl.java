@@ -32,6 +32,18 @@ public class HmsStudentServiceImpl implements IHmsStudentService
     }
 
     /**
+     * 按学号查询学生信息
+     *
+     * @param studentNo 学号
+     * @return 学生信息
+     */
+    @Override
+    public HmsStudent selectHmsStudentByNo(String studentNo)
+    {
+        return hmsStudentMapper.selectHmsStudentByNo(studentNo);
+    }
+
+    /**
      * 查询学生信息列表
      * 
      * @param hmsStudent 学生信息

@@ -1,8 +1,10 @@
 package com.hms.main.jotdown.service.impl;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.hms.common.annotation.DataScope;
 import com.hms.main.jotdown.mapper.HsmJotdownMapper;
 import com.hms.main.jotdown.domain.HsmJotdown;
 import com.hms.main.jotdown.service.IHsmJotdownService;
@@ -38,6 +40,7 @@ public class HsmJotdownServiceImpl implements IHsmJotdownService
      * @return 随手记
      */
     @Override
+    @DataScope(userAlias = "u")
     public List<HsmJotdown> selectHsmJotdownList(HsmJotdown hsmJotdown)
     {
         return hsmJotdownMapper.selectHsmJotdownList(hsmJotdown);
@@ -81,7 +84,7 @@ public class HsmJotdownServiceImpl implements IHsmJotdownService
 
     /**
      * 删除随手记信息
-     * 
+     *
      * @param id 随手记主键
      * @return 结果
      */
@@ -89,5 +92,29 @@ public class HsmJotdownServiceImpl implements IHsmJotdownService
     public int deleteHsmJotdownById(Long id)
     {
         return hsmJotdownMapper.deleteHsmJotdownById(id);
+    }
+
+    /**
+     * 查询随手记统计（总金额、总条数），不受分页影响
+     *
+     * add by CYQ 2026年7月2日
+     */
+    @Override
+    @DataScope(userAlias = "u")
+    public Map<String, Object> selectJotdownTotalStats(HsmJotdown hsmJotdown)
+    {
+        return hsmJotdownMapper.selectJotdownTotalStats(hsmJotdown);
+    }
+
+    /**
+     * 按费用类型分组统计金额
+     *
+     * add by CYQ 2026年7月2日
+     */
+    @Override
+    @DataScope(userAlias = "u")
+    public List<Map<String, Object>> selectJotdownTypeStats(HsmJotdown hsmJotdown)
+    {
+        return hsmJotdownMapper.selectJotdownTypeStats(hsmJotdown);
     }
 }

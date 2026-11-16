@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author CYQ
  */
 @Component
-@ConfigurationProperties(prefix = "qwen")
+@ConfigurationProperties(prefix = "ai.qwen")
 public class QwenConfig {
     private static String apiUrl;
     private static String model;

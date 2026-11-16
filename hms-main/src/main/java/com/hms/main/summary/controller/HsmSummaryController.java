@@ -9,6 +9,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.hms.ai.factory.AIChatFactory;
 import com.hms.ai.template.AbstractAIChatTemplate;
 import com.hms.common.core.redis.RedisCache;
+import com.hms.common.utils.DateUtils;
 import com.hms.common.utils.spring.SpringUtils;
 import com.hms.main.summary.domain.HsmSummaryVO;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -164,6 +165,16 @@ public class HsmSummaryController extends BaseController
     }
 
     /**
+     * 查询财务汇总统计（聚合）add by CYQ 2026-09-01 修复全部统计口径
+     */
+    @PreAuthorize("@ss.hasPermi('main:summary:list')")
+    @GetMapping("/stat")
+    public AjaxResult getSummaryStat(HsmSummary hsmSummary)
+    {
+        return success(hsmSummaryService.selectSummaryStat(hsmSummary));
+    }
+
+    /**
      * AI财务分析接口
      */
 //    @PreAuthorize("@ss.hasPermi('main:summary:ai-analysis')")
@@ -196,9 +207,13 @@ public class HsmSummaryController extends BaseController
             // 构建AI查询内容，包含个人财务数据
             String aiQuery = "基于以下财务数据进行分析：" + financialDataStr + "。具体问题：" + query;
 
-            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
+            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(
+                    AIChatFactory.ServiceType.OPENCODE_GO,
+                    AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
             java.util.Map<String, Object> context = new java.util.HashMap<>();
             context.put("userId", userId);
+            // add by CYQ 2026-10-19 业务单号带入集成日志：按用户+日期标识一次财务分析
+            context.put("billId", "finance-" + userId + "-" + DateUtils.getDate());
 
 
             context.put("nowTime", new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date()));

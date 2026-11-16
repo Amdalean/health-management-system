@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "mail")
 public class MailConfig {
+    /** 天气推送收件人（配置键 mail.we，字段名保持不变以兼容现有配置） */
     private static String we;
     private static String me;
     private static String mailkey;
 
-    public static String getWe() {
+    public static String getWeatherRecipients() {
         return we;
     }
 

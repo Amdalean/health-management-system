@@ -1,6 +1,7 @@
 package com.hms.main.jotdown.service;
 
 import java.util.List;
+import java.util.Map;
 import com.hms.main.jotdown.domain.HsmJotdown;
 
 /**
@@ -53,9 +54,25 @@ public interface IHsmJotdownService
 
     /**
      * 删除随手记信息
-     * 
+     *
      * @param id 随手记主键
      * @return 结果
      */
     public int deleteHsmJotdownById(Long id);
+
+    /**
+     * 查询随手记统计（总金额、总条数），不受分页影响
+     *
+     * @param hsmJotdown 查询条件
+     * @return Map {totalAmount, totalCount}
+     */
+    public Map<String, Object> selectJotdownTotalStats(HsmJotdown hsmJotdown);
+
+    /**
+     * 按费用类型分组统计金额
+     *
+     * @param hsmJotdown 查询条件
+     * @return List<Map> {expenseType, total}
+     */
+    public List<Map<String, Object>> selectJotdownTypeStats(HsmJotdown hsmJotdown);
 }

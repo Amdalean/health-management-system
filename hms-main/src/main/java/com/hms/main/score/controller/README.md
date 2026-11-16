@@ -1,4 +1,4 @@
-# 成绩分析记录 API 文档
+# 成绩智能分析 API 文档
 
 **创建时间**: 2026-03-01  
 **作者**: CYQ
@@ -113,7 +113,7 @@
 
 ---
 
-### 3. 查询成绩分析记录列表
+### 3. 查询成绩智能分析列表
 
 **接口地址**: `GET /main/scoreRecord/list`
 
@@ -153,7 +153,7 @@
 
 ---
 
-### 4. 获取成绩分析记录详情
+### 4. 获取成绩智能分析详情
 
 **接口地址**: `GET /main/scoreRecord/{id}`
 
@@ -237,6 +237,12 @@
 
 ## 异步处理说明
 
+> add by CYQ 2026-11-15 说明: AI 打分通过独立的 `ScoreAnalysisTask`（`@Async("threadPoolTaskExecutor")`）执行，
+> `hms-framework` 的 `ThreadPoolConfig` 已开启 `@EnableAsync`。
+> 提交接口只做「校验 + 状态置 1 + 触发异步任务」后立即返回，不再阻塞请求线程（此前自调用导致 `@Async` 失效，
+> AI 调用同步执行，前端 10s 超时并提示「系统接口请求超时」）。
+> 状态落库使用 `resetForAnalysis`，会清空上一轮的 `score / feedback / analysis_details`。
+
 ### 流程图
 
 ```
@@ -285,6 +291,48 @@ const timer = setInterval(() => {
   });
 }, 3000); // 每 3 秒轮询一次
 ```
+
+---
+
+## 与学生 / 课程建档的联动
+
+> add by CYQ 2026-10-18 说明: 成绩智能分析不再使用裸 ID，全部与「学生管理」「课程管理」「学生选课」联动。
+
+### 1. 联动查询接口
+
+| 接口 | 方法 | 权限 | 说明 |
+|---|---|---|---|
+| `/main/scoreRecord/options` | GET | `main:scoreRecord:list` | 返回 `{ students: [...], courses: [...] }`，供新增/修改表单下拉使用 |
+| `/main/scoreRecord/coursesByStudent/{studentId}` | GET | `main:scoreRecord:list` | 返回该学生**已选**课程（选学生 → 联动过滤课程） |
+| `/main/scoreRecord/myCourses` | GET | `main:scoreRecord:list` | 当前登录用户可选课程；学生账号返回其已选课程，教师/管理员返回全部课程（移动端使用） |
+
+### 2. 业务校验规则
+
+新增 / 修改 / 提交分析成绩记录时统一校验：
+
+1. **课程必须存在**：`course_id` 必须能在 `hms_course` 中查到；
+2. **学生必须存在**：`student_id` 必须能在 `hms_student` 中查到；
+   若未传 `student_id`（移动端场景），按当前登录账号关联的学生档案自动解析
+   （`hms_student.user_id = 当前登录用户ID`）；解析不到时提示
+   *"当前登录账号未关联学生档案，请先在「教学管理 → 学生管理」中生成账号"*；
+3. **必须已选课**：`hms_student_course` 中必须存在 `(student_id, course_id)` 记录，
+   否则提示 *"该学生未选修课程【×××】，请先在「教学管理 → 课程管理 → 选课」中完成选课"*。
+
+> 异步 AI 回写走 Mapper，不触发上述校验，避免二次校验干扰。
+
+### 3. 列表联字段
+
+列表与详情会关联返回：`studentNo`（学号）、`studentName`（学生姓名）、`courseName`（课程名称），
+前端直接展示名称；历史脏数据（学生已删除或未建档）会返回空值，前端以 `ID:xxx` 标签兜底。
+
+### 4. 列表查询参数（新增）
+
+| 参数名 | 类型 | 说明 |
+|---|---|---|
+| studentNo | String | 学号（模糊） |
+| studentName | String | 学生姓名（模糊） |
+| courseId | Long | 课程 ID |
+| analysisType | String | 分析类型 |
 
 ---
 

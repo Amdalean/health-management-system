@@ -21,7 +21,14 @@ import com.hms.common.utils.StringUtils;
 import com.hms.common.utils.file.FileUploadUtils;
 import com.hms.common.utils.file.MimeTypeUtils;
 import com.hms.framework.web.service.TokenService;
+import com.hms.system.domain.SysUserRole;
+import com.hms.system.mapper.SysRoleMapper;
+import com.hms.system.mapper.SysUserRoleMapper;
 import com.hms.system.service.ISysUserService;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 个人信息 业务处理
@@ -37,6 +44,14 @@ public class SysProfileController extends BaseController
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
     /**
      * 个人信息
@@ -109,6 +124,100 @@ public class SysProfileController extends BaseController
             return success();
         }
         return error("修改密码异常，请联系管理员");
+    }
+
+    /**
+     * 订阅量化通知 - 维护邮箱并授予 quant 角色 add by CYQ 2026-09-02
+     * 新用户邮箱为空时弹窗维护，同时自动分配邮件通知角色
+     */
+    @Log(title = "个人信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/subscribeQuant")
+    public AjaxResult subscribeQuant(@RequestBody Map<String, String> params)
+    {
+        String email = params != null ? StringUtils.trim(params.get("email")) : null;
+        if (StringUtils.isEmpty(email))
+        {
+            return error("邮箱不能为空");
+        }
+        if (!EMAIL_PATTERN.matcher(email).matches())
+        {
+            return error("邮箱格式不正确");
+        }
+        LoginUser loginUser = getLoginUser();
+        SysUser currentUser = loginUser.getUser();
+        // 邮箱唯一性校验（排除自己）
+        SysUser checkUser = new SysUser();
+        checkUser.setUserId(currentUser.getUserId());
+        checkUser.setEmail(email);
+        if (!userService.checkEmailUnique(checkUser))
+        {
+            return error("邮箱 '" + email + "' 已被占用");
+        }
+        // 1. 更新邮箱
+        currentUser.setEmail(email);
+        userService.updateUserProfile(currentUser);
+
+        // 2. 授予 quant 角色（幂等）
+        // 查询 quant 角色
+        com.hms.common.core.domain.entity.SysRole quantRole = roleMapper.checkRoleKeyUnique("quant");
+        if (quantRole == null)
+        {
+            // 兜底：按 role_key like 查询
+            com.hms.common.core.domain.entity.SysRole q = new com.hms.common.core.domain.entity.SysRole();
+            q.setRoleKey("quant");
+            List<com.hms.common.core.domain.entity.SysRole> list = roleMapper.selectRoleList(q);
+            if (list != null && !list.isEmpty())
+            {
+                quantRole = list.stream().filter(r -> "quant".equals(r.getRoleKey())).findFirst().orElse(list.get(0));
+            }
+        }
+        if (quantRole == null)
+        {
+            return error("量化角色 quant 不存在，请先执行 hms_quant_role.sql 初始化");
+        }
+        Long quantRoleId = quantRole.getRoleId();
+        List<Long> roleIds = roleMapper.selectRoleListByUserId(currentUser.getUserId());
+        boolean alreadyHas = roleIds != null && roleIds.contains(quantRoleId);
+        if (!alreadyHas)
+        {
+            SysUserRole ur = new SysUserRole();
+            ur.setUserId(currentUser.getUserId());
+            ur.setRoleId(quantRoleId);
+            userRoleMapper.batchUserRole(Collections.singletonList(ur));
+        }
+        // 3. 刷新缓存
+        loginUser.getUser().setEmail(email);
+        tokenService.setLoginUser(loginUser);
+
+        AjaxResult ajax = AjaxResult.success(alreadyHas ? "已订阅（邮箱已更新）" : "订阅成功，已为您开通邮件通知");
+        ajax.put("email", email);
+        ajax.put("subscribed", true);
+        ajax.put("roleId", quantRoleId);
+        return ajax;
+    }
+
+    /**
+     * 查询是否已订阅量化通知
+     */
+    @GetMapping("/subscribeQuant/status")
+    public AjaxResult subscribeQuantStatus()
+    {
+        LoginUser loginUser = getLoginUser();
+        Long userId = loginUser.getUser().getUserId();
+        String email = loginUser.getUser().getEmail();
+        com.hms.common.core.domain.entity.SysRole quantRole = roleMapper.checkRoleKeyUnique("quant");
+        Long quantRoleId = quantRole != null ? quantRole.getRoleId() : null;
+        boolean subscribed = false;
+        if (quantRoleId != null)
+        {
+            List<Long> roleIds = roleMapper.selectRoleListByUserId(userId);
+            subscribed = roleIds != null && roleIds.contains(quantRoleId);
+        }
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("email", email);
+        ajax.put("subscribed", subscribed);
+        ajax.put("quantRoleId", quantRoleId);
+        return ajax;
     }
 
     /**

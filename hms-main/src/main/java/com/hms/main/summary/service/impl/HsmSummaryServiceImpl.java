@@ -18,6 +18,7 @@ import java.util.Map;
 import com.hms.common.utils.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 import com.hms.main.summary.domain.HsmDetail;
+import com.hms.main.summary.domain.HsmSummaryIncome;
 import com.hms.main.summary.mapper.HsmSummaryMapper;
 import com.hms.main.summary.domain.HsmSummary;
 import com.hms.main.summary.service.IHsmSummaryService;
@@ -73,8 +74,11 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         hsmSummary.setCreateTime(DateUtils.getNowDate());
         //add by CYQ 2025年8月29日 增加制单人逻辑
         hsmSummary.setCreateBy(SecurityUtils.getUserId().toString());
+        //add by CYQ 2026-09-21 收入由收入构成自动汇总回写
+        hsmSummary.setIncome(sumIncomeTotal(hsmSummary));
         int rows = hsmSummaryMapper.insertHsmSummary(hsmSummary);
         insertHsmDetail(hsmSummary);
+        insertIncome(hsmSummary);
         return rows;
     }
 
@@ -92,8 +96,12 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         //add by CYQ 2025年8月29日 增加制单人
         String userId = SecurityUtils.getUserId()+"";
         hsmSummary.setUpdateBy(userId);
+        //add by CYQ 2026-09-21 收入由收入构成自动汇总回写
+        hsmSummary.setIncome(sumIncomeTotal(hsmSummary));
         hsmSummaryMapper.deleteHsmDetailBySummaryId(hsmSummary.getId());
+        hsmSummaryMapper.deleteIncomeBySummaryId(hsmSummary.getId());
         insertHsmDetail(hsmSummary);
+        insertIncome(hsmSummary);
         return hsmSummaryMapper.updateHsmSummary(hsmSummary);
     }
 
@@ -108,6 +116,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     public int deleteHsmSummaryByIds(Long[] ids)
     {
         hsmSummaryMapper.deleteHsmDetailBySummaryIds(ids);
+        hsmSummaryMapper.deleteIncomeBySummaryIds(ids);
         return hsmSummaryMapper.deleteHsmSummaryByIds(ids);
     }
 
@@ -122,6 +131,7 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
     public int deleteHsmSummaryById(Long id)
     {
         hsmSummaryMapper.deleteHsmDetailBySummaryId(id);
+        hsmSummaryMapper.deleteIncomeBySummaryId(id);
         return hsmSummaryMapper.deleteHsmSummaryById(id);
     }
 
@@ -138,6 +148,16 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         String items = JSONArray.toJSONString(detail);
         json.put("head",JSONObject.parse(head));
         json.put("items",JSONArray.parse(items));
+        //add by CYQ 2026-09-21 返回上月收入构成，供新增时沿用
+        if (data != null && data.getId() != null)
+        {
+            List<HsmSummaryIncome> incomeItems = hsmSummaryMapper.selectIncomeBySummaryId(data.getId());
+            json.put("incomeItems", JSONArray.parse(JSONArray.toJSONString(incomeItems)));
+        }
+        else
+        {
+            json.put("incomeItems", new JSONArray());
+        }
         return json;
     }
     
@@ -503,12 +523,80 @@ public class HsmSummaryServiceImpl implements IHsmSummaryService
         }
     }
 
+    /**
+     * 汇总收入构成金额
+     * add by CYQ 2026-09-21
+     * 未传收入构成（incomeList == null）时保留原有收入值，避免误清零
+     */
+    private BigDecimal sumIncomeTotal(HsmSummary hsmSummary)
+    {
+        List<HsmSummaryIncome> incomeList = hsmSummary.getIncomeList();
+        if (incomeList == null)
+        {
+            return hsmSummary.getIncome() == null ? BigDecimal.ZERO : hsmSummary.getIncome();
+        }
+        BigDecimal total = BigDecimal.ZERO;
+        for (HsmSummaryIncome item : incomeList)
+        {
+            if (item.getAmount() != null)
+            {
+                total = total.add(item.getAmount());
+            }
+        }
+        return total;
+    }
+
+    /**
+     * 批量保存收入构成
+     * add by CYQ 2026-09-21
+     */
+    private void insertIncome(HsmSummary hsmSummary)
+    {
+        List<HsmSummaryIncome> incomeList = hsmSummary.getIncomeList();
+        if (StringUtils.isNull(incomeList) || incomeList.isEmpty())
+        {
+            return;
+        }
+        List<HsmSummaryIncome> list = new ArrayList<>();
+        int index = 0;
+        for (HsmSummaryIncome item : incomeList)
+        {
+            item.setSummaryId(hsmSummary.getId());
+            item.setId(null);
+            if (item.getSort() == null)
+            {
+                item.setSort(index);
+            }
+            list.add(item);
+            index++;
+        }
+        hsmSummaryMapper.batchHsmSummaryIncome(list);
+    }
+
     @Override
     public List<com.hms.main.summary.domain.SummaryDetailVo> selectLastSummaryDetailByType() {
         //add by CYQ 2025年11月18日 增加制单人逻辑
         Long userId = SecurityUtils.getUserId();
 //        Long userId = 101L;
         return hsmSummaryMapper.selectLastSummaryDetailByType(userId);
+    }
+
+    @Override
+    public Map<String, Object> selectSummaryStat(HsmSummary hsmSummary) {
+        // add by CYQ 2026-09-01 修复全部统计口径：当前存款为时点值
+        if (hsmSummary.getCreateBy() == null) {
+            hsmSummary.setCreateBy(SecurityUtils.getUserId().toString());
+        }
+        Map<String, Object> stat = hsmSummaryMapper.selectSummaryStat(hsmSummary);
+        if (stat == null) {
+            stat = new HashMap<>();
+            stat.put("totalCount", 0);
+            stat.put("totalIncome", 0);
+            stat.put("totalExpense", 0);
+            stat.put("totalBalance", 0);
+            stat.put("currentDeposit", 0);
+        }
+        return stat;
     }
 
     @Override

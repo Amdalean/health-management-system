@@ -52,6 +52,27 @@ public class SysUser extends BaseEntity
     /** 用户头像 */
     private String avatar;
 
+    /** 微信小程序openid */
+    private String wxOpenid;
+
+    /** 当前所在城市（移动端定位上报）add by Qwen 2026-10-26 */
+    private String currentCity;
+
+    /** 当前所在区县 */
+    private String currentDistrict;
+
+    /** 当前所在城市行政区划编码（高德 adcode，天气接口用） */
+    private String currentAdcode;
+
+    /** 当前所在纬度 */
+    private Double currentLatitude;
+
+    /** 当前所在经度 */
+    private Double currentLongitude;
+
+    /** 位置上报时间 */
+    private Date locationTime;
+
     /** 密码 */
     private String password;
 
@@ -195,6 +216,88 @@ public class SysUser extends BaseEntity
     public void setAvatar(String avatar)
     {
         this.avatar = avatar;
+    }
+
+    /**
+     * 获取微信小程序openid
+     * add by CYQ 2026-09-06 微信小程序一键登录
+     */
+    public String getWxOpenid()
+    {
+        return wxOpenid;
+    }
+
+    /**
+     * 设置微信小程序openid
+     * add by CYQ 2026-09-06 微信小程序一键登录
+     */
+    public void setWxOpenid(String wxOpenid)
+    {
+        this.wxOpenid = wxOpenid;
+    }
+
+    /**
+     * 获取当前所在城市
+     * add by Qwen 2026-10-26
+     */
+    public String getCurrentCity()
+    {
+        return currentCity;
+    }
+
+    public void setCurrentCity(String currentCity)
+    {
+        this.currentCity = currentCity;
+    }
+
+    public String getCurrentDistrict()
+    {
+        return currentDistrict;
+    }
+
+    public void setCurrentDistrict(String currentDistrict)
+    {
+        this.currentDistrict = currentDistrict;
+    }
+
+    public String getCurrentAdcode()
+    {
+        return currentAdcode;
+    }
+
+    public void setCurrentAdcode(String currentAdcode)
+    {
+        this.currentAdcode = currentAdcode;
+    }
+
+    public Double getCurrentLatitude()
+    {
+        return currentLatitude;
+    }
+
+    public void setCurrentLatitude(Double currentLatitude)
+    {
+        this.currentLatitude = currentLatitude;
+    }
+
+    public Double getCurrentLongitude()
+    {
+        return currentLongitude;
+    }
+
+    public void setCurrentLongitude(Double currentLongitude)
+    {
+        this.currentLongitude = currentLongitude;
+    }
+
+    public Date getLocationTime()
+    {
+        return locationTime;
+    }
+
+    public void setLocationTime(Date locationTime)
+    {
+        this.locationTime = locationTime;
     }
 
     public String getPassword()

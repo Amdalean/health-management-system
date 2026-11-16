@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.timediary.mapper.HsmTimeDiaryMapper">
+
+    <resultMap type="HsmTimeDiary" id="HsmTimeDiaryResult">
+        <result property="diaryId"       column="diary_id"       />
+        <result property="userId"        column="user_id"        />
+        <result property="diaryDate"     column="diary_date"     />
+        <result property="startTime"     column="start_time"     />
+        <result property="endTime"       column="end_time"       />
+        <result property="category"      column="category"       />
+        <result property="title"         column="title"          />
+        <result property="description"   column="description"    />
+        <result property="durationMin"   column="duration_min"   />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"        column="remark"         />
+    </resultMap>
+
+    <sql id="selectHsmTimeDiaryVo">
+        select t.diary_id, t.user_id, t.diary_date, t.start_time, t.end_time, t.category, t.title, t.description, t.duration_min,
+               t.create_by, t.create_time, t.update_by, t.update_time, t.remark
+        from hms_time_diary t
+        left join sys_user u on u.user_name = t.create_by
+    </sql>
+
+    <select id="selectHsmTimeDiaryList" parameterType="HsmTimeDiary" resultMap="HsmTimeDiaryResult">
+        <include refid="selectHsmTimeDiaryVo"/>
+        <where>
+            <if test="userId != null"> and t.user_id = #{userId}</if>
+            <if test="diaryDate != null"> and t.diary_date = #{diaryDate}</if>
+            <if test="category != null and category != ''"> and t.category = #{category}</if>
+            <if test="title != null and title != ''"> and t.title like concat('%', #{title}, '%')</if>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.diary_date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.diary_date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
+        </where>
+        order by t.diary_date desc, t.start_time asc, t.create_time desc
+    </select>
+
+    <select id="selectHsmTimeDiaryById" parameterType="Long" resultMap="HsmTimeDiaryResult">
+        <include refid="selectHsmTimeDiaryVo"/>
+        where t.diary_id = #{diaryId}
+    </select>
+
+    <select id="selectTimeDiaryByDate" parameterType="HsmTimeDiary" resultMap="HsmTimeDiaryResult">
+        <include refid="selectHsmTimeDiaryVo"/>
+        <where>
+            <if test="diaryDate != null"> and t.diary_date = #{diaryDate}</if>
+            ${params.dataScope}
+        </where>
+        order by t.start_time desc
+    </select>
+
+    <insert id="insertHsmTimeDiary" parameterType="HsmTimeDiary" useGeneratedKeys="true" keyProperty="diaryId">
+        insert into hms_time_diary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="diaryDate != null">diary_date,</if>
+            <if test="startTime != null and startTime != ''">start_time,</if>
+            <if test="endTime != null and endTime != ''">end_time,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="description != null">description,</if>
+            <if test="durationMin != null">duration_min,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="diaryDate != null">#{diaryDate},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="durationMin != null">#{durationMin},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHsmTimeDiary" parameterType="HsmTimeDiary">
+        update hms_time_diary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="diaryDate != null">diary_date = #{diaryDate},</if>
+            <if test="startTime != null and startTime != ''">start_time = #{startTime},</if>
+            <if test="endTime != null and endTime != ''">end_time = #{endTime},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="durationMin != null">duration_min = #{durationMin},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where diary_id = #{diaryId}
+    </update>
+
+    <delete id="deleteHsmTimeDiaryById" parameterType="Long">
+        delete from hms_time_diary where diary_id = #{diaryId}
+    </delete>
+
+    <delete id="deleteHsmTimeDiaryByIds" parameterType="String">
+        delete from hms_time_diary where diary_id in
+        <foreach item="diaryId" collection="array" open="(" separator="," close=")">
+            #{diaryId}
+        </foreach>
+    </delete>
+
+    <!-- 按分类统计时长 -->
+    <select id="selectTimeDiaryCategoryStats" parameterType="HsmTimeDiary" resultType="java.util.Map">
+        select t.category as category, COALESCE(SUM(t.duration_min), 0) as totalMinutes
+        from hms_time_diary t
+        left join sys_user u on u.user_name = t.create_by
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.diary_date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.diary_date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
+        </where>
+        group by t.category
+    </select>
+
+    <!-- 按日期统计总时长 -->
+    <select id="selectTimeDiaryDailyStats" parameterType="HsmTimeDiary" resultType="java.util.Map">
+        select DATE_FORMAT(t.diary_date, '%Y-%m-%d') as diaryDate, COALESCE(SUM(t.duration_min), 0) as totalMinutes
+        from hms_time_diary t
+        left join sys_user u on u.user_name = t.create_by
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.diary_date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.diary_date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
+        </where>
+        group by t.diary_date
+        order by t.diary_date asc
+    </select>
+
+    <!-- 按日期和分类统计时长（用于堆叠柱状图） -->
+    <select id="selectTimeDiaryDailyCategoryStats" parameterType="HsmTimeDiary" resultType="java.util.Map">
+        select DATE_FORMAT(t.diary_date, '%Y-%m-%d') as diaryDate, t.category as category, COALESCE(SUM(t.duration_min), 0) as totalMinutes
+        from hms_time_diary t
+        left join sys_user u on u.user_name = t.create_by
+        <where>
+            <if test="params.beginTime != null and params.beginTime != ''"> and t.diary_date &gt;= #{params.beginTime}</if>
+            <if test="params.endTime != null and params.endTime != ''"> and t.diary_date &lt;= #{params.endTime}</if>
+            ${params.dataScope}
+        </where>
+        group by t.diary_date, t.category
+        order by t.diary_date asc
+    </select>
+</mapper>

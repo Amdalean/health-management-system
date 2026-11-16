@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.tbk.mapper.TbkOrderMapper">
+
+    <resultMap type="TbkOrder" id="TbkOrderResult">
+        <result property="id"                  column="id"                   />
+        <result property="platform"            column="platform"             />
+        <result property="orderId"             column="order_id"             />
+        <result property="itemId"              column="item_id"              />
+        <result property="goodsSign"           column="goods_sign"           />
+        <result property="itemTitle"           column="item_title"           />
+        <result property="itemImg"             column="item_img"             />
+        <result property="shopName"            column="shop_name"            />
+        <result property="pid"                 column="pid"                  />
+        <result property="userId"              column="user_id"              />
+        <result property="userName"            column="user_name"            />
+        <result property="externalUser"        column="external_user"        />
+        <result property="linkId"              column="link_id"              />
+        <result property="matchType"           column="match_type"           />
+        <result property="status"              column="status"               />
+        <result property="statusDesc"          column="status_desc"          />
+        <result property="totalAmount"         column="total_amount"         />
+        <result property="payAmount"           column="pay_amount"           />
+        <result property="estimatedCommission" column="estimated_commission" />
+        <result property="settledCommission"   column="settled_commission"   />
+        <result property="cashbackRate"        column="cashback_rate"        />
+        <result property="cashbackAmount"      column="cashback_amount"      />
+        <result property="cashbackStatus"      column="cashback_status"      />
+        <result property="commissionRate"      column="commission_rate"      />
+        <result property="payTime"             column="pay_time"             />
+        <result property="settleTime"          column="settle_time"          />
+        <result property="refundTag"           column="refund_tag"           />
+        <result property="createTime"          column="create_time"          />
+        <result property="updateTime"          column="update_time"          />
+    </resultMap>
+
+    <sql id="queryWhere">
+        <where>
+            <if test="platform != null and platform != ''">and o.platform = #{platform}</if>
+            <if test="status != null and status != ''">and o.status = #{status}</if>
+            <if test="keyword != null and keyword != ''">
+                and (o.order_id like concat('%', #{keyword}, '%')
+                     or o.item_id like concat('%', #{keyword}, '%')
+                     or o.item_title like concat('%', #{keyword}, '%'))
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and o.pay_time &gt;= concat(#{beginTime}, ' 00:00:00')
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and o.pay_time &lt; date_add(#{endTime}, interval 1 day)
+            </if>
+        </where>
+    </sql>
+
+    <insert id="upsertTbkOrder" parameterType="TbkOrder">
+        insert into tbk_order
+        (platform, order_id, item_id, goods_sign, item_title, item_img, shop_name, pid, user_id, external_user,
+         link_id, match_type, status, status_desc, total_amount, pay_amount, estimated_commission,
+         settled_commission, cashback_rate, cashback_amount, cashback_status, commission_rate,
+         pay_time, settle_time, refund_tag, raw_data, create_time, update_time)
+        values
+        (#{platform}, #{orderId}, #{itemId}, #{goodsSign}, #{itemTitle}, #{itemImg}, #{shopName}, #{pid}, #{userId}, #{externalUser},
+         #{linkId}, #{matchType}, #{status}, #{statusDesc}, #{totalAmount}, #{payAmount}, #{estimatedCommission},
+         #{settledCommission}, #{cashbackRate}, #{cashbackAmount}, #{cashbackStatus}, #{commissionRate},
+         #{payTime}, #{settleTime}, #{refundTag}, #{rawData}, now(), now())
+        on duplicate key update
+            item_id = values(item_id),
+            goods_sign = coalesce(values(goods_sign), goods_sign),
+            item_title = values(item_title),
+            item_img = values(item_img),
+            shop_name = values(shop_name),
+            pid = values(pid),
+            user_id = coalesce(values(user_id), user_id),
+            external_user = coalesce(values(external_user), external_user),
+            link_id = coalesce(values(link_id), link_id),
+            match_type = coalesce(values(match_type), match_type),
+            status = values(status),
+            status_desc = values(status_desc),
+            total_amount = values(total_amount),
+            pay_amount = values(pay_amount),
+            estimated_commission = values(estimated_commission),
+            settled_commission = values(settled_commission),
+            cashback_rate = values(cashback_rate),
+            cashback_amount = values(cashback_amount),
+            cashback_status = values(cashback_status),
+            commission_rate = values(commission_rate),
+            pay_time = values(pay_time),
+            settle_time = values(settle_time),
+            refund_tag = values(refund_tag),
+            raw_data = values(raw_data),
+            update_time = now()
+    </insert>
+
+    <select id="selectTbkOrderList" parameterType="TbkOrder" resultMap="TbkOrderResult">
+        select o.id, o.platform, o.order_id, o.item_id, o.goods_sign, o.item_title, o.item_img, o.shop_name, o.pid,
+               o.user_id, u.user_name, o.external_user, o.link_id, o.match_type, o.status, o.status_desc,
+               o.total_amount, o.pay_amount, o.estimated_commission, o.settled_commission,
+               o.cashback_rate, o.cashback_amount, o.cashback_status, o.commission_rate,
+               o.pay_time, o.settle_time, o.refund_tag, o.create_time, o.update_time
+        from tbk_order o
+        left join sys_user u on u.user_id = o.user_id
+        <include refid="queryWhere"/>
+        order by o.pay_time desc, o.id desc
+    </select>
+
+    <select id="selectTbkOrderStats" parameterType="TbkOrder" resultType="java.util.LinkedHashMap">
+        select
+            count(*) as totalCount,
+            coalesce(sum(coalesce(nullif(o.settled_commission, 0), o.estimated_commission, 0)), 0) as totalCommission,
+            coalesce(sum(o.cashback_amount), 0) as totalCashback,
+            coalesce(sum(case when date(o.pay_time) = curdate() then 1 else 0 end), 0) as todayCount,
+            coalesce(sum(case when date(o.pay_time) = curdate()
+                              then coalesce(nullif(o.settled_commission, 0), o.estimated_commission, 0) else 0 end), 0) as todayCommission,
+            coalesce(sum(case when date(o.pay_time) = curdate() then o.cashback_amount else 0 end), 0) as todayCashback,
+            coalesce(sum(case when date_format(o.pay_time, '%Y-%m') = date_format(curdate(), '%Y-%m')
+                              then 1 else 0 end), 0) as monthCount,
+            coalesce(sum(case when date_format(o.pay_time, '%Y-%m') = date_format(curdate(), '%Y-%m')
+                              then coalesce(nullif(o.settled_commission, 0), o.estimated_commission, 0) else 0 end), 0) as monthCommission,
+            coalesce(sum(case when date_format(o.pay_time, '%Y-%m') = date_format(curdate(), '%Y-%m')
+                              then o.cashback_amount else 0 end), 0) as monthCashback
+        from tbk_order o
+        <include refid="queryWhere"/>
+    </select>
+
+    <select id="selectPlatformStats" parameterType="TbkOrder" resultType="java.util.LinkedHashMap">
+        select o.platform,
+               count(*) as orderCount,
+               coalesce(sum(coalesce(nullif(o.settled_commission, 0), o.estimated_commission, 0)), 0) as commission
+        from tbk_order o
+        <include refid="queryWhere"/>
+        group by o.platform
+        order by commission desc
+    </select>
+
+</mapper>

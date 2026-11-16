@@ -1,6 +1,7 @@
 package com.hms.quartz.domain;
 
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.hms.common.annotation.Excel;
@@ -31,6 +32,10 @@ public class SysJobLog extends BaseEntity
     @Excel(name = "调用目标字符串")
     private String invokeTarget;
 
+    /** 执行服务器 add by CYQ 2026-09-14 记录执行任务的所属服务器 */
+    @Excel(name = "服务名")
+    private String serverName;
+
     /** 日志信息 */
     @Excel(name = "日志信息")
     private String jobMessage;
@@ -43,11 +48,19 @@ public class SysJobLog extends BaseEntity
     @Excel(name = "异常信息")
     private String exceptionInfo;
 
-    /** 开始时间 */
+    /** 开始时间 add by CYQ 2026-09-09 调度日志增加结束时间与耗时展示 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
-    /** 停止时间 */
+    /** 结束时间 add by CYQ 2026-09-09 调度日志增加结束时间与耗时展示 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date stopTime;
+
+    /** 耗时（毫秒，非DB字段，由开始/结束时间计算） add by CYQ 2026-09-09 调度日志增加结束时间与耗时展示 */
+    @Excel(name = "耗时(毫秒)")
+    private Long runMs;
 
     public Long getJobLogId()
     {
@@ -87,6 +100,16 @@ public class SysJobLog extends BaseEntity
     public void setInvokeTarget(String invokeTarget)
     {
         this.invokeTarget = invokeTarget;
+    }
+
+    public String getServerName()
+    {
+        return serverName;
+    }
+
+    public void setServerName(String serverName)
+    {
+        this.serverName = serverName;
     }
 
     public String getJobMessage()
@@ -139,17 +162,41 @@ public class SysJobLog extends BaseEntity
         this.stopTime = stopTime;
     }
 
+    /**
+     * 获取耗时（毫秒），优先返回已回填值，否则由开始/结束时间实时计算
+     * add by CYQ 2026-09-09 调度日志增加结束时间与耗时展示
+     */
+    public Long getRunMs()
+    {
+        if (runMs != null)
+        {
+            return runMs;
+        }
+        if (startTime != null && stopTime != null)
+        {
+            return stopTime.getTime() - startTime.getTime();
+        }
+        return null;
+    }
+
+    public void setRunMs(Long runMs)
+    {
+        this.runMs = runMs;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("jobLogId", getJobLogId())
             .append("jobName", getJobName())
             .append("jobGroup", getJobGroup())
+            .append("serverName", getServerName())
             .append("jobMessage", getJobMessage())
             .append("status", getStatus())
             .append("exceptionInfo", getExceptionInfo())
             .append("startTime", getStartTime())
             .append("stopTime", getStopTime())
+            .append("runMs", getRunMs())
             .toString();
     }
 }

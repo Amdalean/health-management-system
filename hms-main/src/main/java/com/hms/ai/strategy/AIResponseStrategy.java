@@ -19,4 +19,16 @@ public interface AIResponseStrategy {
      * @return 策略名称
      */
     String getStrategyName();
+
+    /**
+     * 是否低延迟场景
+     *
+     * 结构化输出（如选品打分）不需要长思考，关闭推理过程可把单次调用从 70+ 秒降到几秒。
+     * 仅对 Qwen3 系列模型生效。
+     *
+     * add by CYQ 2026-11-04 优惠查询-AI 选品
+     */
+    default boolean lowLatency() {
+        return false;
+    }
 }

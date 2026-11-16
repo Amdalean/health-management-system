@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.mobile.push.mapper.PushDeviceMapper">
+
+    <resultMap type="com.hms.mobile.push.domain.PushDevice" id="PushDeviceResult">
+        <id     property="id"           column="id"             />
+        <result property="userId"       column="user_id"        />
+        <result property="clientId"     column="client_id"      />
+        <result property="platform"     column="platform"       />
+        <result property="appVersion"   column="app_version"    />
+        <result property="wxOpenid"     column="wx_openid"      />
+        <result property="createTime"   column="create_time"    />
+        <result property="updateTime"   column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPushDeviceVo">
+        select id, user_id, client_id, platform, app_version, wx_openid, create_time, update_time
+        from hms_push_device
+    </sql>
+
+    <select id="selectPushDeviceById" parameterType="Long" resultMap="PushDeviceResult">
+        <include refid="selectPushDeviceVo"/> where id = #{id}
+    </select>
+
+    <select id="selectPushDeviceByClientId" parameterType="String" resultMap="PushDeviceResult">
+        <include refid="selectPushDeviceVo"/> where client_id = #{clientId}
+    </select>
+
+    <select id="selectPushDeviceList" parameterType="com.hms.mobile.push.domain.PushDevice" resultMap="PushDeviceResult">
+        <include refid="selectPushDeviceVo"/>
+        <where>
+            <if test="userId != null"> AND user_id = #{userId} </if>
+            <if test="clientId != null and clientId != ''"> AND client_id = #{clientId} </if>
+            <if test="platform != null and platform != ''"> AND platform = #{platform} </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectPushDeviceByUserId" parameterType="Long" resultMap="PushDeviceResult">
+        <include refid="selectPushDeviceVo"/> where user_id = #{userId} order by create_time desc
+    </select>
+
+    <insert id="insertPushDevice" parameterType="com.hms.mobile.push.domain.PushDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into hms_push_device (
+            <if test="userId != null">user_id,</if>
+            <if test="clientId != null and clientId != ''">client_id,</if>
+            <if test="platform != null and platform != ''">platform,</if>
+            <if test="appVersion != null and appVersion != ''">app_version,</if>
+            <if test="wxOpenid != null and wxOpenid != ''">wx_openid,</if>
+            create_time
+        ) values (
+            <if test="userId != null">#{userId},</if>
+            <if test="clientId != null and clientId != ''">#{clientId},</if>
+            <if test="platform != null and platform != ''">#{platform},</if>
+            <if test="appVersion != null and appVersion != ''">#{appVersion},</if>
+            <if test="wxOpenid != null and wxOpenid != ''">#{wxOpenid},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updatePushDevice" parameterType="com.hms.mobile.push.domain.PushDevice">
+        update hms_push_device
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="clientId != null and clientId != ''">client_id = #{clientId},</if>
+            <if test="platform != null and platform != ''">platform = #{platform},</if>
+            <if test="appVersion != null and appVersion != ''">app_version = #{appVersion},</if>
+            <if test="wxOpenid != null and wxOpenid != ''">wx_openid = #{wxOpenid},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 按用户ID更新 wx_openid，有则更新 -->
+    <update id="bindWxOpenid" parameterType="com.hms.mobile.push.domain.PushDevice">
+        update hms_push_device set wx_openid = #{wxOpenid}, update_time = sysdate()
+        where user_id = #{userId}
+    </update>
+
+    <select id="selectPushDeviceByWxOpenid" parameterType="String" resultMap="PushDeviceResult">
+        <include refid="selectPushDeviceVo"/> where wx_openid = #{wxOpenid} order by update_time desc, create_time desc limit 1
+    </select>
+
+    <update id="clearWxOpenid">
+        update hms_push_device set wx_openid = null, update_time = sysdate()
+        where wx_openid = #{wxOpenid} and user_id != #{userId}
+    </update>
+
+    <update id="clearWxOpenidByUserId" parameterType="Long">
+        update hms_push_device set wx_openid = null, update_time = sysdate()
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deletePushDeviceById" parameterType="Long">
+        delete from hms_push_device where id = #{id}
+    </delete>
+
+    <delete id="deletePushDeviceByIds" parameterType="Long">
+        delete from hms_push_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

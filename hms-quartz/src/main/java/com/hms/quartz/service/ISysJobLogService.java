@@ -28,10 +28,18 @@ public interface ISysJobLogService
 
     /**
      * 新增任务日志
-     * 
+     *
      * @param jobLog 调度日志信息
      */
     public void addJobLog(SysJobLog jobLog);
+
+    /**
+     * 更新任务日志
+     * add by CYQ 2026-08-19
+     *
+     * @param jobLog 调度日志信息
+     */
+    public void updateJobLog(SysJobLog jobLog);
 
     /**
      * 批量删除调度日志信息

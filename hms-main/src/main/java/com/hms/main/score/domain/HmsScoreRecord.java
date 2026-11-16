@@ -6,7 +6,7 @@ import com.hms.common.annotation.Excel;
 import com.hms.common.core.domain.BaseEntity;
 
 /**
- * 成绩分析记录对象 hms_score_record
+ * 成绩智能分析对象 hms_score_record
  *
  * @author CYQ
  * @date 2026-03-01
@@ -57,6 +57,15 @@ public class HmsScoreRecord extends BaseEntity
 
     /** 异步任务 ID */
     private String taskId;
+
+    /** 学号（关联 hms_student，非持久化，用于列表展示） */
+    private String studentNo;
+
+    /** 学生姓名（关联 hms_student，非持久化，用于列表展示） */
+    private String studentName;
+
+    /** 课程名称（关联 hms_course，非持久化，用于列表展示） */
+    private String courseName;
 
     /** 删除标志 */
     private String delFlag;

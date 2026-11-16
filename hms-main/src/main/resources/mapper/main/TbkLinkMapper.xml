@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.main.tbk.mapper.TbkLinkMapper">
+
+    <resultMap type="TbkLink" id="TbkLinkResult">
+        <result property="id"         column="id"          />
+        <result property="userId"     column="user_id"     />
+        <result property="anonKey"    column="anon_key"    />
+        <result property="platform"   column="platform"    />
+        <result property="itemId"     column="item_id"     />
+        <result property="goodsSign"  column="goods_sign"  />
+        <result property="pid"        column="pid"         />
+        <result property="title"      column="title"       />
+        <result property="shortUrl"   column="short_url"   />
+        <result property="tpwd"       column="tpwd"        />
+        <result property="source"     column="source"      />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <insert id="insertTbkLink" parameterType="TbkLink" useGeneratedKeys="true" keyProperty="id">
+        insert into tbk_link
+        (user_id, anon_key, platform, item_id, goods_sign, pid, title, short_url, tpwd, source, create_time)
+        values
+        (#{userId}, #{anonKey}, #{platform}, #{itemId}, #{goodsSign}, #{pid}, #{title}, #{shortUrl}, #{tpwd}, #{source}, now())
+    </insert>
+
+    <select id="selectCandidates" resultMap="TbkLinkResult">
+        select id, user_id, anon_key, platform, item_id, goods_sign, pid, title, short_url, tpwd, source, create_time
+        from tbk_link
+        where platform = #{order.platform}
+          and create_time &lt;= #{order.payTime}
+          and create_time &gt;= date_sub(#{order.payTime}, interval #{windowDays} day)
+        <if test="(order.itemId != null and order.itemId != '') or (order.goodsSign != null and order.goodsSign != '') or (order.itemTitle != null and order.itemTitle != '')">
+            and (
+                1 = 2
+                <if test="order.itemId != null and order.itemId != ''">
+                    or item_id = #{order.itemId}
+                </if>
+                <if test="order.goodsSign != null and order.goodsSign != ''">
+                    or goods_sign = #{order.goodsSign}
+                </if>
+                <!-- 大淘客订单的商品ID编码与物料搜索落库的 item_id 不一致，用标题兜底做近似归因 -->
+                <if test="order.itemTitle != null and order.itemTitle != ''">
+                    or title = #{order.itemTitle}
+                </if>
+            )
+        </if>
+        order by create_time desc
+        limit 50
+    </select>
+
+</mapper>

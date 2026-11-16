@@ -172,6 +172,16 @@ public class SysJobController extends BaseController
     }
 
     /**
+     * 获取当前正在执行的任务ID列表
+     * add by CYQ 2026-08-19
+     */
+    @GetMapping("/running")
+    public AjaxResult running() throws SchedulerException
+    {
+        return success(jobService.getRunningJobIds());
+    }
+
+    /**
      * 删除定时任务
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")

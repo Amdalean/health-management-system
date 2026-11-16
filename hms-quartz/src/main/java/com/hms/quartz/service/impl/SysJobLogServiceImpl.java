@@ -27,7 +27,13 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     @Override
     public List<SysJobLog> selectJobLogList(SysJobLog jobLog)
     {
-        return jobLogMapper.selectJobLogList(jobLog);
+        List<SysJobLog> list = jobLogMapper.selectJobLogList(jobLog);
+        // add by CYQ 2026-09-09 回填耗时，前端直接展示秒数
+        for (SysJobLog log : list)
+        {
+            fillRunMs(log);
+        }
+        return list;
     }
 
     /**
@@ -39,18 +45,42 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     @Override
     public SysJobLog selectJobLogById(Long jobLogId)
     {
-        return jobLogMapper.selectJobLogById(jobLogId);
+        SysJobLog log = jobLogMapper.selectJobLogById(jobLogId);
+        fillRunMs(log);
+        return log;
+    }
+
+    /**
+     * 回填耗时（毫秒）= 结束时间 - 开始时间
+     * add by CYQ 2026-09-09 调度日志增加结束时间与耗时展示
+     */
+    private void fillRunMs(SysJobLog log)
+    {
+        if (log != null && log.getStartTime() != null && log.getStopTime() != null)
+        {
+            log.setRunMs(log.getStopTime().getTime() - log.getStartTime().getTime());
+        }
     }
 
     /**
      * 新增任务日志
-     * 
+     *
      * @param jobLog 调度日志信息
      */
     @Override
     public void addJobLog(SysJobLog jobLog)
     {
         jobLogMapper.insertJobLog(jobLog);
+    }
+
+    /**
+     * 更新任务日志
+     * add by CYQ 2026-08-19
+     */
+    @Override
+    public void updateJobLog(SysJobLog jobLog)
+    {
+        jobLogMapper.updateJobLog(jobLog);
     }
 
     /**

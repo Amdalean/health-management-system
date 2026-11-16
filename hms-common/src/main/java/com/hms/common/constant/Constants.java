@@ -51,6 +51,12 @@ public class Constants
     public static final String FAIL = "1";
 
     /**
+     * 任务执行中标识
+     * add by CYQ 2026-08-19
+     */
+    public static final String RUNNING = "2";
+
+    /**
      * 登录成功
      */
     public static final String LOGIN_SUCCESS = "Success";

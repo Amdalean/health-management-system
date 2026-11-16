@@ -18,7 +18,7 @@ public class AIDialogSystemTest {
     public void testAIHealthAdviceStrategy() {
         System.out.println("=== AI健康建议策略测试 ===");
         try {
-            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.HEALTH_ADVICE);
+            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.HEALTH_ADVICE);
             Map<String, Object> context = new HashMap<>();
             context.put("userId", "123");
             String response = aiChat.chat("如何保持健康饮食？", context);
@@ -33,7 +33,7 @@ public class AIDialogSystemTest {
     public void testAIReportOutputStrategy() {
         System.out.println("=== AI报表输出策略测试 ===");
         try {
-            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.REPORT_OUTPUT);
+            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.REPORT_OUTPUT);
             Map<String, Object> context = new HashMap<>();
             context.put("userId", "123");
             String response = aiChat.chat("生成本月健康数据报告", context);
@@ -48,7 +48,7 @@ public class AIDialogSystemTest {
     public void testAIFinancialAnalysisStrategy() {
         System.out.println("=== AI财务分析策略测试 ===");
         try {
-            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
+            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
             Map<String, Object> context = new HashMap<>();
             context.put("userId", "123");
             String response = aiChat.chat("分析健康管理系统本月收入情况", context);
@@ -63,10 +63,10 @@ public class AIDialogSystemTest {
     public void testAIGradeAnalysisStrategy() {
         System.out.println("=== AI成绩分析策略测试 ===");
         try {
-            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.StrategyType.GRADE_ANALYSIS);
+            AbstractAIChatTemplate aiChat = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.GRADE_ANALYSIS);
             Map<String, Object> context = new HashMap<>();
             context.put("userId", "123");
-            
+
             // 模拟体育专业学生体能测试数据
             String mockGradeData = "{\n" +
                     "  \"studentId\": \"S001\",\n" +
@@ -119,7 +119,7 @@ public class AIDialogSystemTest {
                     "  \"coach\": \"王教练\",\n" +
                     "  \"injuryHistory\": \"左膝轻微劳损（已康复）\"\n" +
                     "}";
-            
+
             String response = aiChat.chat("请分析以下体育专业学生的体能测试成绩：" + mockGradeData, context);
             System.out.println("成绩分析AI回复: " + response);
         } catch (Exception e) {
@@ -133,19 +133,19 @@ public class AIDialogSystemTest {
         System.out.println("=== AI策略工厂测试 ===");
         try {
             // 测试创建健康建议AI
-            AbstractAIChatTemplate healthAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.HEALTH_ADVICE);
+            AbstractAIChatTemplate healthAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.HEALTH_ADVICE);
             System.out.println("健康建议AI创建成功: " + (healthAI != null));
 
             // 测试创建报表输出AI
-            AbstractAIChatTemplate reportAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.REPORT_OUTPUT);
+            AbstractAIChatTemplate reportAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.REPORT_OUTPUT);
             System.out.println("报表输出AI创建成功: " + (reportAI != null));
 
             // 测试创建财务分析AI
-            AbstractAIChatTemplate financialAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
+            AbstractAIChatTemplate financialAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
             System.out.println("财务分析AI创建成功: " + (financialAI != null));
 
             // 测试创建成绩分析AI
-            AbstractAIChatTemplate gradeAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.GRADE_ANALYSIS);
+            AbstractAIChatTemplate gradeAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.GRADE_ANALYSIS);
             System.out.println("成绩分析AI创建成功: " + (gradeAI != null));
 
             // 尝试创建不存在的策略类型
@@ -166,19 +166,19 @@ public class AIDialogSystemTest {
         System.out.println("=== AI系统提示词策略测试 ===");
         try {
             // 测试健康建议策略的系统提示词
-            AbstractAIChatTemplate healthAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.HEALTH_ADVICE);
+            AbstractAIChatTemplate healthAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.HEALTH_ADVICE);
             System.out.println("健康建议系统提示词策略正确应用");
 
             // 测试报表输出策略的系统提示词
-            AbstractAIChatTemplate reportAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.REPORT_OUTPUT);
+            AbstractAIChatTemplate reportAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.REPORT_OUTPUT);
             System.out.println("报表输出系统提示词策略正确应用");
 
             // 测试财务分析策略的系统提示词
-            AbstractAIChatTemplate financialAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
+            AbstractAIChatTemplate financialAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.FINANCIAL_ANALYSIS);
             System.out.println("财务分析系统提示词策略正确应用");
 
             // 测试成绩分析策略的系统提示词
-            AbstractAIChatTemplate gradeAI = AIChatFactory.createAIChat(AIChatFactory.StrategyType.GRADE_ANALYSIS);
+            AbstractAIChatTemplate gradeAI = AIChatFactory.createAIChat(AIChatFactory.ServiceType.OPENCODE_GO, AIChatFactory.StrategyType.GRADE_ANALYSIS);
             System.out.println("成绩分析系统提示词策略正确应用");
         } catch (Exception e) {
             System.out.println("AI系统提示词策略测试失败: " + e.getMessage());

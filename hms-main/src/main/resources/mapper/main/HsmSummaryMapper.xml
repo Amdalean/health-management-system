@@ -28,6 +28,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap id="HsmSummaryHsmDetailResult" type="HsmSummary" extends="HsmSummaryResult">
         <collection property="hsmDetailList" ofType="HsmDetail" column="id" select="selectHsmDetailList" />
+        <collection property="incomeList" ofType="HsmSummaryIncome" column="id" select="selectIncomeBySummaryId" />
+    </resultMap>
+
+    <resultMap type="HsmSummaryIncome" id="HsmSummaryIncomeResult">
+        <result property="id"    column="id"    />
+        <result property="summaryId"    column="summary_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="amount"    column="amount"    />
+        <result property="sort"    column="sort"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <resultMap type="HsmDetail" id="HsmDetailResult">
@@ -68,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <!-- 适配权限控制 -->
             ${params.dataScope}
         </where>
-        order by year asc,month asc
+        order by year desc,month desc
     </select>
     
     <select id="selectHsmSummaryById" parameterType="Long" resultMap="HsmSummaryHsmDetailResult">
@@ -197,4 +211,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dictLabel"    column="dict_label"    />
         <result property="mny"    column="mny"    />
     </resultMap>
+
+    <!-- 财务汇总统计聚合 add by CYQ 2026-09-01 修复全部统计口径：当前存款取最新期末时点值；2026-09-02 修复 DataScope 误用 t1.user_id 导致 Unknown column -->
+    <select id="selectSummaryStat" parameterType="HsmSummary" resultType="map">
+        SELECT
+            COUNT(*) as totalCount,
+            COALESCE(SUM(income),0) as totalIncome,
+            COALESCE(SUM(expense),0) as totalExpense,
+            COALESCE(SUM(balance),0) as totalBalance,
+            (SELECT end_deposit FROM hsm_summary t2
+             WHERE t2.create_by = #{createBy}
+             <if test="year != null "> and t2.year = #{year}</if>
+             <if test="month != null "> and t2.month = #{month}</if>
+             ORDER BY t2.year DESC, t2.month DESC LIMIT 1) as currentDeposit
+        FROM hsm_summary t1
+        <where>
+            <if test="year != null "> and t1.year = #{year}</if>
+            <if test="month != null "> and t1.month = #{month}</if>
+            <if test="createBy != null  and createBy != ''"> and t1.create_by = #{createBy}</if>
+        </where>
+    </select>
+
+    <!-- 收入构成 add by CYQ 2026-09-21 -->
+    <select id="selectIncomeBySummaryId" parameterType="Long" resultMap="HsmSummaryIncomeResult">
+        select id, summary_id, item_name, amount, sort, remark, create_by, create_time, update_by, update_time
+        from hsm_summary_income
+        where summary_id = #{summaryId}
+        order by sort, id
+    </select>
+
+    <insert id="batchHsmSummaryIncome">
+        insert into hsm_summary_income(id, summary_id, item_name, amount, sort, remark, create_by, create_time, update_by, update_time) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.summaryId}, #{item.itemName}, #{item.amount}, #{item.sort}, #{item.remark}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime})
+        </foreach>
+    </insert>
+
+    <delete id="deleteIncomeBySummaryId" parameterType="Long">
+        delete from hsm_summary_income where summary_id = #{summaryId}
+    </delete>
+
+    <delete id="deleteIncomeBySummaryIds" parameterType="String">
+        delete from hsm_summary_income where summary_id in
+        <foreach item="summaryId" collection="array" open="(" separator="," close=")">
+            #{summaryId}
+        </foreach>
+    </delete>
 </mapper>

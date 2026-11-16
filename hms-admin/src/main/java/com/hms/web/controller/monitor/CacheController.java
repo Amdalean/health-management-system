@@ -43,6 +43,12 @@ public class CacheController
         caches.add(new SysCache(CacheConstants.REPEAT_SUBMIT_KEY, "防重提交"));
         caches.add(new SysCache(CacheConstants.RATE_LIMIT_KEY, "限流处理"));
         caches.add(new SysCache(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
+        // 业务自定义缓存，add by CYQ 2026-11-04
+        caches.add(new SysCache(CacheConstants.TBK_PICK_KEY, "AI选品结果"));
+        caches.add(new SysCache(CacheConstants.TBK_CONVERT_KEY, "淘客转链结果"));
+        caches.add(new SysCache(CacheConstants.TBK_TAOBAO_TOKEN_KEY, "淘宝授权Token"));
+        caches.add(new SysCache(CacheConstants.USER_NAME_KEY, "用户名称"));
+        caches.add(new SysCache(CacheConstants.LOCK_KEY, "分布式锁"));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")

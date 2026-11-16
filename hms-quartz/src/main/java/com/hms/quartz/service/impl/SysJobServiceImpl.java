@@ -1,8 +1,10 @@
 package com.hms.quartz.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -245,6 +247,28 @@ public class SysJobServiceImpl implements ISysJobService
             scheduler.deleteJob(jobKey);
         }
         ScheduleUtils.createScheduleJob(scheduler, job);
+    }
+
+    /**
+     * 获取当前正在执行的任务ID列表
+     * add by CYQ 2026-08-19
+     */
+    @Override
+    public List<Long> getRunningJobIds() throws SchedulerException
+    {
+        List<Long> runningIds = new ArrayList<>();
+        for (JobExecutionContext ctx : scheduler.getCurrentlyExecutingJobs())
+        {
+            String name = ctx.getJobDetail().getKey().getName();
+            try
+            {
+                runningIds.add(Long.parseLong(name));
+            }
+            catch (NumberFormatException ignored)
+            {
+            }
+        }
+        return runningIds;
     }
 
     /**

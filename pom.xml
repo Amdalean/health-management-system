@@ -10,13 +10,14 @@
 
     <name>hms</name>
     <url>http://www.ruoyi.vip</url>
-    <description>T1大健康</description>
+    <description>Caelum</description>
     
     <properties>
         <hms.version>3.8.8</hms.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+<!--        <java.version>1.8</java.version>-->
+        <java.version>17</java.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
         <spring-framework.version>5.3.33</spring-framework.version>
         <spring-security.version>5.7.12</spring-security.version>
@@ -31,12 +32,13 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+        <arthas.version>4.3.0</arthas.version>
+        <lombok.version>1.18.34</lombok.version>
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
-
             <!-- SpringFramework的依赖配置-->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -126,6 +128,13 @@
                 <version>${velocity.version}</version>
             </dependency>
 
+            <!-- Arthas 诊断工具 -->
+            <dependency>
+                <groupId>com.taobao.arthas</groupId>
+                <artifactId>arthas-spring-boot-starter</artifactId>
+                <version>${arthas.version}</version>
+            </dependency>
+
             <!-- 阿里JSON解析器 -->
             <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
@@ -138,6 +147,14 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jwt.version}</version>
+            </dependency>
+
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- 验证码 -->
@@ -179,6 +196,13 @@
             <dependency>
                 <groupId>com.hms</groupId>
                 <artifactId>hms-common</artifactId>
+                <version>${hms.version}</version>
+            </dependency>
+
+            <!-- 移动端模块-->
+            <dependency>
+                <groupId>com.hms</groupId>
+                <artifactId>hms-mobile</artifactId>
                 <version>${hms.version}</version>
             </dependency>
 
@@ -224,6 +248,7 @@
         <module>hms-generator</module>
         <module>hms-common</module>
         <module>hms-main</module>
+        <module>hms-mobile</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -232,11 +257,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <parameters>true</parameters>
                 </configuration>
             </plugin>
         </plugins>

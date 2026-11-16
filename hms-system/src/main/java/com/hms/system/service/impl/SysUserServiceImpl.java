@@ -30,6 +30,7 @@ import com.hms.system.mapper.SysUserRoleMapper;
 import com.hms.system.service.ISysConfigService;
 import com.hms.system.service.ISysDeptService;
 import com.hms.system.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 用户 业务层处理
@@ -64,6 +65,12 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+
+    @Value("${hms.register.life-butler-auto-assign:false}")
+    private boolean lifeButlerAutoAssign;
+
+    @Value("${hms.register.life-butler-role-keys:}")
+    private String lifeButlerRoleKeys;
 
     /**
      * 根据条件分页查询用户列表
@@ -126,6 +133,36 @@ public class SysUserServiceImpl implements ISysUserService
     public SysUser selectUserById(Long userId)
     {
         return userMapper.selectUserById(userId);
+    }
+
+    /**
+     * 通过微信小程序openid查询用户（微信一键登录用）
+     * add by CYQ 2026-09-06 微信小程序一键登录
+     */
+    @Override
+    public SysUser selectUserByWxOpenid(String wxOpenid)
+    {
+        return userMapper.selectUserByWxOpenid(wxOpenid);
+    }
+
+    /**
+     * 清除指定 openid 在其他用户下的绑定（账号换绑微信时用）
+     * add by CYQ 2026-09-06 微信小程序一键登录
+     */
+    @Override
+    public int clearUserWxOpenid(SysUser user)
+    {
+        return userMapper.clearUserWxOpenid(user);
+    }
+
+    /**
+     * 按用户ID解绑微信小程序openid（设置页手动解绑用）
+     * add by CYQ 2026-09-09 设置页手动关联微信，登录页仅已绑定显示一键登录
+     */
+    @Override
+    public int clearWxOpenidByUserId(Long userId)
+    {
+        return userMapper.clearWxOpenidByUserId(userId);
     }
 
     /**
@@ -276,9 +313,67 @@ public class SysUserServiceImpl implements ISysUserService
      * @return 结果
      */
     @Override
+    @Transactional
     public boolean registerUser(SysUser user)
     {
-        return userMapper.insertUser(user) > 0;
+        boolean ok = userMapper.insertUser(user) > 0;
+        if (ok && lifeButlerAutoAssign && StringUtils.isNotEmpty(lifeButlerRoleKeys))
+        {
+            try
+            {
+                String[] keys = lifeButlerRoleKeys.split(",");
+                List<Long> roleIds = new ArrayList<>();
+                for (String k : keys)
+                {
+                    String key = StringUtils.trim(k);
+                    if (StringUtils.isEmpty(key))
+                    {
+                        continue;
+                    }
+                    SysRole role = roleMapper.checkRoleKeyUnique(key);
+                    if (role != null && role.getRoleId() != null)
+                    {
+                        roleIds.add(role.getRoleId());
+                    }
+                    else
+                    {
+                        // 兼容 like 查询
+                        SysRole q = new SysRole();
+                        q.setRoleKey(key);
+                        List<SysRole> list = roleMapper.selectRoleList(q);
+                        if (list != null)
+                        {
+                            for (SysRole r : list)
+                            {
+                                if (key.equals(r.getRoleKey()))
+                                {
+                                    roleIds.add(r.getRoleId());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!roleIds.isEmpty() && user.getUserId() != null)
+                {
+                    List<SysUserRole> urs = new ArrayList<>();
+                    for (Long rid : roleIds)
+                    {
+                        SysUserRole ur = new SysUserRole();
+                        ur.setUserId(user.getUserId());
+                        ur.setRoleId(rid);
+                        urs.add(ur);
+                    }
+                    userRoleMapper.batchUserRole(urs);
+                    log.info("新用户 {} 自动分配生活管家角色 {} -> {}", user.getUserName(), lifeButlerRoleKeys, roleIds);
+                }
+            }
+            catch (Exception e)
+            {
+                log.error("自动分配生活管家角色失败 user={} keys={}", user.getUserName(), lifeButlerRoleKeys, e);
+            }
+        }
+        return ok;
     }
 
     /**
@@ -339,6 +434,19 @@ public class SysUserServiceImpl implements ISysUserService
     public int updateUserProfile(SysUser user)
     {
         return userMapper.updateUser(user);
+    }
+
+    /**
+     * 更新用户当前所在城市（移动端定位上报）
+     * add by Qwen 2026-10-26
+     *
+     * @param user 用户信息（userId + 城市字段）
+     * @return 结果
+     */
+    @Override
+    public int updateUserLocation(SysUser user)
+    {
+        return userMapper.updateUserLocation(user);
     }
 
     /**

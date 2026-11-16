@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.system.mapper.HmsIntegrationLogMapper">
+
+    <resultMap type="HmsIntegrationLog" id="HmsIntegrationLogResult">
+        <id     property="logId"           column="log_id"           />
+        <result property="title"           column="title"            />
+        <result property="bizType"         column="biz_type"         />
+        <result property="sender"          column="sender"           />
+        <result property="receiver"        column="receiver"         />
+        <result property="serverId"        column="server_id"        />
+        <result property="billId"          column="bill_id"          />
+        <result property="sendMessage"     column="send_message"     />
+        <result property="responseMessage" column="response_message" />
+        <result property="startTime"       column="start_time"       />
+        <result property="endTime"         column="end_time"         />
+        <result property="costTime"        column="cost_time"        />
+        <result property="status"          column="status"           />
+        <result property="errorMsg"        column="error_msg"        />
+        <result property="method"          column="method"           />
+        <result property="operName"        column="oper_name"        />
+        <result property="createBy"        column="create_by"        />
+        <result property="createTime"      column="create_time"      />
+        <result property="updateBy"        column="update_by"        />
+        <result property="updateTime"      column="update_time"      />
+        <result property="remark"          column="remark"           />
+    </resultMap>
+
+    <sql id="selectHmsIntegrationLogVo">
+        select log_id, title, biz_type, sender, receiver, server_id, bill_id,
+               send_message, response_message, start_time, end_time, cost_time,
+               status, error_msg, method, oper_name, create_by, create_time,
+               update_by, update_time, remark
+        from hms_integration_log
+    </sql>
+
+    <insert id="insertHmsIntegrationLog" parameterType="HmsIntegrationLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into hms_integration_log
+        (title, biz_type, sender, receiver, server_id, bill_id, send_message, response_message,
+         start_time, end_time, cost_time, status, error_msg, method, oper_name, create_time)
+        values
+        (#{title}, #{bizType}, #{sender}, #{receiver}, #{serverId}, #{billId}, #{sendMessage}, #{responseMessage},
+         #{startTime}, #{endTime}, #{costTime}, #{status}, #{errorMsg}, #{method}, #{operName}, sysdate())
+    </insert>
+
+    <select id="selectHmsIntegrationLogList" parameterType="HmsIntegrationLog" resultMap="HmsIntegrationLogResult">
+        <include refid="selectHmsIntegrationLogVo"/>
+        <where>
+            <if test="title != null and title != ''">
+                AND title like concat('%', #{title}, '%')
+            </if>
+            <if test="bizType != null and bizType != ''">
+                AND biz_type = #{bizType}
+            </if>
+            <if test="sender != null and sender != ''">
+                AND sender like concat('%', #{sender}, '%')
+            </if>
+            <if test="receiver != null and receiver != ''">
+                AND receiver like concat('%', #{receiver}, '%')
+            </if>
+            <if test="serverId != null and serverId != ''">
+                AND server_id like concat('%', #{serverId}, '%')
+            </if>
+            <if test="billId != null and billId != ''">
+                AND bill_id like concat('%', #{billId}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''">
+                AND start_time &gt;= #{params.beginTime}
+            </if>
+            <if test="params.endTime != null and params.endTime != ''">
+                AND start_time &lt;= #{params.endTime}
+            </if>
+        </where>
+        order by log_id desc
+    </select>
+
+    <select id="selectHmsIntegrationLogById" parameterType="Long" resultMap="HmsIntegrationLogResult">
+        <include refid="selectHmsIntegrationLogVo"/>
+        where log_id = #{logId}
+    </select>
+
+    <delete id="deleteHmsIntegrationLogByIds" parameterType="Long">
+        delete from hms_integration_log where log_id in
+        <foreach collection="array" item="logId" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+
+    <delete id="cleanHmsIntegrationLog">
+        truncate table hms_integration_log
+    </delete>
+
+</mapper>

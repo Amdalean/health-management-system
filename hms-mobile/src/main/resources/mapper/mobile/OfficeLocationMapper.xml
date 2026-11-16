@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hms.mobile.officelocation.mapper.OfficeLocationMapper">
+
+    <resultMap type="com.hms.mobile.officelocation.domain.OfficeLocation" id="OfficeLocationResult">
+        <id     property="id"         column="id"           />
+        <result property="name"       column="name"         />
+        <result property="latitude"   column="latitude"     />
+        <result property="longitude"  column="longitude"    />
+        <result property="radius"     column="radius"       />
+        <result property="status"     column="status"       />
+        <result property="createBy"   column="create_by"    />
+        <result property="createTime" column="create_time"  />
+        <result property="updateBy"   column="update_by"    />
+        <result property="updateTime" column="update_time"  />
+    </resultMap>
+
+    <sql id="selectOfficeLocationVo">
+        select id, name, latitude, longitude, radius, status,
+               create_by, create_time, update_by, update_time
+        from hms_office_location
+    </sql>
+
+    <select id="selectOfficeLocationById" parameterType="Long" resultMap="OfficeLocationResult">
+        <include refid="selectOfficeLocationVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectOfficeLocationList" parameterType="com.hms.mobile.officelocation.domain.OfficeLocation" resultMap="OfficeLocationResult">
+        <include refid="selectOfficeLocationVo"/>
+        <where>
+            <if test="name != null and name != ''">
+                AND name like concat('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        order by id asc
+    </select>
+
+    <select id="selectAllEnabledLocations" resultMap="OfficeLocationResult">
+        <include refid="selectOfficeLocationVo"/>
+        where status = '1'
+        order by id asc
+    </select>
+
+    <insert id="insertOfficeLocation" parameterType="com.hms.mobile.officelocation.domain.OfficeLocation" useGeneratedKeys="true" keyProperty="id">
+        insert into hms_office_location (
+            <if test="name != null and name != ''">name,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="radius != null">radius,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        ) values (
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="radius != null">#{radius},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            sysdate()
+        )
+    </insert>
+
+    <update id="updateOfficeLocation" parameterType="com.hms.mobile.officelocation.domain.OfficeLocation">
+        update hms_office_location
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="radius != null">radius = #{radius},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOfficeLocationById" parameterType="Long">
+        delete from hms_office_location where id = #{id}
+    </delete>
+
+    <delete id="deleteOfficeLocationByIds" parameterType="Long">
+        delete from hms_office_location where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
