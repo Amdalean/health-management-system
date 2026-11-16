@@ -607,9 +607,12 @@ create table sys_job_log (
   job_name            varchar(64)    not null                   comment '任务名称',
   job_group           varchar(64)    not null                   comment '任务组名',
   invoke_target       varchar(500)   not null                   comment '调用目标字符串',
+  server_name         varchar(128)   default ''                 comment '执行服务器',
   job_message         varchar(500)                              comment '日志信息',
-  status              char(1)        default '0'                comment '执行状态（0正常 1失败）',
+  status              char(1)        default '0'                comment '执行状态（0正常 1失败 2执行中）',
   exception_info      varchar(2000)  default ''                 comment '异常信息',
+  start_time          datetime                                  comment '开始时间',
+  stop_time           datetime                                  comment '结束时间',
   create_time         datetime                                  comment '创建时间',
   primary key (job_log_id)
 ) engine=innodb comment = '定时任务调度日志表';

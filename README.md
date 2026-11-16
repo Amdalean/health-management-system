@@ -12,15 +12,18 @@
 * 高效率开发，使用代码生成器可以一键生成前后端代码。
 
 ## 演示环境
-- PC端服务演示地址：http://127.0.0.1/login?redirect=/index
-- 移动端H5演示地址：http://127.0.0.1:9090/login?redirect=/index#/
-- 移动端APP下载地址：https://gitee.com/sillage_c/health-management-system/releases/download/app_v1.1.3/T1%E5%A4%A7%E5%81%A5%E5%BA%B7_v1.1.3.apk
+- PC 端：`http://your-domain.com`
+- 移动端 H5：`http://your-domain.com:9090`
+
+> 演示地址与本机部署信息不入库，部署时请自行填写；数据库账号、Redis 密码、
+> 各类开放平台密钥统一通过环境变量注入（参见 `application.yml` 中的 `${...}` 占位）。
 
 ## 用户
-| 用户名    | 密码     | 角色    |
-|--------|--------|-------|
-| YHC    | 123456 | 系统管理员 |
-| user01 | user01 | 普通用户  |
+初始化后系统仅有若依默认管理员 `admin`，其余业务账号请在「系统管理-用户管理」
+中创建，或使用移动端/PC 端注册接口生成。**示例密码不可用于生产环境。**
+
+## 待办事项
+[] 增加思维导图功能
 
 ## 内置功能
 

@@ -1,128 +1,264 @@
-version: '1.0'
+version: "1.0"
 name: master-pipeline
 displayName: MasterPipeline
+stages:
+- name: 代码编译
+  displayName: 代码编译
+  strategy: parallel
+  trigger: auto
+  steps:
+  - step: build@nodejs
+    name: build_frontend
+    displayName: Nodejs 构建 (前端)
+    nodeVersion: 22.22.0
+    commands:
+    - '# 设置NPM源，提升安装速度'
+    - npm config set registry https://registry.npmmirror.com
+    - ""
+    - '# 执行编译命令'
+    - cd RuoYi-Vue3 && npm install && npm run build:prod
+    artifacts:
+    - name: FRONTEND_ARTIFACT
+      path:
+      - ./RuoYi-Vue3/dist/**
+      type: .tar.gz
+    caches:
+    - "~/.npm"
+    - "~/.yarn"
+    notify: []
+    strategy:
+      retry: "0"
+  - step: build@maven
+    name: build_backend
+    displayName: Maven 构建 (后端)
+    jdkVersion: "17"
+    mavenVersion: 3.9.12
+    commands:
+    - mvn -B clean package -Dmaven.test.skip=true
+    artifacts:
+    - name: BUILD_ARTIFACT
+      path:
+      - ./hms-admin/target/*.jar
+      type: .tar.gz
+    strategy:
+      retry: "0"
+- name: 主机部署
+  displayName: 主机部署
+  strategy: parallel
+  trigger: auto
+  executor: []
+  steps:
+  - step: deploy@agent
+    name: deploy_backend
+    displayName: 后端主机部署
+    deployArtifact:
+    - name: output
+      target: /www/wwwroot/hms/deploy
+      source: build
+      dependArtifact: BUILD_ARTIFACT
+      artifactRepository: default
+      artifactName: output
+      artifactVersion: latest
+    script: |-
+      #!/bin/bash
+
+      # ================= 后端配置区域 =================
+      # 制品包路径 (Gitee Go 默认上传路径)
+      DEPLOY_PACKAGE="/www/wwwroot/hms/deploy/output.tar.gz"
+
+      # 应用部署目录 (jar 包所在目录)
+      DEPLOY_DIR="/www/wwwroot/hms"
+
+      # 应用名称
+      APP_NAME="hms-admin.jar"
+
+      # 指定 JDK 路径
+      JAVA_PATH="/www/server/java/jdk-17.0.8/bin/java"
+
+      # JVM 参数
+      JVM_OPTS="-Xmx1024M -Xms256M"
+
+      # 日志目录
+      LOG_DIR="$DEPLOY_DIR/logs"
+      # ==============================================
+
+      echo "========== HMS 后端部署脚本 =========="
+
+      # 1. 检查制品包是否存在
+      echo ">>> 检查制品包..."
+      if [ ! -f "$DEPLOY_PACKAGE" ]; then
+          echo "❌ 错误：制品包 $DEPLOY_PACKAGE 不存在！"
+          exit 1
+      fi
+
+      # 2. 创建必要的目录
+      echo ">>> 创建目录结构..."
+      mkdir -p $DEPLOY_DIR
+      mkdir -p $LOG_DIR
+
+      # 3. 解压覆盖文件
+      echo ">>> 正在解压并覆盖文件..."
+      tar zxvf $DEPLOY_PACKAGE -C $DEPLOY_DIR --strip-components=1
+
+      if [ $? -eq 0 ]; then
+          echo "✅ 文件覆盖成功"
+      else
+          echo "❌ 解压失败"
+          exit 1
+      fi
+
+      # 4. 确保 jar 包有执行权限
+      chmod +x $DEPLOY_DIR/$APP_NAME
+
+      # 5. 同步量化子系统 (veighNa 独立仓库) + 重建/更新 Python 依赖
+      echo ">>> 正在同步量化子系统 veighNa ..."
+      VEIGHNA_DIR="$DEPLOY_DIR/veighNa"
+      if [ -d "$VEIGHNA_DIR/.git" ]; then
+          # 5a. 确保 pull 的是 veighna-quant（独立仓库），而非父仓库 health-management-system
+          CURRENT_REMOTE=$(git -C "$VEIGHNA_DIR" remote get-url origin 2>/dev/null)
+          if echo "$CURRENT_REMOTE" | grep -q "veighna-quant"; then
+              echo "    remote OK: $CURRENT_REMOTE"
+          else
+              echo "    ⚠️ remote 指向 $CURRENT_REMOTE，需切到独立仓库 veighna-quant，尝试修正..."
+              GIT_TERMINAL_PROMPT=0 git -C "$VEIGHNA_DIR" remote set-url origin git@gitee.com:sillage_c/veighna-quant.git 2>&1 || echo "    ⚠️ 修正 remote 失败"
+          fi
+          # 5b. 拉取最新代码（失败不阻塞主部署，但打印告警含 stdout 以便排查）
+          GIT_TERMINAL_PROMPT=0 timeout 120 git -C "$VEIGHNA_DIR" pull origin main 2>&1 \
+              || echo "    ⚠️ veighNa 代码同步失败，继续主应用部署"
+          # 5c. 更新 Python 依赖（若 git 里 requirements.txt 有变化）
+          if [ -f "$VEIGHNA_DIR/requirements.txt" ]; then
+              echo "    >>> 更新 veighNa Python 依赖..."
+              # 确保 venv 存在（优先复用已有 venv，缺失则用系统 python3 创建）
+              VENV_PYTHON=""
+              for v in "$VEIGHNA_DIR/venv/bin/python" "$VEIGHNA_DIR/.venv/bin/python" "$VEIGHNA_DIR/.venv/Scripts/python.exe"; do
+                  if [ -f "$v" ]; then VENV_PYTHON="$v"; break; fi
+              done
+              if [ -z "$VENV_PYTHON" ]; then
+                  echo "    未发现 venv，用系统 python3 创建 .venv ..."
+                  python3 -m venv "$VEIGHNA_DIR/.venv" 2>&1
+                  VENV_PYTHON="$VEIGHNA_DIR/.venv/bin/python"
+              fi
+              if [ -n "$VENV_PYTHON" ]; then
+                  # 国内镜像加速（失败可回退默认源，均不阻塞主部署）
+                  "$VENV_PYTHON" -m pip install -r "$VEIGHNA_DIR/requirements.txt" \
+                      -i https://pypi.tuna.tsinghua.edu.cn/simple --quiet 2>&1 \
+                      || "$VENV_PYTHON" -m pip install -r "$VEIGHNA_DIR/requirements.txt" --quiet 2>&1 \
+                      || echo "    ⚠️ Python 依赖更新失败（检查网络/源），继续主应用部署"
+                  echo "    ✅ veighNa Python 依赖检查完成"
+              else
+                  echo "    ⚠️ 无法定位/创建 venv，跳过依赖更新"
+              fi
+          else
+              echo "    ⚠️ 未找到 requirements.txt，跳过依赖更新"
+          fi
+      else
+          echo "⚠️ 未找到 $VEIGHNA_DIR/.git，跳过 veighNa 同步"
+      fi
+
+      # 6. 停止旧进程
+      echo ">>> 正在停止旧应用进程..."
+      PID=$(ps -ef | grep java | grep "$DEPLOY_DIR/$APP_NAME" | grep -v grep | awk '{print $2}')
+
+      if [ -n "$PID" ]; then
+          echo "⏹️ 发现进程 $PID，正在停止..."
+          kill $PID
+          sleep 3
+          if ps -p $PID > /dev/null; then
+              kill -9 $PID
+              echo "⚠️ 进程 $PID 强制终止"
+          else
+              echo "✅ 进程 $PID 已停止"
+          fi
+      else
+          echo "ℹ️ 未发现运行中的进程"
+      fi
+
+      # 7. 启动新应用
+      echo ">>> 正在启动新应用..."
+      nohup $JAVA_PATH -jar $JVM_OPTS $DEPLOY_DIR/$APP_NAME > $LOG_DIR/app.log 2>&1 &
+
+      echo "🚀 应用启动命令已发送"
+      echo "📄 日志路径: $LOG_DIR/app.log"
+      echo "✅ 后端部署脚本执行完毕"
+    hostGroupID:
+      ID: T1
+      hostID:
+      - ec0708fa-f99c-44bb-b38d-d3c64c5dd54c
+    notify: []
+    strategy:
+      retry: "0"
+  - step: deploy@agent
+    name: deploy_frontend
+    displayName: 前端主机部署
+    deployArtifact:
+    - name: frontend_output
+      target: /www/wwwroot/hms/deploy
+      source: build
+      dependArtifact: FRONTEND_ARTIFACT
+      artifactRepository: default
+      artifactName: output
+      artifactVersion: latest
+    script: |-
+      #!/bin/bash
+
+      # ================= 前端配置区域 =================
+      # 前端制品包路径
+      FRONTEND_PACKAGE="/www/wwwroot/hms/deploy/frontend_output.tar.gz"
+
+      # 前端部署目录
+      FRONTEND_DIR="/www/wwwroot/hms/dist"
+      # ===============================================
+
+      echo "========== HMS 前端部署脚本 =========="
+
+      # 1. 检查前端制品包是否存在
+      echo ">>> 检查前端制品包..."
+      if [ ! -f "$FRONTEND_PACKAGE" ]; then
+          echo "❌ 错误：前端制品包 $FRONTEND_PACKAGE 不存在！"
+          exit 1
+      fi
+
+      # 2. 创建前端部署目录
+      echo ">>> 创建前端部署目录..."
+      mkdir -p $FRONTEND_DIR
+
+      # 3. 清理旧的前端文件
+      echo ">>> 清理旧的前端文件..."
+      rm -rf ${FRONTEND_DIR:?}/*
+
+      # 4. 预览制品包结构（调试用）
+      echo ">>> 制品包结构预览："
+      tar tzf $FRONTEND_PACKAGE | head -20
+
+      # 5. 解压前端制品到部署目录（剥离 ./ 前缀）
+      echo ">>> 正在解压前端制品..."
+      tar zxf $FRONTEND_PACKAGE -C $FRONTEND_DIR --strip-components=1
+      TAR_EXIT_CODE=$?
+
+      if [ $TAR_EXIT_CODE -eq 0 ]; then
+          echo "✅ 前端文件部署成功"
+      else
+          echo "❌ 前端文件解压失败（退出码: $TAR_EXIT_CODE）"
+          exit 1
+      fi
+
+      # 6. 设置目录权限（忽略 .user.ini 等系统文件的权限错误）
+      chmod -R 755 $FRONTEND_DIR 2>/dev/null || true
+
+      echo "📂 前端部署路径: $FRONTEND_DIR"
+      echo "✅ 前端部署脚本执行完毕"
+    hostGroupID:
+      ID: T1
+      hostID:
+      - ec0708fa-f99c-44bb-b38d-d3c64c5dd54c
+    notify: []
+    strategy:
+      retry: "0"
 triggers:
   trigger: auto
   push:
     branches:
-      include:
-        - master
-stages:
-  - name: compile
-    displayName: 编译
-    strategy: naturally
-    trigger: auto
-    steps:
-      - step: build@maven
-        name: build_maven
-        displayName: Maven 构建
-        jdkVersion: 8
-        mavenVersion: 3.3.9
-        commands:
-          - mvn -B clean package -Dmaven.test.skip=true
-        artifacts:
-          - name: BUILD_ARTIFACT
-            path:
-              - ./hms-admin/target/*.jar
-  - name: deploy_agent
-    displayName: 部署
-    strategy: naturally
-    trigger: auto
-    executor: []
-    steps:
-      - step: deploy@agent
-        name: deploy_agent
-        displayName: 主机部署
-        hostGroupID:
-          ID: T1
-          hostID:
-            - f1d69b10-7e70-48d1-b811-2bb291704c73
-        deployArtifact:
-          - source: build
-            name: output
-            target: /www/wwwroot/hms/deploy
-            dependArtifact: BUILD_ARTIFACT
-        script:
-          - '#!/bin/bash'
-          - ''
-          - '# ================= 配置区域 ================='
-          - '# 制品包路径 (Gitee Go 默认上传路径)'
-          - DEPLOY_PACKAGE="/www/wwwroot/hms/deploy/output.tar.gz"
-          - ''
-          - '# 应用部署目录 (你的 jar 包所在目录)'
-          - DEPLOY_DIR="/www/wwwroot/hms"
-          - ''
-          - '# 应用名称'
-          - APP_NAME="hms-admin.jar"
-          - ''
-          - '# 指定 JDK 路径 (根据你提供的路径)'
-          - JAVA_PATH="/www/server/java/jdk1.8.0_371/bin/java"
-          - ''
-          - '# JVM 参数 (根据你提供的参数)'
-          - JVM_OPTS="-Xmx1024M -Xms256M"
-          - ''
-          - '# 日志目录'
-          - LOG_DIR="$DEPLOY_DIR/logs"
-          - '# =========================================='
-          - ''
-          - echo "========== HMS 系统部署脚本 =========="
-          - ''
-          - '# 1. 检查制品包是否存在'
-          - echo ">>> 检查制品包..."
-          - if [ ! -f "$DEPLOY_PACKAGE" ]; then
-          - '    echo "❌ 错误：制品包 $DEPLOY_PACKAGE 不存在！"'
-          - '    exit 1'
-          - fi
-          - ''
-          - '# 2. 创建必要的目录'
-          - echo ">>> 创建目录结构..."
-          - mkdir -p $DEPLOY_DIR
-          - mkdir -p $LOG_DIR
-          - ''
-          - '# 3. 解压覆盖文件'
-          - echo ">>> 正在解压并覆盖文件..."
-          - '# -C 指定解压目录'
-          - '# --strip-components=1 用于去除压缩包内的顶层目录结构'
-          - tar zxvf $DEPLOY_PACKAGE -C $DEPLOY_DIR --strip-components=1
-          - ''
-          - if [ $? -eq 0 ]; then
-          - '    echo "✅ 文件覆盖成功"'
-          - else
-          - '    echo "❌ 解压失败"'
-          - '    exit 1'
-          - fi
-          - ''
-          - '# 4. 确保 jar 包有执行权限'
-          - chmod +x $DEPLOY_DIR/$APP_NAME
-          - ''
-          - '# 5. 停止旧进程'
-          - echo ">>> 正在停止旧应用进程..."
-          - '# 查找包含 hms-admin.jar 且是 java 进程的 PID'
-          - PID=$(ps -ef | grep java | grep "$DEPLOY_DIR/$APP_NAME" | grep -v grep | awk '{print $2}')
-          - ''
-          - if [ -n "$PID" ]; then
-          - '    echo "⏹️ 发现进程 $PID，正在停止..."'
-          - '    kill $PID'
-          - '    sleep 3'
-          - '    # 再次检查，如果还在则强制终止'
-          - '    if ps -p $PID > /dev/null; then'
-          - '        kill -9 $PID'
-          - '        echo "⚠️ 进程 $PID 强制终止"'
-          - '    else'
-          - '        echo "✅ 进程 $PID 已停止"'
-          - '    fi'
-          - else
-          - '    echo "ℹ️ 未发现运行中的进程"'
-          - fi
-          - ''
-          - '# 6. 启动新应用'
-          - echo ">>> 正在启动新应用..."
-          - '# 使用指定的 JDK 路径和参数启动'
-          - nohup $JAVA_PATH -jar $JVM_OPTS $DEPLOY_DIR/$APP_NAME > $LOG_DIR/app.log 2>&1 &
-          - ''
-          - echo "🚀 应用启动命令已发送"
-          - 'echo "📄 日志路径: $LOG_DIR/app.log"'
-          - echo "✅ 部署脚本执行完毕"
-        notify: []
-        strategy:
-          retry: '0'
+      prefix: []
+      precise:
+      - master
+      include: []
