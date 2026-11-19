@@ -9,6 +9,7 @@ import java.util.Map;
  * 由 {@link AiChatIntegrationStrategy} 统一发送并记录系统集成日志。
  *
  * add by CYQ 2026-10-19 AI 调用接入系统集成日志
+ * @author 崔永琦
  */
 public class AiChatRequest
 {

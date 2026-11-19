@@ -24,6 +24,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * add by CYQ 2026-06-05 说明: 移动端打卡记录业务实现
  */
 @Service
+/**
+ * public class ClockinRecordServiceImpl implements IClockinRecordService {
+ *
+ * @author 崔永琦
+ */
 public class ClockinRecordServiceImpl implements IClockinRecordService {
 
     private static final Logger log = LoggerFactory.getLogger(ClockinRecordServiceImpl.class);

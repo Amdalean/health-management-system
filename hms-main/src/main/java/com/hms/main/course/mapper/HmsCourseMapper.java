@@ -9,7 +9,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 课程建档 Mapper 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 课程建档 + 学生选课数据层。
  *   课程列表关联 hms_teacher 取授课教师姓名、关联 hms_student_course 统计选课人数。

@@ -3,6 +3,7 @@ package com.hms.mobile.common.util;
 /**
  * 地理坐标工具类
  * add by CYQ 2026-06-06 说明: 提供基于Haversine公式的经纬度距离计算
+ * @author 崔永琦
  */
 public class GeoUtils {
 

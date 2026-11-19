@@ -2,6 +2,11 @@ package com.hms.ai.strategy;
 
 import java.util.Map;
 
+/**
+ * public class CommonStrategy implements AIResponseStrategy {
+ *
+ * @author 崔永琦
+ */
 public class CommonStrategy implements AIResponseStrategy {
     @Override
     public String processResponse(String input, Map<String, Object> context) {

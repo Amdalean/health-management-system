@@ -100,3 +100,7 @@ RuoYi-App/unpackage/
 
 # 个人电子书/资料（含第三方版权内容，勿提交）
 doc/book/
+
+# 本地开发辅助文件（不入库）
+AGENTS.md
+arthas-output/

@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * 学生选课（学生课程分配）对象 hms_student_course
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 按论文表5「学生课程分配表 Student_Course_Assignment」建模，
  *   字段为 assignment_id / student_id / course_id / assign_time；

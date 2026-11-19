@@ -18,6 +18,11 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/mobile/push/message")
+/**
+ * public class PushMessageController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class PushMessageController extends BaseController {
 
     @Autowired

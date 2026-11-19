@@ -8,7 +8,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 成绩智能分析 Service 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-03-01
  * add by CYQ 2026-10-18 说明: 与学生建档、课程建档、学生选课联动，
  *   新增学生/课程下拉与"我的课程"查询接口。

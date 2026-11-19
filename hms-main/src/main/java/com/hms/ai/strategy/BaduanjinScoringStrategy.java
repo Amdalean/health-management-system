@@ -6,7 +6,7 @@ import java.util.Map;
  * 八段锦视频 AI 打分策略实现
  * 用于分析八段锦动作视频，输出 JSON 格式的评分结果
  * 
- * @author CYQ 2026-03-01
+ * @author 崔永琦 2026-03-01
  */
 public class BaduanjinScoringStrategy implements AIResponseStrategy {
 

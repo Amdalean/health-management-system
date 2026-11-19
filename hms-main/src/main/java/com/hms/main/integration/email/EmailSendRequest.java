@@ -6,6 +6,7 @@ import java.util.Arrays;
  * 邮件发送请求
  *
  * add by CYQ 2026-09-14 系统集成日志框架-邮件接入
+ * @author 崔永琦
  */
 public class EmailSendRequest
 {

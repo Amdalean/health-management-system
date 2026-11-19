@@ -24,6 +24,11 @@ import java.util.*;
  * modify by CYQ 2026-06-08
  */
 @Service
+/**
+ * public class UniPushServiceImpl implements IUniPushService {
+ *
+ * @author 崔永琦
+ */
 public class UniPushServiceImpl implements IUniPushService {
     private static final Logger log = LoggerFactory.getLogger(UniPushServiceImpl.class);
 

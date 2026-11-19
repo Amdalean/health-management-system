@@ -8,6 +8,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * 办公地点对象
  * add by CYQ 2026-06-06 说明: 办公地点配置实体，用于打卡地理围栏判定
+ * @author 崔永琦
  */
 public class OfficeLocation extends BaseEntity {
     private static final long serialVersionUID = 1L;

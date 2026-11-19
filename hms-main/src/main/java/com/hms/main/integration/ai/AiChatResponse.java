@@ -4,6 +4,7 @@ package com.hms.main.integration.ai;
  * AI 对话响应
  *
  * add by CYQ 2026-10-19 AI 调用接入系统集成日志
+ * @author 崔永琦
  */
 public class AiChatResponse
 {

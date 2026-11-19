@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/mobile/appVersion")
+/**
+ * public class SysAppVersionController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class SysAppVersionController extends BaseController {
     @Autowired
     private ISysAppVersionService appVersionService;

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 /**
  * AI对话抽象模板类 - 使用模板方法模式
  * 包含AI连接等通用配置处理
+ * @author 崔永琦
  */
 public abstract class AbstractAIChatTemplate {
     

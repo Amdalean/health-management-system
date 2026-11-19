@@ -1,216 +1,174 @@
+# 基于大模型的实践类课程教学评估系统
 
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">HMS</h1>
-<h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
+面向高校体育类实践课程的教学评估系统，核心能力是用通用大模型对**八段锦练习视频**按团体标准**逐式评分**，并把评分纳入课程的教学评估流程。
 
+> 本仓库为国家开放大学学士学位论文《基于大模型的实践类课程教学评估系统设计与实现》的配套源码。
+> 作者：崔永琦（计算机科学与技术，学号 2280201251059）
 
-## 平台简介
+---
 
-* 前端采用Vue、Element UI。
-* 后端采用Spring Boot、Spring Security、Redis & Jwt。
-* 权限认证使用Jwt，支持多终端认证系统。
-* 支持加载动态权限菜单，多方式轻松权限控制。
-* 高效率开发，使用代码生成器可以一键生成前后端代码。
+## 一、要解决的问题
 
-## 演示环境
-- PC 端：`http://your-domain.com`
-- 移动端 H5：`http://your-domain.com:9090`
+实践类课程的动作技能评价长期依赖教师现场逐人观察打分：
 
-> 演示地址与本机部署信息不入库，部署时请自行填写；数据库账号、Redis 密码、
-> 各类开放平台密钥统一通过环境变量注入（参见 `application.yml` 中的 `${...}` 占位）。
+- 一个教学班通常数十名学生，教师需在一节课内完成全部记录与评分；
+- 评分标准虽有统一要求，不同教师对动作细节的把握仍有差异；
+- 成绩课后集中评定，学生数天后才拿到一个总分，不知道哪一式不达标。
 
-## 用户
-初始化后系统仅有若依默认管理员 `admin`，其余业务账号请在「系统管理-用户管理」
-中创建，或使用移动端/PC 端注册接口生成。**示例密码不可用于生产环境。**
+本系统把《八段锦》团体标准中"动作、呼吸、意念"的文字规定编码为提示词，由大模型直接对练习视频逐式评分并生成评语，在不训练专用模型、不依赖标注数据的前提下，为课程过程性评价提供参考。
 
-## 待办事项
-[] 增加思维导图功能
+**注意：模型评分只作为参考，最终成绩仍由教师复核确认。**
 
-## 内置功能
+---
 
-1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
-2.  部门管理：配置系统组织机构（公司、部门、小组），树结构展现支持数据权限。
-3.  岗位管理：配置系统用户所属担任职务。
-4.  菜单管理：配置系统菜单，操作权限，按钮权限标识等。
-5.  角色管理：角色菜单权限分配、设置角色按机构进行数据范围权限划分。
-6.  字典管理：对系统中经常使用的一些较为固定的数据进行维护。
-7.  参数管理：对系统动态配置常用参数。
-8.  通知公告：系统通知公告信息发布维护。
-9.  操作日志：系统正常操作日志记录和查询；系统异常信息日志记录和查询。
-10. 登录日志：系统登录日志记录查询包含登录异常。
-11. 在线用户：当前系统中活跃用户状态监控。
-12. 定时任务：在线（添加、修改、删除)任务调度包含执行结果日志。
-13. 代码生成：前后端代码的生成（java、html、xml、sql）支持CRUD下载 。
-14. 系统接口：根据业务代码自动生成相关的api接口文档。
-15. 服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
-16. 缓存监控：对系统的缓存信息查询，命令统计等。
-17. 在线构建器：拖动表单元素生成相应的HTML代码。
-18. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
+## 二、系统功能
 
+| 一级模块 | 子功能 |
+|---|---|
+| 用户与权限管理 | 用户管理、角色与菜单权限、部门管理、登录鉴权与个人中心 |
+| 教学基础数据管理 | 学生建档、教师建档、课程建档、学生选课与退课、生成系统账号 |
+| **成绩智能分析（核心）** | 练习视频提交、大模型智能评分、分析结果查询与导出、分析过程日志 |
+| 教学资源管理 | 教学资料分类与上传下载、资料在线预览、知识地图 |
+| 系统监控与运维 | 操作日志与登录日志、集成调用日志、定时任务、服务器与缓存监控 |
 
-## 时序图
-```mermaid
-sequenceDiagram
-participant User
-participant WebApp
-participant Server
-participant Database
-    User->>WebApp: 输入用户名和密码
-    WebApp->>Server: 发送登录请求（用户名、密码）
-    Server->>Database: 查询用户名和密码
-    Database-->>Server: 返回查询结果（用户信息）
-    Server->>WebApp: 登录验证结果（成功或失败）
-    WebApp-->>User: 显示登录结果（成功或失败）
-```
+其中"成绩智能分析"承担核心评估手段，其余模块为评分业务提供评估对象、评估范围、评估依据与结果归档的支撑。
 
-```mermaid
-graph TD
-    A["前端层"] --> B["应用层"]
-    B --> C["数据层"]
-    B --> D["智能化支持层"]
-    C --> E["数据库(MySQL)"]
-    D --> F["ollama4大模型"]
-    D --> G["qwen2通义千问模型"]
+---
 
-%%graph TD
-%%    participant "前端层" as A
-%%    participant "应用层" as B
-%%    participant "数据层" as C
-%%    participant "智能化支持层" as D
-%%    participant "数据库(MySQL)" as E
-%%    participant "ollama4大模型" as F
-%%    participant "qwen2通义千问模型" as G
-%%    A[test] ->> B: 调用
-%%    B ->> C: 数据请求
-%%    B ->> D: 智能化请求
-%%    C ->> E: 数据存取
-%%    D ->> F: 大模型调用
-%%    D ->> G: 通义千问调用
-```
+## 三、技术栈
 
-系统总体架构分为多个层次，包括访问层、编程语言层、服务层、数据层、存储层和基础设施层。
+| 层次 | 选型 |
+|---|---|
+| 后端 | Spring Boot 2.5.15、Spring Security、MyBatis、JDK 17 |
+| 前端 | Vue 3、Element Plus、Vite（PC 端）；uni-app（移动端） |
+| 存储 | MySQL 5.7、Redis |
+| 模型服务 | OpenAI 兼容协议接入，支持通义千问（DashScope）与本地 Ollama 部署 |
+| 架构 | RuoYi-Vue 前后端分离，JWT 无状态鉴权 |
 
-- **访问层**：包括ToC和ToB的用户访问，分别通过WEB和PC端进行。
-- **编程语言层**：WEB端使用Uniapp、Node、Vue，PC端使用Vue、Java。
-- **服务层**：包含系统管理、数据池、业务服务、鉴权服务和系统监控等模块。
-- **数据层**：负责数据缓存、存储过程、事务和消息管道的管理。
-- **存储层**：使用Cache和Redis进行缓存，使用MySQL作为数据库。
-- **基础设施层**：基于Linux和Windows操作系统，使用Docker进行容器化部署，并集成ollama中间件。
+---
 
-- **系统管理**：包括组织管理、用户管理、字典管理和菜单管理。
-- **数据池**：包括学生建档、教师建档、课程建档和教学资料库。
-- **业务服务**：包括资料检索、消息推送、专属大模型和成绩录入。
-- **鉴权服务**：负责用户权限的管理和验证。
-- **系统监控**：负责系统的日志记录和监控。
-
-
-```plaintext
-+---------------------+
-|    用户前端界面     |
-+---------------------+
-           |
-           v
-+---------------------+
-|      后端服务       |  <---> 数据库
-|  (Spring Boot)      |
-+---------------------+
-           |
-           v
-+---------------------+
-|   第三方服务模块   |
-|  (AI处理, API调用) |
-+---------------------+
-```
-
-```mermaid
-sequenceDiagram
-    participant 用户
-    participant 学生系统
-    participant 数据库
-
-    用户->>学生系统: 输入学生信息
-    学生系统->>数据库: 保存学生信息
-    数据库-->>学生系统: 数据保存成功
-    学生系统-->>用户: 提示保存成功
-```
-
-### 成绩分析时序图
-
-```mermaid
-sequenceDiagram
-    participant 学生 as 学生
-    participant 教师 as 教师
-    participant 系统 as 教学管理系统
-    participant 大模型服务 as 大模型服务(AI)
-
-    学生->>系统: 登录并请求成绩分析
-    系统->>学生: 显示成绩分析界面
-    学生->>系统: 选择课程和时间段，提交分析请求
-    系统->>大模型服务: 发送成绩数据及分析请求
-    大模型服务-->>系统: 返回分析结果（包括改进建议）
-    系统->>教师: （可选）通知教师查看特定学生的成绩分析报告
-    系统->>学生: 显示成绩分析报告给学生
-```
-
-```mermaid
-classDiagram
-    class Student {
-        +INT student_id (PK)
-        +VARCHAR(50) name
-        +CHAR(2) gender
-        +DATE birth_date
-        +VARCHAR(100) major
-        +VARCHAR(20) grade
-        +VARCHAR(20) phone
-        +DATE enrollment_date
-        +VARCHAR(20) student_no (UK)
-    }
-
-    class Teacher {
-        +INT teacher_id (PK)
-        +VARCHAR(50) name
-        +CHAR(2) gender
-        +VARCHAR(50) title
-        +VARCHAR(20) phone
-        +DATE hire_date
-        +VARCHAR(100) department
-        +VARCHAR(20) staff_no (UK)
-    }
-
-    class Course {
-        +INT course_id (PK)
-        +VARCHAR(100) course_name
-        +INT teacher_id (FK)
-        +INT credit
-        +INT hours
-        +VARCHAR(20) semester
-    }
-
-    class Grade {
-        +INT grade_id (PK)
-        +INT student_id (FK)
-        +INT course_id (FK)
-        +DECIMAL(5,2) score
-        +DATETIME record_time
-        +TEXT remark
-    }
-
-    class AI_Analysis_Log {
-        +BIGINT log_id (PK)
-        +INT student_id (FK)
-        +INT course_id (FK, nullable)
-        +VARCHAR(50) analysis_type
-        +JSON input_data
-        +LONGTEXT ai_response
-        +ENUM('success','error') status
-        +TEXT error_message
-        +DATETIME created_at
-        +VARCHAR(50) model_name
-    }
-
-    Student "1" --> "0..*" Grade : has
-    Student "1" --> "0..*" AI_Analysis_Log : analyzed by
-    Course "1" --> "0..*" Grade : graded in
-    Course "1" --> "0..*" AI_Analysis_Log : optionally analyzed for
-    Teacher "1" --> "0..*" Course : teaches
+## 四、评分链路
 
 ```
+学生提交练习视频
+      ↓
+写入评分记录，状态置 0（待分析）
+      ↓
+点击提交 → 状态置 1（分析中）→ 立即返回 taskId（毫秒级）
+      ↓
+@Async 异步线程调用大模型，按团体标准逐式评分
+      ↓
+提示词约束 → 解析前清洗 Markdown 包裹 → 解析失败置 3 并记录原因
+      ↓
+状态置 2（已完成），写回分数、总评与逐式评语
+      ↓
+前端每 3 秒轮询任务状态，完成后展示逐式评语与改进建议
+      ↓
+教师复核确认
+```
+
+三个关键设计：
+
+1. **异步执行 + 状态机 + 轮询**：单次推理需数十秒至数分钟，提交请求在毫秒级返回，避免请求线程被阻塞。
+2. **三层防护**：提示词约束输出 JSON 结构 → 解析前清洗非结构化噪声 → 解析失败写回失败状态而非向前端抛异常。
+3. **模板方法 + 策略 + 工厂**：`AbstractAIChatTemplate` 固定调用骨架，策略承载各场景提示词与输出约束，`AIChatFactory` 按"服务商 + 业务场景"组装实例，新增评分场景只需实现一个策略类。
+
+---
+
+## 五、目录结构
+
+```
+├── hms-admin            # Web 入口：启动类、系统级 Controller、配置文件
+├── hms-framework        # 核心框架：Security 配置、JWT 过滤器、拦截器
+├── hms-system           # 系统模块：用户/角色/菜单/部门
+├── hms-common           # 通用工具：注解、异常、基类、XSS 过滤、Excel
+├── hms-main             # 业务主模块（见下）
+│   └── com/hms/main/
+│       ├── account      # 生成系统账号
+│       ├── student      # 学生建档
+│       ├── teacher      # 教师建档
+│       ├── course       # 课程建档与选课
+│       ├── score        # 成绩智能分析（核心）
+│       ├── document     # 教学资源与知识地图
+│       └── integration  # 外部服务集成调用
+│   └── com/hms/ai/
+│       ├── template     # AI 调用骨架（模板方法）
+│       ├── strategy     # 场景策略（含八段锦评分、成绩分析）
+│       ├── factory      # 对话实例工厂
+│       └── qwen/ollama  # 各服务商实现
+├── hms-mobile           # 移动端服务：设备上报、推送、版本管理
+├── hms-quartz           # 定时任务
+├── hms-generator        # 代码生成器
+├── RuoYi-Vue3           # PC 前端
+├── RuoYi-App            # 移动端（uni-app）
+└── sql                  # 建表与初始化脚本
+```
+
+---
+
+## 六、论文与代码的对应关系
+
+| 论文章节 | 代码位置 |
+|---|---|
+| 3.2 角色与权限设计 | `hms-framework`、`hms-system`、`RuoYi-Vue3/src/views/system` |
+| 4.2 用户与权限管理 | `hms-admin`、`hms-system` |
+| 4.3 学生建档、生成系统账号 | `hms-main/.../student`、`hms-main/.../account` |
+| 4.4 教师建档 | `hms-main/.../teacher` |
+| 4.5 课程与选课 | `hms-main/.../course` |
+| 4.6 成绩智能分析 | `hms-main/.../score`、`hms-main/com/hms/ai` |
+| 4.7 教学资源管理 | `hms-main/.../document` |
+| 4.8 系统监控与运维 | `hms-admin/.../monitor`、`hms-main/.../integration` |
+| 第五章 系统测试 | `hms-admin/src/test/java/com/hms/test` |
+
+---
+
+## 七、快速开始
+
+**环境要求**：JDK 17、Maven 3.6+、Node 18+、MySQL 5.7、Redis
+
+1. 初始化数据库
+   ```bash
+   mysql -uroot -p -e "create database ry default charset utf8mb4"
+   mysql -uroot -p ry < sql/ry_20240629.sql
+   mysql -uroot -p ry < sql/quartz.sql
+   ```
+
+2. 配置环境变量（不要把凭据写进配置文件）
+   ```bash
+   export QWEN_API_KEY=your_key
+   export MYSQL_HOST=127.0.0.1
+   export REDIS_HOST=127.0.0.1
+   ```
+
+3. 启动后端
+   ```bash
+   mvn clean package -Dmaven.test.skip=true
+   java -jar hms-admin/target/hms-admin.jar
+   ```
+
+4. 启动前端
+   ```bash
+   cd RuoYi-Vue3 && npm install && npm run dev
+   ```
+
+5. 访问 `http://localhost:80`，默认管理员 `admin` / `admin123`
+
+> 如需本地部署大模型，先启动 Ollama 并拉取模型：`ollama pull qwen3.5:9b`，并在 `application.yml` 中把服务商切换为 `OLLAMA`。
+
+---
+
+## 八、测试
+
+```bash
+# 单元测试：评分策略、提示词与输出清洗
+mvn test -pl hms-admin -Dtest=BaduanjinScoringTest
+
+# 端到端：提交视频 → 轮询 → 查看逐式评分
+mvn test -pl hms-admin -Dtest=BaduanjinApiE2ETest
+```
+
+---
+
+## 九、许可
+
+基于 [RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue)（MIT）二次开发，遵循 MIT 协议。

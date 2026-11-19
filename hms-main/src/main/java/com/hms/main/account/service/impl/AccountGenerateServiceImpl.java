@@ -24,7 +24,7 @@ import com.hms.system.service.ISysUserService;
 /**
  * 系统账号生成 Service 业务层处理
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 「生成账号」核心实现。
  *   1) 用户名 = 学生学号 / 教师工号，初始密码取系统配置 sys.user.initPassword（默认 123456）；

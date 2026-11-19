@@ -24,6 +24,11 @@ import java.util.Map;
  * add by CYQ 2026-09-21 AI 模块重构：服务商拆分
  */
 @Log4j2
+/**
+ * public abstract class AbstractOpenAiChat extends AbstractAIChatTemplate {
+ *
+ * @author 崔永琦
+ */
 public abstract class AbstractOpenAiChat extends AbstractAIChatTemplate {
 
     public AbstractOpenAiChat(AIResponseStrategy strategy) {

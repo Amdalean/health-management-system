@@ -10,6 +10,7 @@ import com.hms.mobile.location.domain.LocationReport;
 /**
  * 高德逆地理编码工具
  * add by Qwen 2026-10-26 说明: 服务端把经纬度解析成城市/adcode，客户端不必再调高德（省掉小程序域名白名单）
+ * @author 崔永琦
  */
 public class AmapRegeoUtils {
 

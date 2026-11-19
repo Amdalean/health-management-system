@@ -4,6 +4,7 @@ import java.util.Map;
 
 /**
  * AI响应策略接口 - 不同策略对应不同场景
+ * @author 崔永琦
  */
 public interface AIResponseStrategy {
     /**

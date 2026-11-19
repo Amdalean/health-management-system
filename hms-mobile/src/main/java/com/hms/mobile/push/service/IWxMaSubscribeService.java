@@ -5,6 +5,7 @@ import java.util.Map;
 /**
  * 微信小程序订阅消息服务接口
  * add by CYQ 2026-06-10
+ * @author 崔永琦
  */
 public interface IWxMaSubscribeService {
 

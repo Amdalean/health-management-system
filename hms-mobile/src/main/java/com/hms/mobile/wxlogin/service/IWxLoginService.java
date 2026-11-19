@@ -5,6 +5,7 @@ import java.util.Map;
 /**
  * 微信小程序一键登录服务接口
  * add by CYQ 2026-09-06 微信小程序一键登录，首次使用需绑定系统账号
+ * @author 崔永琦
  */
 public interface IWxLoginService {
 

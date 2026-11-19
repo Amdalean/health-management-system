@@ -6,7 +6,7 @@ import com.hms.main.teacher.domain.HmsTeacher;
 /**
  * 教师建档 Service 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 教师建档业务层接口，与 Mapper 方法一一对应。
  */

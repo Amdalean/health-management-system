@@ -14,6 +14,7 @@ import java.util.UUID;
  * 基于 OpenAI 兼容协议，额外携带 x-opencode-session 会话标识与可识别的 User-Agent。
  *
  * add by CYQ 2026-09-21 AI 模块重构：从 Qwen 中拆出 OpenCode Go
+ * @author 崔永琦
  */
 public class OpenCodeGoAIChat extends AbstractOpenAiChat {
 

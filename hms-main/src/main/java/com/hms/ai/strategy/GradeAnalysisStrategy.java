@@ -4,6 +4,7 @@ import java.util.Map;
 
 /**
  * 成绩分析响应策略实现
+ * @author 崔永琦
  */
 public class GradeAnalysisStrategy implements AIResponseStrategy {
 

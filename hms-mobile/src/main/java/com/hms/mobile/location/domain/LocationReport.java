@@ -3,6 +3,7 @@ package com.hms.mobile.location.domain;
 /**
  * 位置上报请求对象（不落库，直接写入 sys_user 的 current_* 字段）
  * add by Qwen 2026-10-26
+ * @author 崔永琦
  */
 public class LocationReport {
 

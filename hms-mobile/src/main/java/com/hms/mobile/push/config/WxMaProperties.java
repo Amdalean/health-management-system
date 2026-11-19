@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "wx.miniapp")
+/**
+ * public class WxMaProperties {
+ *
+ * @author 崔永琦
+ */
 public class WxMaProperties {
 
     /** 小程序 AppID */

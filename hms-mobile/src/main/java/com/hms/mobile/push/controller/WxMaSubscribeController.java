@@ -22,6 +22,11 @@ import com.hms.system.service.ISysUserService;
  */
 @RestController
 @RequestMapping("/mobile/wx/subscribe")
+/**
+ * public class WxMaSubscribeController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class WxMaSubscribeController extends BaseController {
 
     @Autowired

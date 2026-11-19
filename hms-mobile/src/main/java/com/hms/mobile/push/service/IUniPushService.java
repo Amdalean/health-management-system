@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * UniPush 推送发送服务接口
  * add by CYQ 2026-05-22
+ * @author 崔永琦
  */
 public interface IUniPushService {
 

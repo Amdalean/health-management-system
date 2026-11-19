@@ -12,6 +12,11 @@ import com.hms.mobile.officelocation.service.IOfficeLocationService;
  * add by CYQ 2026-06-06 说明: 办公地点业务实现
  */
 @Service
+/**
+ * public class OfficeLocationServiceImpl implements IOfficeLocationService {
+ *
+ * @author 崔永琦
+ */
 public class OfficeLocationServiceImpl implements IOfficeLocationService {
 
     @Autowired

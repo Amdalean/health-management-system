@@ -6,7 +6,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 学生建档 Service 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2024-09-13
  * add by CYQ 2026-10-18 说明: 配合论文表1重建学生建档模块，补充按学号查询（唯一性校验用）。
  */

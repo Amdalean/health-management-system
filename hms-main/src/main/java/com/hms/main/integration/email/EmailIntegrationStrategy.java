@@ -23,6 +23,11 @@ import com.hms.common.utils.StringUtils;
  * add by CYQ 2026-09-14 系统集成日志框架-邮件接入
  */
 @IntegrationLog(title = "邮件通知", bizType = "EMAIL", sender = "HMS")
+/**
+ * public class EmailIntegrationStrategy extends AbstractIntegrationStrategy<EmailSendRequest, EmailSendResponse>
+ *
+ * @author 崔永琦
+ */
 public class EmailIntegrationStrategy extends AbstractIntegrationStrategy<EmailSendRequest, EmailSendResponse>
 {
     private static final Logger log = LoggerFactory.getLogger(EmailIntegrationStrategy.class);

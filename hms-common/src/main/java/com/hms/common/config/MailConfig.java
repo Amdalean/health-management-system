@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 读取邮件相关配置
- * @author CYQ
+ * @author 崔永琦
  */
 @Component
 @ConfigurationProperties(prefix = "mail")

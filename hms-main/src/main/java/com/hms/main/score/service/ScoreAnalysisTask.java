@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
  *   前端 10s 超时 → 报「系统接口请求超时」，且列表拿不到「分析中」状态。
  *   这里独立成 Bean，确保调用走代理、真正异步执行。
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-11-15
  */
 @Component

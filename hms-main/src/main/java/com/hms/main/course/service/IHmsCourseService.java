@@ -8,7 +8,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 课程建档 Service 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 课程建档 + 学生选课业务层接口。
  */

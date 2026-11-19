@@ -26,7 +26,7 @@ import com.hms.main.teacher.service.IHmsTeacherService;
 /**
  * 教师建档Controller
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 按论文表2新建教师建档模块，提供教师信息的增删改查、导出，
  *   以及「生成账号」接口（用户名 = 工号，自动分配「教师」角色）。

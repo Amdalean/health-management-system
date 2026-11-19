@@ -9,7 +9,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * 教师建档对象 hms_teacher
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 按论文表2「教师建档表 teacher」建立教师实体，
  *   字段为 teacher_id / staff_no / name / gender / title / phone / hire_date / department，

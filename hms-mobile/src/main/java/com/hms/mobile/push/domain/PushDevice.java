@@ -8,6 +8,7 @@ import com.hms.common.core.domain.BaseEntity;
  * 推送设备信息对象
  * add by CYQ 2026-05-17 说明: 移动端推送设备信息实体
  * modify by CYQ 2026-06-10 添加 wxOpenid 字段存储微信小程序 openid
+ * @author 崔永琦
  */
 public class PushDevice extends BaseEntity {
     private static final long serialVersionUID = 1L;

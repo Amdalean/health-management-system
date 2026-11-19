@@ -10,7 +10,7 @@ import com.hms.main.teacher.service.IHmsTeacherService;
 /**
  * 教师建档 Service 业务层处理
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 教师建档业务层实现，委托 Mapper 完成数据访问。
  */

@@ -8,6 +8,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * APP版本管理对象 sys_app_version
  * add by CYQ 2026-05-17 说明: APP版本实体 (移动端专属)
+ * @author 崔永琦
  */
 public class SysAppVersion extends BaseEntity {
     private static final long serialVersionUID = 1L;

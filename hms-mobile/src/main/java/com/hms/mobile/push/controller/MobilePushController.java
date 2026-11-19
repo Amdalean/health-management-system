@@ -21,6 +21,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/mobile/push")
+/**
+ * public class MobilePushController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class MobilePushController extends BaseController {
     @Autowired
     private IPushDeviceService pushDeviceService;

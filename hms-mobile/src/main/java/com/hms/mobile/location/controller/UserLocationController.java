@@ -22,6 +22,11 @@ import com.hms.system.service.ISysUserService;
  */
 @RestController
 @RequestMapping("/mobile/location")
+/**
+ * public class UserLocationController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class UserLocationController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(UserLocationController.class);

@@ -7,7 +7,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 学生建档 Mapper 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2024-09-13
  * add by CYQ 2026-10-18 说明: 配合论文表1重建，补充按学号查询与回写系统账号 ID 的方法。
  */

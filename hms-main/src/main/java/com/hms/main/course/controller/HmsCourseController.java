@@ -26,7 +26,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 课程建档Controller
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 按论文表3新建课程建档模块，提供课程增删改查、导出，
  *   以及学生选课/退课管理（论文表5 学生课程分配表）的接口。

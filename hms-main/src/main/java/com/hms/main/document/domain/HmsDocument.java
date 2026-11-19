@@ -10,7 +10,7 @@ import com.hms.common.core.domain.TreeEntity;
 /**
  * 资料库管理对象 hms_document
  * 
- * @author CYQ
+ * @author 崔永琦
  * @date 2025-03-15
  */
 public class HmsDocument extends TreeEntity

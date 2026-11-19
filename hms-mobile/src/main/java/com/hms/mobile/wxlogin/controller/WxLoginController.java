@@ -20,6 +20,11 @@ import com.hms.mobile.wxlogin.service.IWxLoginService;
  */
 @RestController
 @RequestMapping("/mobile/wx/login")
+/**
+ * public class WxLoginController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class WxLoginController extends BaseController {
 
     @Autowired

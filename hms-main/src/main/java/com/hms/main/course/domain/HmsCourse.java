@@ -7,7 +7,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * 课程建档对象 hms_course
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 按论文表3「课程建档表 course」建立课程实体，
  *   字段为 course_id / course_name / teacher_id / credit / hours / semester，

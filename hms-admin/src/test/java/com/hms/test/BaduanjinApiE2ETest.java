@@ -45,7 +45,7 @@ import java.util.UUID;
  *   <li>测试会新建一条记录并在结束时删除，不修改既有数据。</li>
  * </ul>
  *
- * @author CYQ 2026-11-16
+ * @author 崔永琦 2026-11-16
  */
 @Tag("e2e")
 @EnabledIfSystemProperty(named = "e2e", matches = "true")

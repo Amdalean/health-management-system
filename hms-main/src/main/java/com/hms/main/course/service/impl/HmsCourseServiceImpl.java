@@ -13,7 +13,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 课程建档 Service 业务层处理
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 课程建档与选课业务层实现。
  *   删除课程时级联清理 hms_student_course 中的选课记录，避免脏数据。

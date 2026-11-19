@@ -8,6 +8,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * 打卡记录对象
  * add by CYQ 2026-06-05 说明: 移动端打卡记录实体
+ * @author 崔永琦
  */
 public class ClockinRecord extends BaseEntity {
     private static final long serialVersionUID = 1L;

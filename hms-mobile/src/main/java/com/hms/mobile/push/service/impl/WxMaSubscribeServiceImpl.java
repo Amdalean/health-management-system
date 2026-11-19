@@ -21,6 +21,11 @@ import com.hms.mobile.push.service.IWxMaSubscribeService;
  */
 @SuppressWarnings("unchecked")
 @Service
+/**
+ * public class WxMaSubscribeServiceImpl implements IWxMaSubscribeService {
+ *
+ * @author 崔永琦
+ */
 public class WxMaSubscribeServiceImpl implements IWxMaSubscribeService {
 
     private static final Logger log = LoggerFactory.getLogger(WxMaSubscribeServiceImpl.class);

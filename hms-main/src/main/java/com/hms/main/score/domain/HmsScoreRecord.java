@@ -8,7 +8,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * 成绩智能分析对象 hms_score_record
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-03-01
  */
 @Data

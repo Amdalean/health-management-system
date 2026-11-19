@@ -5,7 +5,7 @@ import com.hms.main.account.domain.UserGenerateResult;
 /**
  * 系统账号生成 Service 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-10-18
  * add by CYQ 2026-10-18 说明: 根据学生学号 / 教师工号为建档记录生成 sys_user 系统账号，
  *   并回写 hms_student.user_id / hms_teacher.user_id，实现「建档 → 开通账号」一体化。

@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "unipush")
+/**
+ * public class UniPushProperties {
+ *
+ * @author 崔永琦
+ */
 public class UniPushProperties {
 
     /** uniCloud 云函数 URL化地址 */

@@ -35,6 +35,11 @@ import com.hms.system.service.ISysUserService;
  * add by CYQ 2026-09-06 微信小程序一键登录，首次使用需绑定系统账号
  */
 @Service
+/**
+ * public class WxLoginServiceImpl implements IWxLoginService {
+ *
+ * @author 崔永琦
+ */
 public class WxLoginServiceImpl implements IWxLoginService {
 
     @Autowired

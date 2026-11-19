@@ -6,6 +6,7 @@ import com.hms.mobile.officelocation.domain.OfficeLocation;
 /**
  * 办公地点 数据层
  * add by CYQ 2026-06-06 说明: 办公地点数据访问接口
+ * @author 崔永琦
  */
 public interface OfficeLocationMapper {
 

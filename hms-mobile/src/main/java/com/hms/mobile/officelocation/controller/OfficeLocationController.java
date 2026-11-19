@@ -20,6 +20,11 @@ import com.hms.mobile.officelocation.service.IOfficeLocationService;
  */
 @RestController
 @RequestMapping("/mobile/officeLocation")
+/**
+ * public class OfficeLocationController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class OfficeLocationController extends BaseController {
 
     @Autowired

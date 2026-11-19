@@ -9,7 +9,7 @@ import com.hms.main.student.domain.HmsStudent;
 /**
  * 成绩智能分析 Mapper 接口
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-03-01
  * add by CYQ 2026-10-18 说明: 与学生建档、课程建档、学生选课联动，
  *   补充「学生下拉」「按学生查已选课程」「校验选课关系」三个查询。

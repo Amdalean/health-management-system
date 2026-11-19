@@ -19,6 +19,11 @@ import cn.hutool.core.util.RandomUtil;
  * add by CYQ 2026-10-19 AI 调用接入系统集成日志
  */
 @IntegrationLog(title = "AI对话", bizType = "AI", sender = "HMS")
+/**
+ * public class AiChatIntegrationStrategy extends AbstractIntegrationStrategy<AiChatRequest, AiChatResponse>
+ *
+ * @author 崔永琦
+ */
 public class AiChatIntegrationStrategy extends AbstractIntegrationStrategy<AiChatRequest, AiChatResponse>
 {
     /** 兜底单据标识前缀 */

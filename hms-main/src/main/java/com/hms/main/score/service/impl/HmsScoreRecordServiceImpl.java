@@ -26,7 +26,7 @@ import com.hms.main.student.mapper.HmsStudentMapper;
 /**
  * 成绩智能分析 Service 业务层处理
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-03-01
  * add by CYQ 2026-10-18 说明: 与学生建档、课程建档、学生选课联动。
  *   提交/新增/修改成绩智能分析时统一校验「学生存在 + 课程存在 + 学生已选修该课程」；

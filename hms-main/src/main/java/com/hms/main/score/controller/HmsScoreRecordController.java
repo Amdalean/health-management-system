@@ -24,7 +24,7 @@ import com.hms.common.core.page.TableDataInfo;
 /**
  * 成绩智能分析 Controller
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2026-03-01
  */
 @RestController

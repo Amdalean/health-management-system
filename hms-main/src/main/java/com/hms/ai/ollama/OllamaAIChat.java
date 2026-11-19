@@ -13,6 +13,7 @@ import com.hms.common.utils.StringUtils;
  * update by CYQ 2026-09-21 AI 模块重构：归位至 ai.ollama，支持配置读取
  * update by CYQ 2026-11-15 统一协议：改为继承 AbstractOpenAiChat，走 Ollama 的
  *        OpenAI 兼容端点 /v1/chat/completions，与云端 Qwen 共用同一套请求构造与响应解析
+ * @author 崔永琦
  */
 public class OllamaAIChat extends AbstractOpenAiChat {
 

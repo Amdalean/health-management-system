@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 只校验提示词构建、工厂装配与输出清洗，**不发起网络请求、不依赖 Spring 上下文与数据库**，
  * 因此整个类可在毫秒级完成，并允许并行执行（见 junit-platform.properties）。
  *
- * @author CYQ 2026-11-16
+ * @author 崔永琦 2026-11-16
  */
 @Execution(ExecutionMode.CONCURRENT)
 @DisplayName("八段锦打分单元测试")

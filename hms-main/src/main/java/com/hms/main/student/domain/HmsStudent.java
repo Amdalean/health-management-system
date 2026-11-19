@@ -9,7 +9,7 @@ import com.hms.common.core.domain.BaseEntity;
 /**
  * 学生建档对象 hms_student
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2024-09-13
  * add by CYQ 2026-10-18 说明: 按论文表1「学生建档表 student」重建实体，
  *   字段与数据库 hms_student 保持一致（student_id / student_no / name / gender /

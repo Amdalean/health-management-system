@@ -6,74 +6,70 @@ import com.hms.ai.qwen.QwenAIChat;
 import com.hms.ai.strategy.AIResponseStrategy;
 import com.hms.ai.strategy.BaduanjinScoringStrategy;
 import com.hms.ai.strategy.CommonStrategy;
-import com.hms.ai.strategy.DragonRajaStrategy;
-import com.hms.ai.strategy.DragonRajaWeatherStrategy;
-import com.hms.ai.strategy.FinancialAnalysisStrategy;
 import com.hms.ai.strategy.GradeAnalysisStrategy;
-import com.hms.ai.strategy.HealthAdviceStrategy;
-import com.hms.ai.strategy.JotdownRecognitionStrategy;
-import com.hms.ai.strategy.ReminderStrategy;
-import com.hms.ai.strategy.ReportOutputStrategy;
-import com.hms.ai.strategy.ShoppingIntentStrategy;
-import com.hms.ai.strategy.ShoppingPickStrategy;
-import com.hms.ai.strategy.WeatherSkyStrategy;
 import com.hms.ai.template.AbstractAIChatTemplate;
 
 /**
- * AI对话工厂类 - 使用工厂模式创建不同类型的AI对话实例
+ * AI 对话工厂类 —— 使用工厂模式，按"服务商 + 业务场景"两个维度创建对话实例。
  *
- * add by CYQ 2026年4月6日 - 增加 Ollama 服务支持
- * update by CYQ 2026-09-21 AI 模块重构：服务商按包拆分（qwen / opencodego / ollama）
+ * <p>模板方法固定调用骨架（输入预处理 → 上下文注入 → 模型调用 → 响应后处理），
+ * 策略接口承载各场景的提示词与输出约束，工厂负责组装。</p>
+ *
+ * <p>新增一个评分场景只需实现一个 {@link AIResponseStrategy} 并在 {@link StrategyType}
+ * 中登记，无需重复编写模型调用代码。</p>
+ *
+ * @author 崔永琦
+ * @date 2026-03-10
  */
 public class AIChatFactory {
 
     /**
-     * AI 服务类型（服务商）
+     * AI 服务商类型
      */
     public enum ServiceType {
-        QWEN,         // 通义千问 DashScope
-        OPENCODE_GO,  // OpenCode Go 代理
-        OLLAMA        // 本地 Ollama
-    }
-
-    public enum StrategyType {
-        HEALTH_ADVICE,
-        REPORT_OUTPUT,
-        FINANCIAL_ANALYSIS,
-        GRADE_ANALYSIS,
-        BADUANJIN_SCORING,
-        COMMON,
-        DragonRaja,
-        WEATHER_SKY,
-        // add by CYQ 2026-11-09 天气播报龙族角色每日随机（楚子航/凯撒/路明非/芬格尔/诺诺/诺玛/绘梨衣/源稚生/昂热）
-        DRAGON_RAJA_WEATHER,
-        Reminder,
-        JOTDOWN_RECOGNITION,
-        // add by CYQ 2026-11-04 优惠查询-AI 选品：需求解析 / 性价比打分
-        SHOPPING_INTENT,
-        SHOPPING_PICK
+        /** 通义千问 DashScope 兼容接口 */
+        QWEN,
+        /** OpenAI 兼容代理 */
+        OPENCODE_GO,
+        /** 本地 Ollama 部署 */
+        OLLAMA
     }
 
     /**
-     * 根据策略类型创建 AI对话实例（默认 Qwen）
+     * 业务场景（策略）类型
+     */
+    public enum StrategyType {
+        /** 成绩智能分析：实践类课程动作逐式评分 */
+        BADUANJIN_SCORING,
+        /** 成绩智能分析：一般课程成绩数据分析 */
+        GRADE_ANALYSIS,
+        /** 通用对话 */
+        COMMON
+    }
+
+    private AIChatFactory() {
+    }
+
+    /**
+     * 根据策略类型创建 AI 对话实例（默认服务商）
      *
-     * @param strategyType 策略类型（对应不同场景）
-     * @return AI对话实例
+     * @param strategyType 业务场景
+     * @return AI 对话实例
      */
     public static AbstractAIChatTemplate createAIChat(StrategyType strategyType) {
         return createAIChat(ServiceType.QWEN, strategyType);
     }
 
     /**
-     * 根据服务类型和策略类型创建AI对话实例
+     * 根据服务商与业务场景创建 AI 对话实例
      *
      * @param serviceType  服务商（QWEN / OPENCODE_GO / OLLAMA）
-     * @param strategyType 策略类型（对应不同场景）
-     * @return AI对话实例
+     * @param strategyType 业务场景
+     * @return AI 对话实例
      */
     public static AbstractAIChatTemplate createAIChat(ServiceType serviceType, StrategyType strategyType) {
         if (serviceType == null) {
-            throw new IllegalArgumentException("不支持的服务类型: " + serviceType);
+            throw new IllegalArgumentException("不支持的服务类型: null");
         }
         AIResponseStrategy strategy = createStrategy(strategyType);
         switch (serviceType) {
@@ -93,35 +89,15 @@ public class AIChatFactory {
      */
     private static AIResponseStrategy createStrategy(StrategyType strategyType) {
         if (strategyType == null) {
-            throw new IllegalArgumentException("不支持的策略类型: " + strategyType);
+            throw new IllegalArgumentException("不支持的策略类型: null");
         }
         switch (strategyType) {
-            case HEALTH_ADVICE:
-                return new HealthAdviceStrategy();
-            case REPORT_OUTPUT:
-                return new ReportOutputStrategy();
-            case FINANCIAL_ANALYSIS:
-                return new FinancialAnalysisStrategy();
-            case GRADE_ANALYSIS:
-                return new GradeAnalysisStrategy();
             case BADUANJIN_SCORING:
                 return new BaduanjinScoringStrategy();
+            case GRADE_ANALYSIS:
+                return new GradeAnalysisStrategy();
             case COMMON:
                 return new CommonStrategy();
-            case DragonRaja:
-                return new DragonRajaStrategy();
-            case WEATHER_SKY:
-                return new WeatherSkyStrategy();
-            case DRAGON_RAJA_WEATHER:
-                return new DragonRajaWeatherStrategy();
-            case Reminder:
-                return new ReminderStrategy();
-            case JOTDOWN_RECOGNITION:
-                return new JotdownRecognitionStrategy();
-            case SHOPPING_INTENT:
-                return new ShoppingIntentStrategy();
-            case SHOPPING_PICK:
-                return new ShoppingPickStrategy();
             default:
                 throw new IllegalArgumentException("不支持的策略类型: " + strategyType);
         }

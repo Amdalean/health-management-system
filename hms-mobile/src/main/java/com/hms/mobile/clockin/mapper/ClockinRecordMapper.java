@@ -8,6 +8,7 @@ import com.hms.mobile.clockin.domain.ClockinRecord;
 /**
  * 打卡记录 数据层
  * add by CYQ 2026-06-05 说明: 移动端打卡记录数据访问接口
+ * @author 崔永琦
  */
 public interface ClockinRecordMapper {
 

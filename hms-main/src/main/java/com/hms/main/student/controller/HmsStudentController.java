@@ -26,7 +26,7 @@ import com.hms.common.core.page.TableDataInfo;
 /**
  * 学生建档Controller
  *
- * @author CYQ
+ * @author 崔永琦
  * @date 2024-09-13
  * add by CYQ 2026-10-18 说明: 按论文表1对齐学生建档模块，新增「生成账号」接口
  *   （单条 generateUser/{studentId}、批量 generateUser/batch），

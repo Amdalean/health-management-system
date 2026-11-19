@@ -29,6 +29,11 @@ import com.hms.mobile.push.service.IPushDeviceService;
  */
 @RestController
 @RequestMapping("/mobile/clockin")
+/**
+ * public class ClockinRecordController extends BaseController {
+ *
+ * @author 崔永琦
+ */
 public class ClockinRecordController extends BaseController {
 
     @Autowired

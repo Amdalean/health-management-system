@@ -7,6 +7,7 @@ import com.hms.mobile.clockin.domain.ClockinRecord;
 /**
  * 打卡记录 服务层
  * add by CYQ 2026-06-05 说明: 移动端打卡记录业务接口
+ * @author 崔永琦
  */
 public interface IClockinRecordService {
 
